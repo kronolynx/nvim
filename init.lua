@@ -17,4 +17,7 @@ if vim.fn.has "nvim-0.6.1" ~= 1 then
   vim.cmd "cquit"
 end
 
-require("config.lazy_setup")
+require("config.autocmds")
+require("config.options")
+require("config.keymaps")
+require("config.lazy")
