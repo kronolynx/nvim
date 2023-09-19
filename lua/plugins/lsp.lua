@@ -1,48 +1,35 @@
 local api = vim.api
-local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  api.nvim_set_keymap(mode, lhs, rhs, options)
+local on_attach = function(_, bufnr)
+  api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 end
 
-local on_attach = function(_, bufnr)
-  -- LSP agnostic mappings
-  map("n", "<leader>rr", [[<cmd>lua vim.lsp.buf.rename()<CR>]])
-  -- map("n", "<leader>rr", ":Lspsaga ")
-  map("n", "<leader>ca", [[<cmd>lua vim.lsp.buf.code_action()<CR>]])
-  map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
-  map("n", "<leader>=", [[<cmd>lua vim.lsp.buf.format({ async = true })<CR>]])
-
-  map("n", "<leader>vt", [[<cmd>lua vim.lsp.buf.hover()<CR>]])
-  -- map("n", "<leader>vd", ":Lspsaga hover_doc")
-  map("n", "<leader>vp", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
-  map("n", "<leader>vs", [[<cmd>lua vim.lsp.buf.document_symbol()<CR>]])
-
-  map("n", "<leader>gi", [[<cmd>lua vim.lsp.buf.implementation()<CR>]])
-  map("n", "<leader>gr", [[<cmd>lua vim.lsp.buf.references()<CR>]])
-  -- map("n", "<leader>gd", [[<cmd>lua vim.lsp.buf.definition()<CR>]])
-  map("n", "<leader>gd", [[<cmd>lua vim.lsp.buf.type_definition()<CR>]])
-  map("n", "<leader>gu", [[<cmd>lua vim.lsp.buf.incomming_calls()<CR>]])
-  map("n", "<leader>go", [[<cmd>lua vim.lsp.buf.outgoing_calls()<CR>]])
-  map("n", "<leader>fr", [[<cmd>lua vim.lsp.buf.references()<CR>]])
-  map("", "<M-CR>", [[<cmd>lua vim.lsp.buf.code_action()<CR>]])
-  map("", "<M-CR>", [[<cmd>lua <CR>]])
-  map("n", "<leader>as", [[<cmd>lua vim.lsp.start_client()<CR>]])
-  map("n", "<leader>ah", [[<cmd>lua vim.lsp.stop_client()<CR>]])
+return {{
+  "neovim/nvim-lspconfig",
+  event = { "BufReadPre", "BufNewFile" },
+  keys = {
+    { "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "Rename symbol" },
+    { "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
+    { "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
+    { "<leader>=",  "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
+    { "<leader>vt", "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "Hover" },
+    { "<leader>vp", "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
+    { "<leader>vs", "<cmd>lua vim.lsp.buf.document_symbol()<CR>",        desc = "Document symbol" },
+    { "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>",         desc = "Implementation" },
+    { "<leader>fr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
+    { "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
+    { "<leader>gd", "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
+    { "<leader>gu", "<cmd>lua vim.lsp.buf.incomming_calls()<CR>",        desc = "Incomming calls" },
+    { "<leader>go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>",         desc = "Outgoing calls" },
+    { "<M-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
+    { "<leader>as", "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
+    { "<leader>ah", "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
 
   -- TODO
   -- add lspsaga bindings
   -- vim.lsp.buf.workspace_symbol()  Lists all symbols in the current workspace in the quickfix window.
   --*vim.lsp.buf.clear_references()* Removes document highlights from current buffer.
   --*vim.lsp.buf.completion()* Retrieves the completion items at the current cursor position. Can only be called in Insert mode.
-
-  api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-end
-
-return {
-  "neovim/nvim-lspconfig",
+  },
   opts = {
     setup = {
       metals = {},
@@ -112,12 +99,60 @@ return {
     "williamboman/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     {
+      "j-hui/fidget.nvim",
+      tag = 'legacy',
+      config = function()
+        require('fidget').setup()
+      end
+    }, -- Useful status updates for LSP
+    {
+      "folke/neodev.nvim",
+      config = function()
+        require('neodev').setup()
+      end
+    }, -- Additional lua configuration
+    -- {
+    --   'nvimdev/lspsaga.nvim',
+    --   config = function()
+    --     require('lspsaga').setup({
+    --       ui = {
+    --         border = 'rounded',
+    --       },
+    --       symbol_in_winbar = {
+    --         enable = false
+    --       },
+    --       lightbulb = {
+    --         enable = true
+    --       },
+    --       outline = {
+    --         layout = 'float'
+    --       },
+    --       finder = {
+    --         edit = { "o", "<CR>" },
+    --         vsplit = "s",
+    --         split = "i",
+    --         tabe = "t",
+    --         quit = { ";", "<ESC>" },
+    --       },
+    --     })
+    --   end,
+    -- }
+  }
+},
+    {
       'scalameta/nvim-metals',
+      enabled = false,
       keys = {
-
+        { "<leader>at",  ":Telescope metals commands<CR>",                         desc =                "Metals commands" },
+        { "<leader>ws",  "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "Hover worksheet" },
+        { "<leader>tt",  "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                  desc = "Toggle tree" },
+        { "<leader>ff",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "Find in tree" },
+        { "<leader>vis", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "Show implicits" },
+        { "<leader>am",  "<cmd>lua require('telescope').extensions.metals.commands()<CR>",         desc = "Metal commands" },
+        { "<leader>vt", "<Esc><cmd>lua require('metals').type_of_range()<CR>", mode = "v", desc = "View type" }
       },
       ft = { "scala", "sbt" },
-      dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim" },
+      dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim", "nvim-lspconfig" },
       config = function()
         --================================
         -- Metals specific setup
@@ -149,15 +184,6 @@ return {
 
         metals_config.on_attach = function(client, bufnr)
           on_attach(client, bufnr)
-
-          -- Metals specific mappings
-          map("v", "<leader>vt", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]])
-          map("n", "<leader>ws", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]])
-          map("n", "<leader>tt", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]])
-          map("n", "<leader>ff", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]])
-          map("n", "<leader>vis", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]])
-          map("n", "<leader>am", [[<cmd>lua require("telescope").extensions.metals.commands()<CR>]])
-          map("n", "<leader>at", ":Telescope metals commands<CR>")
 
           -- A lot of the servers I use won't support document_highlight or codelens,
           -- so we juse use them in Metals
@@ -219,13 +245,14 @@ return {
             },
           }
 
-          map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]])
-          map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]])
-          map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]])
-          map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]])
-          map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]])
-          map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]])
-          map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]])
+          -- TODO add to keybindings
+          -- map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]])
+          -- map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]])
+          -- map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]])
+          -- map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]])
+          -- map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]])
+          -- map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]])
+          -- map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]])
 
           -- dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
           --   --vim.notify("Tests have finished!")
@@ -245,48 +272,4 @@ return {
           group = nvim_metals_group,
         })
       end
-    },
-    {
-      "j-hui/fidget.nvim",
-      tag = 'legacy',
-      config = function()
-        require('fidget').setup()
-      end
-    }, -- Useful status updates for LSP
-    {
-      "folke/neodev.nvim",
-      config = function()
-        require('neodev').setup()
-      end
-    }, -- Additional lua configuration
-    -- {
-    --   "L3MON4D3/LuaSnip",
-    -- },
-    -- {
-    --   'nvimdev/lspsaga.nvim',
-    --   config = function()
-    --     require('lspsaga').setup({
-    --       ui = {
-    --         border = 'rounded',
-    --       },
-    --       symbol_in_winbar = {
-    --         enable = false
-    --       },
-    --       lightbulb = {
-    --         enable = true
-    --       },
-    --       outline = {
-    --         layout = 'float'
-    --       },
-    --       finder = {
-    --         edit = { "o", "<CR>" },
-    --         vsplit = "s",
-    --         split = "i",
-    --         tabe = "t",
-    --         quit = { ";", "<ESC>" },
-    --       },
-    --     })
-    --   end,
-    -- }
-  }
-}
+    }}

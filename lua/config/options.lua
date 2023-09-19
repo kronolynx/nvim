@@ -23,8 +23,8 @@ opt.incsearch = true   -- set incremental search, like modern browsers
 opt.lazyredraw = false -- don't redraw while executing macros
 opt.magic = true       -- set magic on, for regular expressions
 
-opt.autowrite = true -- save on buffer change
--- opt.autowriteall = true -- save on buffer change -- TODO compare with autowrite
+-- opt.autowrite = true -- save on buffer change
+opt.autowriteall = true -- save on buffer change -- TODO compare with autowrite
 
 -- indentation
 local indent = 2

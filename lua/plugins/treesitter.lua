@@ -1,5 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  event = { "BufReadPost", "BufNewFile" },
   build = function()
     local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
     ts_update()
@@ -25,6 +26,8 @@ return {
         "javascript",
         "json",
         "lua",
+        "luadoc",
+        "luap",
         "markdown",
         "markdown_inline",
         "python",

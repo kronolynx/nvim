@@ -13,8 +13,8 @@ return {
         name = "barbecue",
         version = "*",
         dependencies = {
-          "SmiteshP/nvim-navic",
-          "nvim-tree/nvim-web-devicons", -- optional dependency
+          -- "SmiteshP/nvim-navic",
+          "nvim-tree/nvim-web-devicons",
         },
         opts = {
           -- configurations go here
