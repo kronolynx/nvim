@@ -39,6 +39,7 @@ opt.showcmd = true      -- Show the (partial) command as it’s being typed
 opt.number = true    -- show line numbers
 opt.cmdheight = 1       -- Height of the command bar
 opt.cursorline = true   -- Highlight current line
+opt.signcolumn = "yes"
 
 -- toggle invisible characters
 opt.list = true
