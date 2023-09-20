@@ -69,7 +69,8 @@ return {{
       capabilities = lsp_capabilities,
     })
 
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
+    -- using Noice for hover
+    -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 
 
 
@@ -100,6 +101,7 @@ return {{
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     {
       "j-hui/fidget.nvim",
+      enabled = false,
       tag = 'legacy',
       config = function()
         require('fidget').setup()
