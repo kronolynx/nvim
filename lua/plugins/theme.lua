@@ -27,6 +27,32 @@ return {
     name = "catppuccin",
     priority = 1000,
     config = function()
+      require("catppuccin").setup({
+        flavour = "catppuccin-frappe",
+        integrations = {
+          cmp = true,
+          flash = true,
+          gitsigns = true,
+          lsp_trouble = true,
+          native_lsp = {
+            enabled = true,
+            underlines = {
+              errors = { "undercurl" },
+              hints = { "undercurl" },
+              warnings = { "undercurl" },
+              information = { "undercurl" },
+            },
+          },
+          neotree = true,
+          noice = true,
+          notify = true,
+          telescope = true,
+          treesitter = true,
+          ufo = true,
+          which_key = true,
+        }
+      })
+
       vim.cmd.colorscheme "catppuccin-frappe"
     end
   },
