@@ -27,5 +27,12 @@ return {
   },
   config = function()
     require("telescope").load_extension("ui-select")
+    require("telescope").setup({
+      pickers = {
+        buffers = {
+          sort_mru = true,
+        }
+      }
+    })
   end
 }

@@ -43,6 +43,11 @@ return {
               information = { "undercurl" },
             },
           },
+          indent_blankline = {
+            enabled = true,
+            scope_color = "", -- catppuccin color (eg. `lavender`) Default: text
+            colored_indent_levels = false, -- requires extra steps to enable 
+          },
           neotree = true,
           noice = true,
           notify = true,
@@ -50,7 +55,17 @@ return {
           treesitter = true,
           ufo = true,
           which_key = true,
-        }
+        },
+        highlight_overrides = {
+          all = function(colors)
+            return {
+              Search = { bg = colors.flamingo, fg = colors.mantle },
+              LineNr = { fg = colors.overlay0 },
+              CursorLine = { bg = colors.Surface1 },
+              -- IndentBlanklineChar = { fg = colors.mauve },
+            }
+          end,
+        },
       })
 
       vim.cmd.colorscheme "catppuccin-frappe"

@@ -9,10 +9,10 @@ cmd([[autocmd BufReadPost,BufNewFile .html,*.txt,*.md,*.adoc set spell spelllang
 -- Return to last edit position when opening files (You want this!)
 cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
 
+-- save on focus lost
+cmd([[au FocusLost * silent! :wall]])
 
--- stuff
 cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]]) -- yank highlight
-cmd([[au FocusLost * silent! :wa]]) -- save on focus lost
 
 -- When vimwindow is resized resize splits
 cmd([[au VimResized * exe "normal! \<c-w>="]])
