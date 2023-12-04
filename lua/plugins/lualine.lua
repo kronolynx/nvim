@@ -126,8 +126,8 @@ return {
       function()
         return '▊'
       end,
-      color = { fg = colors.blue },        -- Sets highlighting of component
-      padding = { left = 0, right = 1 },   -- We don't need space before this
+      color = { fg = colors.blue },      -- Sets highlighting of component
+      padding = { left = 0, right = 1 }, -- We don't need space before this
     }
 
     ins_left {
@@ -172,6 +172,8 @@ return {
 
     ins_left {
       'filename',
+      path = 3, -- :h lualine-filename-component-options
+      shorting_target = 20,
       cond = conditions.buffer_not_empty,
       color = { fg = colors.magenta, gui = 'bold' },
     }
@@ -221,20 +223,41 @@ return {
       color = { fg = colors.white, gui = 'bold' },
     }
 
+    -- Noice config  -- TODO how to exclude mode form show mode ?
+    -- ins_right {
+    --   require("noice").api.status.message.get_hl,
+    --   cond = require("noice").api.status.message.has,
+    -- }
+    -- ins_right {
+    --   require("noice").api.status.command.get,
+    --   cond = require("noice").api.status.command.has,
+    --   color = { fg = colors.darkblue },
+    -- }
+    -- ins_right {
+    --   require("noice").api.status.mode.get,
+    --   cond = require("noice").api.status.mode.has,
+    --   color = { fg = colors.blue },
+    -- }
+    -- ins_right {
+    --   require("noice").api.status.search.get,
+    --   cond = require("noice").api.status.search.has,
+    --   color = { fg = colors.magenta },
+    -- }
+
     -- Add components to right sections
     ins_right {
-      'o:encoding',         -- option component same as &encoding in viml
-      fmt = string.upper,   -- I'm not sure why it's upper case either ;)
+      'o:encoding',       -- option component same as &encoding in viml
+      fmt = string.upper, -- I'm not sure why it's upper case either ;)
       cond = conditions.hide_in_width,
       color = { fg = colors.green, gui = 'bold' },
     }
 
-    ins_right {
-      'fileformat',
-      fmt = string.upper,
-      icons_enabled = false,   -- I think icons are cool but Eviline doesn't have them. sigh
-      color = { fg = colors.green, gui = 'bold' },
-    }
+    -- ins_right {
+    --   'fileformat',
+    --   fmt = string.upper,
+    --   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+    --   color = { fg = colors.green, gui = 'bold' },
+    -- }
 
     ins_right {
       'branch',
@@ -261,11 +284,13 @@ return {
       padding = { left = 1 },
     }
 
+
     -- Now don't forget to initialize lualine
     lualine.setup(config)
   end,
   dependencies = {
     { 'nvim-tree/nvim-web-devicons', lazy = true },
     'linrongbin16/lsp-progress.nvim',
+    'folke/noice.nvim'
   }
 }
