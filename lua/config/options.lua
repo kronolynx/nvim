@@ -50,3 +50,6 @@ opt.listchars = {
   extends = "❯",
   precedes = "❮"
 }
+
+-- don't give the "ATTENTION" message when an existing swap file is found
+opt.shortmess:append("A")
