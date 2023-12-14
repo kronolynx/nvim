@@ -46,4 +46,4 @@ map("n", "#", "#zz", { noremap = true })
 map("n", "<CR>", ":noh<CR><CR>", { noremap = true })
 map("", "<BS>", ":nohlsearch<CR>", { silent = true })
 
-map("n", "<leader>ff", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", { noremap = true })
+map("n", "<C-1>", ":Neotree toggle<CR>", { noremap = true })
