@@ -172,7 +172,7 @@ return {
 
     ins_left {
       'filename',
-      path = 3, -- :h lualine-filename-component-options
+      path = 1, -- :h lualine-filename-component-options
       shorting_target = 20,
       cond = conditions.buffer_not_empty,
       color = { fg = colors.magenta, gui = 'bold' },

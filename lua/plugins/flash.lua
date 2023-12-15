@@ -5,14 +5,21 @@ return {
   keys = {
     {
       "s",
-      mode = { "n", "x", "o" },
+      mode = { "n" },
+      function()
+        require("flash").jump()
+      end,
+    },
+    {
+      "<leader>s",
+      mode = { "v" },
       function()
         require("flash").jump()
       end,
     },
     {
       "S",
-      mode = { "n", "o", "x" },
+      mode = { "n" },
       function()
         require("flash").treesitter()
       end,
@@ -34,7 +41,7 @@ return {
       mode = { "n" },
       function()
         require("flash").jump({
-          pattern = ".",   -- initialize pattern with any char
+          pattern = ".", -- initialize pattern with any char
           search = {
             mode = function(pattern)
               -- remove leading dot

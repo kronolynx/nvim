@@ -36,6 +36,12 @@ return {
           lsp_trouble = true,
           native_lsp = {
             enabled = true,
+            virtual_text = {
+              errors = { "italic" },
+              hints = { "italic" },
+              warnings = { "italic" },
+              information = { "italic" },
+            },
             underlines = {
               errors = { "undercurl" },
               hints = { "undercurl" },
@@ -45,8 +51,8 @@ return {
           },
           indent_blankline = {
             enabled = true,
-            scope_color = "", -- catppuccin color (eg. `lavender`) Default: text
-            colored_indent_levels = false, -- requires extra steps to enable 
+            scope_color = "",              -- catppuccin color (eg. `lavender`) Default: text
+            colored_indent_levels = false, -- requires extra steps to enable
           },
           neotree = true,
           noice = true,
