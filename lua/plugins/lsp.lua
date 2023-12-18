@@ -27,22 +27,57 @@ return { {
     { "<leader>lvt", "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "View type" },
     { "<leader>ly",  "<cmd>lua vim.lsp.buf.document_symbol()<CR>",        desc = "Document symbol" },
     { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "Rename symbol" },
-    { "<leader>lfi", "<cmd>Telescope lsp_incoming_calls<CR>",             desc = "Who calls this symbol" },
-    { "<leader>lfo", "<cmd>Telescope lsp_outgoing_calls<CR>",             desc = "What is called by this symbol" },
-    { "<leader>lgi", "<cmd>Telescope lsp_implementations<CR>",            desc = "implementation" },
-    { "<leader>lgr", "<cmd>Telescope lsp_references<CR>",                 desc = "references" },
-    { "<leader>lgt", "<cmd>Telescope lsp_type_definitions<CR>",           desc = "Type definition" },
-    { "<leader>lvs", "<cmd>Telescope lsp_document_symbol<CR>",            desc = "Document symbol" },
-    { "<leader>lvs", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>",   desc = "Document symbol" },
-    { "<leader>lvs", "<cmd>Telescope lsp_workspace_symbol<CR>",           desc = "Document symbol" },
-    { "<leader>lxd", "<cmd>Telescope lsp_definitions<CR>",                desc = "Go definitions" },
-    { "<leader>lge", "<cmd>Telescope diagnostics<CR>",                    desc = "error diagnostics" },
-
+    {
+      "<leader>lfi",
+      "<cmd>Telescope lsp_incoming_calls<CR>",
+      desc =
+      "Who calls this symbol"
+    },
+    {
+      "<leader>lfo",
+      "<cmd>Telescope lsp_outgoing_calls<CR>",
+      desc =
+      "What is called by this symbol"
+    },
+    { "<leader>lgi", "<cmd>Telescope lsp_implementations<CR>",          desc = "implementation" },
+    { "<leader>lgr", "<cmd>Telescope lsp_references<CR>",               desc = "references" },
+    { "<leader>lgt", "<cmd>Telescope lsp_type_definitions<CR>",         desc = "Type definition" },
+    { "<leader>lvs", "<cmd>Telescope lsp_document_symbol<CR>",          desc = "Document symbol" },
+    { "<leader>lvs", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>", desc = "Document symbol" },
+    { "<leader>lvs", "<cmd>Telescope lsp_workspace_symbol<CR>",         desc = "Document symbol" },
+    { "<leader>lxd", "<cmd>Telescope lsp_definitions<CR>",              desc = "Go definitions" },
+    {
+      "<leader>lxv",
+      ":vsplit | lua vim.lsp.buf.definition()<CR>",
+      desc =
+      "V split definitions"
+    },
+    {
+      "<leader>lxy",
+      ":split | lua vim.lsp.buf.definition()<CR>",
+      desc =
+      "Y split definitions"
+    },
     -- TODO
     -- add lspsaga bindings
     -- vim.lsp.buf.workspace_symbol()  Lists all symbols in the current workspace in the quickfix window.
     --*vim.lsp.buf.clear_references()* Removes document highlights from current buffer.
     --*vim.lsp.buf.completion()* Retrieves the completion items at the current cursor position. Can only be called in Insert mode.
+    --map("n", "[d",        function() vim.diagnostic.goto_prev { wrap = false } end)
+    --map("n", "]d",        function() vim.diagnostic.goto_next { wrap = false } end)
+    --map("n", "<leader>sh", vim.lsp.buf.signature_help)
+    --map("n", "<leader>H",  vim.lsp.buf.document_highlight, {desc = "Highlights the current symbol in the entire buffer"})
+    --map("n", "<leader>nH", vim.lsp.buf.clear_references,   {desc = "Clear symbol highlights"})
+
+    -- TODO can I make this shorter ?
+    { "<leader>lgda", "<cmd>lua require('telescope.builtin').diagnostics<CR>",                  desc = "all diagnostics" },
+    {
+      "<leader>lgde",
+      "<cmd>lua require('telescope.builtin').diagnostics({severity = 'E'}<CR>",
+      desc =
+      "error diagnostics"
+    },
+    { "<leader>lgdw", "<cmd>lua require('telescope.builtin').diagnostics({severity = 'W'}<CR>", desc = "warn diagnostics" },
   },
   opts = {
     setup = {
@@ -68,7 +103,7 @@ return { {
     })
 
     local lspconfig = require("lspconfig")
-    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+    -- local lsp_capabilities =
 
     -- TODO , do I want this ???
     -- vim.cmd [[
@@ -93,7 +128,7 @@ return { {
     })
 
     lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-      capabilities = lsp_capabilities,
+      capabilities = require("cmp_nvim_lsp").default_capabilities(),
     })
 
     -- using Noice for hover
@@ -113,10 +148,26 @@ return { {
       },
     })
 
+    -- enable completion on all lsp instances
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    local cmp_lsp = require("cmp_nvim_lsp")
+    local cmp_capabilities = cmp_lsp.default_capabilities(capabilities)
+
+    -- enable code folding
+    -- needs to be on cmp_capabilities or it will get overwritten
+    cmp_capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true
+    }
+
     -- -- These server just use the vanilla setup
     local servers = { "bashls", "tsserver", "yamlls", "lua_ls" }
     for _, server in pairs(servers) do
-      lspconfig[server].setup({ on_attach = on_attach })
+      lspconfig[server].setup({
+        on_attach = on_attach,
+        capabilities = cmp_capabilities
+      })
     end
 
     -- Uncomment for trace logs from neovim
@@ -186,14 +237,22 @@ return { {
       -- { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                 desc = "Toggle tree" },
       -- { "<leader>ff",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "Find in tree" },
       { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "View implicits" },
-      { "<leader>lvt", "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",      desc =
-      "View infered type" },
-      { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",                           desc = "view logs" },
-      { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>",                          desc = "import build" },
+      {
+        "<leader>lvt",
+        "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",
+        desc =
+        "View infered type"
+      },
+      { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",  desc = "view logs" },
+      { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>", desc = "import build" },
       --{ "<C-A-o>", "<cmd>lua require('metals').organize_imports()<CR>", desc = "organize imports" },
-      { "<leader>lvt", "<Esc><cmd>lua require('metals').type_of_range()<CR>",                    mode = "v",
-                                                                                                                              desc =
-        "View type" },
+      {
+        "<leader>lvt",
+        "<Esc><cmd>lua require('metals').type_of_range()<CR>",
+        mode = "v",
+        desc =
+        "View type"
+      },
     },
     ft = { "scala", "sbt" },
     dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim", "nvim-lspconfig" },
@@ -204,7 +263,6 @@ return { {
       local metals_config = require("metals").bare_config()
 
       local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
-      local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
       metals_config.tvp = {
         icons = {
           enabled = true
@@ -224,14 +282,23 @@ return { {
         },
       }
 
+      metals_config.init_options.statusBarProvider = "on"
       -- *READ THIS*
       -- I *highly* recommend setting statusBarProvider to true, however if you do,
       -- you *have* to have a setting to display this in your statusline or else
       -- you'll not see any messages from metals. There is more info in the help
       -- docs about this
-      metals_config.init_options.statusBarProvider = "on"
-      metals_config.capabilities = lsp_capabilities
-      lsp_capabilities.textDocument.completion.completionItem.snippetSupport = true
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+      local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+      -- enable code folding
+      -- needs to be on cmp_capabilities or it will get overwritten
+      cmp_capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true
+      }
+      metals_config.capabilities = cmp_capabilities
 
       metals_config.on_attach = function(client, bufnr)
         on_attach(client, bufnr)

@@ -42,8 +42,12 @@ map("n", "<C-o>", "<C-o>zz", { noremap = true })
 map("n", "<C-i>", "<C-i>zz", { noremap = true })
 map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
+
 -- This unsets the "last search pattern" register by hitting return
 map("n", "<CR>", ":noh<CR><CR>", { noremap = true })
 map("", "<BS>", ":nohlsearch<CR>", { silent = true })
 
 map("n", "<C-1>", ":Neotree toggle<CR>", { noremap = true })
+
+map("n", "<A-Left>", "<C-o>", { noremap = true })
+map("n", "<A-Right>", "<C-i>", { noremap = true })

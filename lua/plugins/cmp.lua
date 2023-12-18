@@ -1,8 +1,9 @@
 return {
   "hrsh7th/nvim-cmp",
-  -- event = "InsertEnter",
+  event = "InsertEnter",
   dependencies = {
     -- { 'hrsh7th/cmp-nvim-lsp-document-symbol'},
+    -- TODO remove unused
     { "hrsh7th/cmp-emoji" },
     { "hrsh7th/cmp-buffer" },
     { "hrsh7th/cmp-cmdline" },
@@ -31,6 +32,8 @@ return {
     local cmp = require("cmp")
     local lspkind = require('lspkind')
 
+    require("luasnip.loaders.from_vscode").lazy_load({ include = { "scala", "lua" } })
+    require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/lua/snippets" })
     local luasnip = require('luasnip')
 
     cmp.setup({
@@ -40,7 +43,17 @@ return {
         end,
       },
       mapping = {
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
+        -- None of this made sense to me when first looking into this since there
+        -- is no vim docs, but you can't have select = true here _unless_ you are
+        -- also using the snippet stuff. So keep in mind that if you remove
+        -- snippets you need to remove this select
+        ["<C-k"] = cmp.mapping.select_prev_item(),
+        ["<C-j"] = cmp.mapping.select_next_item(),
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
         ["<Tab>"] = function(fallback)
           if cmp.visible() then
             -- cmp.confirm({ select = true })
@@ -64,16 +77,18 @@ return {
         end,
       },
       completion = {
-        completeopt = "menu,menuone,noinsert",
+        completeopt = "menu,menuone,preview,noinsert,noselect",
       },
       sources = {
-        { name = "nvim_lsp",               priority = 10 },
-        { name = "luasnip" },
-        { name = "buffer" },
-        { name = "look",                   keyword_length = 3, option = { convert_case = true, loud = true } },
-        { name = "nvim_lua" },
-        { name = "path" },
+        { name = "nvim_lsp",                priority = 10 },
+        { name = "nvim_lsp_document_symbol" },
         { name = "nvim_lsp_signature_help" },
+        { name = "rg" }, --ripgrep results
+        { name = "buffer" },
+        --{ name = "look",                    keyword_length = 3, option = { convert_case = true, loud = true } },
+        { name = "path" },
+        { name = "nvim_lua" },
+        { name = "luasnip" },
       },
       formatting = {
         format = lspkind.cmp_format({
