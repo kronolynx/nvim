@@ -3,32 +3,46 @@ local on_attach = function(_, bufnr)
   api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 end
 
-return {{
+return { {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   keys = {
-    { "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "Rename symbol" },
-    { "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
-    { "<leader>=",  "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
-    { "<leader>vt", "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "Hover" },
-    { "<leader>vp", "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
-    { "<leader>vs", "<cmd>lua vim.lsp.buf.document_symbol()<CR>",        desc = "Document symbol" },
-    { "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>",         desc = "Implementation" },
-    { "<leader>fr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
-    { "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
-    { "<leader>gd", "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
-    { "<leader>gu", "<cmd>lua vim.lsp.buf.incomming_calls()<CR>",        desc = "Incomming calls" },
-    { "<leader>go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>",         desc = "Outgoing calls" },
-    { "<M-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
-    { "<leader>as", "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
-    { "<leader>ah", "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
+    { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
+    { "<leader>ca",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
+    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
+    { "<leader>ah",  "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
+    { "<leader>as",  "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
+    { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
+    { "<leader>ld",  "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
+    { "<leader>lcl", "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
+    { "<leader>lgo", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>",         desc = "Outgoing calls" },
+    { "<leader>lh",  "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
+    { "<leader>li",  "<cmd>lua vim.lsp.buf.implementation()<CR>",         desc = "Implementation" },
+    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
+    { "<leader>ls",  "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
+    { "<leader>ls",  "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
+    { "<leader>lt",  "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "Hover" },
+    { "<leader>lvp", "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
+    { "<leader>lvr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
+    { "<leader>lvt", "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "View type" },
+    { "<leader>ly",  "<cmd>lua vim.lsp.buf.document_symbol()<CR>",        desc = "Document symbol" },
+    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "Rename symbol" },
+    { "<leader>lfi", "<cmd>Telescope lsp_incoming_calls<CR>",             desc = "Who calls this symbol" },
+    { "<leader>lfo", "<cmd>Telescope lsp_outgoing_calls<CR>",             desc = "What is called by this symbol" },
+    { "<leader>lgi", "<cmd>Telescope lsp_implementations<CR>",            desc = "implementation" },
+    { "<leader>lgr", "<cmd>Telescope lsp_references<CR>",                 desc = "references" },
+    { "<leader>lgt", "<cmd>Telescope lsp_type_definitions<CR>",           desc = "Type definition" },
+    { "<leader>lvs", "<cmd>Telescope lsp_document_symbol<CR>",            desc = "Document symbol" },
+    { "<leader>lvs", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>",   desc = "Document symbol" },
+    { "<leader>lvs", "<cmd>Telescope lsp_workspace_symbol<CR>",           desc = "Document symbol" },
+    { "<leader>lxd", "<cmd>Telescope lsp_definitions<CR>",                desc = "Go definitions" },
+    { "<leader>lge", "<cmd>Telescope diagnostics<CR>",                    desc = "error diagnostics" },
 
-  -- TODO
-  -- add lspsaga bindings
-  -- vim.lsp.buf.workspace_symbol()  Lists all symbols in the current workspace in the quickfix window.
-  --*vim.lsp.buf.clear_references()* Removes document highlights from current buffer.
-  --*vim.lsp.buf.completion()* Retrieves the completion items at the current cursor position. Can only be called in Insert mode.
+    -- TODO
+    -- add lspsaga bindings
+    -- vim.lsp.buf.workspace_symbol()  Lists all symbols in the current workspace in the quickfix window.
+    --*vim.lsp.buf.clear_references()* Removes document highlights from current buffer.
+    --*vim.lsp.buf.completion()* Retrieves the completion items at the current cursor position. Can only be called in Insert mode.
   },
   opts = {
     setup = {
@@ -55,6 +69,19 @@ return {{
 
     local lspconfig = require("lspconfig")
     local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+    -- TODO , do I want this ???
+    -- vim.cmd [[
+    --  highlight LspDiagnosticsUnderlineError gui=NONE
+    --  highlight LspDiagnosticsUnderlineWarning gui=NONE
+    --  highlight LspDiagnosticsUnderlineInformation gui=NONE
+    --  highlight LspDiagnosticsUnderlineHint gui=NONE
+    -- ]]
+    -- vim.cmd [[
+    --  highlight LspReferenceRead gui=NONE
+    --  highlight LspReferenceText gui=NONE
+    --  highlight LspReferenceWrite gui=NONE
+    -- ]]
 
     require('mason-lspconfig').setup_handlers({
       function(server_name)
@@ -113,6 +140,14 @@ return {{
         require('neodev').setup()
       end
     }, -- Additional lua configuration
+    {
+      "ray-x/lsp_signature.nvim",
+      config = function()
+        require("lsp_signature").setup {
+          hint_enable = true
+        }
+      end
+    }
     -- {
     --   'nvimdev/lspsaga.nvim',
     --   config = function()
@@ -141,137 +176,154 @@ return {{
     -- }
   }
 },
-    {
-      'scalameta/nvim-metals',
-      enabled = false,
-      keys = {
-        { "<leader>at",  ":Telescope metals commands<CR>",                         desc =                "Metals commands" },
-        { "<leader>ws",  "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "Hover worksheet" },
-        { "<leader>tt",  "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                  desc = "Toggle tree" },
-        { "<leader>ff",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "Find in tree" },
-        { "<leader>vis", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "Show implicits" },
-        { "<leader>am",  "<cmd>lua require('telescope').extensions.metals.commands()<CR>",         desc = "Metal commands" },
-        { "<leader>vt", "<Esc><cmd>lua require('metals').type_of_range()<CR>", mode = "v", desc = "View type" }
-      },
-      ft = { "scala", "sbt" },
-      dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim", "nvim-lspconfig" },
-      config = function()
-        --================================
-        -- Metals specific setup
-        --================================
-        local metals_config = require("metals").bare_config()
+  {
+    'scalameta/nvim-metals',
+    enabled = true,
+    keys = {
+      { "<leader>lmc", ":Telescope metals commands<CR>",                                         desc = "Commands" },
+      --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },
+      { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "Hover worksheet" },
+      -- { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                 desc = "Toggle tree" },
+      -- { "<leader>ff",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "Find in tree" },
+      { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "View implicits" },
+      { "<leader>lvt", "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",      desc =
+      "View infered type" },
+      { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",                           desc = "view logs" },
+      { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>",                          desc = "import build" },
+      --{ "<C-A-o>", "<cmd>lua require('metals').organize_imports()<CR>", desc = "organize imports" },
+      { "<leader>lvt", "<Esc><cmd>lua require('metals').type_of_range()<CR>",                    mode = "v",
+                                                                                                                              desc =
+        "View type" },
+    },
+    ft = { "scala", "sbt" },
+    dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim", "nvim-lspconfig" },
+    config = function()
+      --================================
+      -- Metals specific setup
+      --================================
+      local metals_config = require("metals").bare_config()
 
-        local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
-        local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-        metals_config.tvp = {
-          icons = {
-            enabled = true
-          }
+      local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
+      local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+      metals_config.tvp = {
+        icons = {
+          enabled = true
         }
+      }
 
-        metals_config.settings = {
-          showImplicitArguments = true,
-          showImplicitConversionsAndClasses = true,
-          showInferredType = true,
-          excludedPackages = {
-            "akka.actor.typed.javadsl",
-            "com.github.swagger.akka.javadsl",
-            "akka.stream.javadsl",
-            "akka.http.javadsl",
+      metals_config.settings = {
+        showImplicitArguments = true,
+        showImplicitConversionsAndClasses = true,
+        showInferredType = true,
+        superMethodLensesEnabled = true,
+        excludedPackages = {
+          "akka.actor.typed.javadsl",
+          "com.github.swagger.akka.javadsl",
+          "akka.stream.javadsl",
+          "akka.http.javadsl",
+        },
+      }
+
+      -- *READ THIS*
+      -- I *highly* recommend setting statusBarProvider to true, however if you do,
+      -- you *have* to have a setting to display this in your statusline or else
+      -- you'll not see any messages from metals. There is more info in the help
+      -- docs about this
+      metals_config.init_options.statusBarProvider = "on"
+      metals_config.capabilities = lsp_capabilities
+      lsp_capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      metals_config.on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
+
+        -- A lot of the servers I use won't support document_highlight or codelens,
+        -- so we juse use them in Metals
+        api.nvim_create_autocmd("CursorHold", {
+          callback = vim.lsp.buf.document_highlight,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd("CursorMoved", {
+          callback = vim.lsp.buf.clear_references,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+          callback = vim.lsp.codelens.refresh,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd("FileType", {
+          pattern = { "dap-repl" },
+          callback = function()
+            require("dap.ext.autocompl").attach()
+          end,
+          group = lsp_group,
+        })
+
+        -- nvim-dap
+        -- I only use nvim-dap with Scala, so we keep it all in here
+        local dap = require("dap")
+
+        dap.configurations.scala = {
+          {
+            type = "scala",
+            request = "launch",
+            name = "Run or test with input",
+            metals = {
+              runType = "runOrTestFile",
+              args = function()
+                local args_string = vim.fn.input("Arguments: ")
+                return vim.split(args_string, " +")
+              end,
+            },
+          },
+          {
+            type = "scala",
+            request = "launch",
+            name = "Run or Test",
+            metals = {
+              runType = "runOrTestFile",
+            },
+          },
+          {
+            type = "scala",
+            request = "launch",
+            name = "Test Target",
+            metals = {
+              runType = "testTarget",
+            },
           },
         }
 
-        metals_config.init_options.statusBarProvider = "on"
-        metals_config.capabilities = lsp_capabilities
+        -- TODO add to keybindings
+        -- map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]])
+        -- map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]])
+        -- map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]])
+        -- map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]])
+        -- map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]])
+        -- map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]])
+        -- map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]])
 
-        metals_config.on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
+        -- dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
+        --   --vim.notify("Tests have finished!")
+        --   dap.repl.open()
+        -- end
 
-          -- A lot of the servers I use won't support document_highlight or codelens,
-          -- so we juse use them in Metals
-          api.nvim_create_autocmd("CursorHold", {
-            callback = vim.lsp.buf.document_highlight,
-            buffer = bufnr,
-            group = lsp_group,
-          })
-          api.nvim_create_autocmd("CursorMoved", {
-            callback = vim.lsp.buf.clear_references,
-            buffer = bufnr,
-            group = lsp_group,
-          })
-          api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-            callback = vim.lsp.codelens.refresh,
-            buffer = bufnr,
-            group = lsp_group,
-          })
-          api.nvim_create_autocmd("FileType", {
-            pattern = { "dap-repl" },
-            callback = function()
-              require("dap.ext.autocompl").attach()
-            end,
-            group = lsp_group,
-          })
-
-          -- nvim-dap
-          -- I only use nvim-dap with Scala, so we keep it all in here
-          local dap = require("dap")
-
-          dap.configurations.scala = {
-            {
-              type = "scala",
-              request = "launch",
-              name = "Run or test with input",
-              metals = {
-                runType = "runOrTestFile",
-                args = function()
-                  local args_string = vim.fn.input("Arguments: ")
-                  return vim.split(args_string, " +")
-                end,
-              },
-            },
-            {
-              type = "scala",
-              request = "launch",
-              name = "Run or Test",
-              metals = {
-                runType = "runOrTestFile",
-              },
-            },
-            {
-              type = "scala",
-              request = "launch",
-              name = "Test Target",
-              metals = {
-                runType = "testTarget",
-              },
-            },
-          }
-
-          -- TODO add to keybindings
-          -- map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]])
-          -- map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]])
-          -- map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]])
-          -- map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]])
-          -- map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]])
-          -- map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]])
-          -- map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]])
-
-          -- dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
-          --   --vim.notify("Tests have finished!")
-          --   dap.repl.open()
-          -- end
-
-          require("metals").setup_dap()
-        end
-
-        local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
-        api.nvim_create_autocmd("FileType", {
-          pattern = { "scala", "sbt" },
-          callback = function()
-            vim.notify("Metals initialize")
-            require("metals").initialize_or_attach(metals_config)
-          end,
-          group = nvim_metals_group,
-        })
+        require("metals").setup_dap()
       end
-    }}
+
+      --local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
+      --api.nvim_create_autocmd("FileType", {
+      --  pattern = { "scala", "sbt" },
+      --  callback = function()
+      --    vim.notify("Metals initialize")
+      --    require("metals").initialize_or_attach(metals_config)
+      --  end,
+      --  group = nvim_metals_group,
+      --})
+
+      vim.notify("Metals initialize")
+      require("metals").initialize_or_attach(metals_config)
+    end
+  } }

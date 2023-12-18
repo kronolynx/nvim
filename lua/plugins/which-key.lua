@@ -14,6 +14,11 @@ return {
       ["<leader>m"] = { name = "+git" },
       ["<leader>s"] = { name = "+search" },
       ["<leader>v"] = { name = "+view" },
+      ["<leader>l"] = { name = "+LSP" },
+      ["<leader>lm"] = { name = "+Metals" },
+      ["<leader>lv"] = { name = "+view" },
+      ["<leader>lg"] = { name = "+goto" },
+      ["<leader>lf"] = { name = "+find" },
     }
   },
   config = function(_, opts)
