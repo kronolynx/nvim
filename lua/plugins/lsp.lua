@@ -10,17 +10,14 @@ return { {
     { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
     { "<leader>ca",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
     { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
-    { "<leader>ah",  "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
-    { "<leader>as",  "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
+    -- { "<leader>ld",  "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
     { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>ld",  "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
-    { "<leader>lcl", "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
+    { "<leader>lcS", "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
+    { "<leader>lch", "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
     { "<leader>lgo", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>",         desc = "Outgoing calls" },
-    { "<leader>lh",  "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
     { "<leader>li",  "<cmd>lua vim.lsp.buf.implementation()<CR>",         desc = "Implementation" },
     { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
     { "<leader>ls",  "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
-    { "<leader>ls",  "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
     { "<leader>lt",  "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "Hover" },
     { "<leader>lvp", "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
     { "<leader>lvr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
@@ -134,6 +131,15 @@ return { {
     -- using Noice for hover
     -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 
+    vim.lsp.handlers["textDocument/publishDiagnostics"] =
+        vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+          -- Disable underline, it's very annoying
+          underline = false,
+          -- Enable virtual text, override spacing to 4
+          -- virtual_text = { spacing = 4 },
+          signs = true,
+          update_in_insert = false
+        })
 
 
 
@@ -241,7 +247,7 @@ return { {
         "<leader>lvt",
         "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",
         desc =
-        "View infered type"
+        "Toggle infered type"
       },
       { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",  desc = "view logs" },
       { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>", desc = "import build" },
