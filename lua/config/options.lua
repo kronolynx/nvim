@@ -7,6 +7,8 @@ local global_opt = vim.opt_global
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 g.mapleader = ' '
 g.maplocalleader = ' '
+ -- disable netrw
+g.loaded_netrwPlugin = 1
 
 global_opt.scrolloff = 5
 
@@ -25,6 +27,10 @@ opt.magic = true       -- set magic on, for regular expressions
 
 -- opt.autowrite = true -- save on buffer change
 opt.autowriteall = true -- save on buffer change -- TODO compare with autowrite
+
+
+-- disable wrap of long lines
+opt.wrap = false
 
 -- indentation
 local indent = 2
@@ -45,11 +51,15 @@ opt.signcolumn = "yes"
 opt.list = true
 opt.listchars = {
   tab = "→ ",
-  eol = "¬",
+  -- eol = "¬",
   trail = "⋅",
   extends = "❯",
   precedes = "❮"
 }
+
+-- completion
+-- opt.wildmode = "list:longest,full"
+-- opt.wildmenu = true
 
 -- don't give the "ATTENTION" message when an existing swap file is found
 opt.shortmess:append("A")

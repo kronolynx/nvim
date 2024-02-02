@@ -18,12 +18,17 @@ map("", "<C-s>", "<esc>:w!<cr>")
 -- Sudo write
 map("", "<leader>xs", ":w !sudo tee %<CR>", { noremap = true })
 
-map("n", "<leader>fo", ":copen<cr>")
-map("n", "<leader>fc", ":cclose<cr>")
-map("n", "<leader>fn", ":cnext<cr>")
-map("n", "<leader>fp", ":cprevious<cr>")
+map("n", "<leader>to", ":copen<cr>")
+map("n", "<leader>tc", ":cclose<cr>")
+map("n", "<leader>tn", ":cnext<cr>")
+map("n", "<leader>tp", ":cprevious<cr>")
 
 map("v", "<leader>p", "\"dP")
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '<leader>[d', vim.diagnostic.open_float, { desc = 'Line diagnostics' })
 
 -- Smart way to move between windows
 map("", "<C-j>", "<C-W>j")

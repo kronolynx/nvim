@@ -51,7 +51,7 @@ return {
           },
           indent_blankline = {
             enabled = true,
-            scope_color = "",              -- catppuccin color (eg. `lavender`) Default: text
+            scope_color = "lavender",      -- catppuccin color (eg. `lavender`) Default: text
             colored_indent_levels = false, -- requires extra steps to enable
           },
           neotree = true,
@@ -59,6 +59,7 @@ return {
           notify = true,
           telescope = true,
           treesitter = true,
+          treesitter_context = true,
           ufo = true,
           which_key = true,
         },
@@ -68,7 +69,7 @@ return {
               Search = { bg = colors.flamingo, fg = colors.mantle },
               LineNr = { fg = colors.overlay0 },
               CursorLine = { bg = colors.Surface1 },
-              -- IndentBlanklineChar = { fg = colors.mauve },
+              IndentBlanklineChar = { fg = colors.mantle },
             }
           end,
         },

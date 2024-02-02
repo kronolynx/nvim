@@ -1,6 +1,20 @@
 return {
   "folke/flash.nvim",
+  enable = false,
   event = "VeryLazy",
+  config = function()
+    require("flash").setup({
+      search = {
+        multi_window = true,
+        forward = true,
+        mode = "exact", -- Match exactly, or use "search" for regular search, "fuzzy" for fuzzy search
+        incremental = true, -- Behave like `incsearch`
+      },
+      jump = {
+        jumplist = true,
+      }
+    })
+  end,
   opts = {},
   keys = {
     {

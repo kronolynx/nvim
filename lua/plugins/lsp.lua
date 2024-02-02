@@ -7,74 +7,22 @@ return { {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   keys = {
+    { "<leader>gd",  "<cmd>Telescope lsp_definitions<CR>",                desc = "[D]efinitions" },
+    { "<leader>gr",  "<cmd>Telescope lsp_references<CR>",                 desc = "[R]eferences" },
+    { "<leader>gi",  "<cmd>Telescope lsp_implementations<CR>",            desc = "[I]mplementation" },
+    { "<leader>gt",  "<cmd>Telescope lsp_type_definitions<CR>",           desc = "[T]ype definition" }, -- TODO what does this do ?
+    { "<leader>vt",  "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "[T]ype documentation" },
+    { "<leader>vt",  "<cmd>lua vim.lsp.buf.hover()<CR>", mode = "v",      desc = "[T]ype documentation" },
+    { "<leader>vsd", "<cmd>Telescope lsp_document_symbol<CR>",            desc = "[s]ymbol [D]ocument " },
+    { "<leader>vsw", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>",   desc = "[s]ymbol [W]orkspace " },
+    { "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", mode = "i",   desc = "Signature help" },
+    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "[R]efactor [R]ename symbol" },
     { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
-    { "<leader>ca",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
-    -- { "<leader>ld",  "<cmd>lua vim.lsp.buf.type_definition()<CR>",        desc = "Type definition" },
+    { "<M-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
     { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>lcS", "<cmd>lua vim.lsp.start_client()<CR>",               desc = "Start client" },
-    { "<leader>lch", "<cmd>lua vim.lsp.stop_client()<CR>",                desc = "Stop client" },
-    { "<leader>lgo", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>",         desc = "Outgoing calls" },
-    { "<leader>li",  "<cmd>lua vim.lsp.buf.implementation()<CR>",         desc = "Implementation" },
-    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "Code lens run" },
-    { "<leader>ls",  "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
-    { "<leader>lt",  "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "Hover" },
-    { "<leader>lvp", "<cmd>lua vim.lsp.buf.signature_help()<CR>",         desc = "Signature" },
-    { "<leader>lvr", "<cmd>lua vim.lsp.buf.references()<CR>",             desc = "References" },
-    { "<leader>lvt", "<cmd>lua vim.lsp.buf.hover()<CR>",                  desc = "View type" },
-    { "<leader>ly",  "<cmd>lua vim.lsp.buf.document_symbol()<CR>",        desc = "Document symbol" },
-    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "Rename symbol" },
-    {
-      "<leader>lfi",
-      "<cmd>Telescope lsp_incoming_calls<CR>",
-      desc =
-      "Who calls this symbol"
-    },
-    {
-      "<leader>lfo",
-      "<cmd>Telescope lsp_outgoing_calls<CR>",
-      desc =
-      "What is called by this symbol"
-    },
-    { "<leader>lgi", "<cmd>Telescope lsp_implementations<CR>",          desc = "implementation" },
-    { "<leader>lgr", "<cmd>Telescope lsp_references<CR>",               desc = "references" },
-    { "<leader>lgt", "<cmd>Telescope lsp_type_definitions<CR>",         desc = "Type definition" },
-    { "<leader>lvs", "<cmd>Telescope lsp_document_symbol<CR>",          desc = "Document symbol" },
-    { "<leader>lvs", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>", desc = "Document symbol" },
-    { "<leader>lvs", "<cmd>Telescope lsp_workspace_symbol<CR>",         desc = "Document symbol" },
-    { "<leader>lxd", "<cmd>Telescope lsp_definitions<CR>",              desc = "Go definitions" },
-    {
-      "<leader>lxv",
-      ":vsplit | lua vim.lsp.buf.definition()<CR>",
-      desc =
-      "V split definitions"
-    },
-    {
-      "<leader>lxy",
-      ":split | lua vim.lsp.buf.definition()<CR>",
-      desc =
-      "Y split definitions"
-    },
-    -- TODO
-    -- add lspsaga bindings
-    -- vim.lsp.buf.workspace_symbol()  Lists all symbols in the current workspace in the quickfix window.
-    --*vim.lsp.buf.clear_references()* Removes document highlights from current buffer.
-    --*vim.lsp.buf.completion()* Retrieves the completion items at the current cursor position. Can only be called in Insert mode.
-    --map("n", "[d",        function() vim.diagnostic.goto_prev { wrap = false } end)
-    --map("n", "]d",        function() vim.diagnostic.goto_next { wrap = false } end)
-    --map("n", "<leader>sh", vim.lsp.buf.signature_help)
-    --map("n", "<leader>H",  vim.lsp.buf.document_highlight, {desc = "Highlights the current symbol in the entire buffer"})
-    --map("n", "<leader>nH", vim.lsp.buf.clear_references,   {desc = "Clear symbol highlights"})
-
-    -- TODO can I make this shorter ?
-    { "<leader>lgda", "<cmd>lua require('telescope.builtin').diagnostics<CR>",                  desc = "all diagnostics" },
-    {
-      "<leader>lgde",
-      "<cmd>lua require('telescope.builtin').diagnostics({severity = 'E'}<CR>",
-      desc =
-      "error diagnostics"
-    },
-    { "<leader>lgdw", "<cmd>lua require('telescope.builtin').diagnostics({severity = 'W'}<CR>", desc = "warn diagnostics" },
+    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
+    { "<leader>lgx", "<cmd>lua vim.lsp.buf.declaration",                  desc = "Go declaration" }
+    --- check what is used and what should be removed
   },
   opts = {
     setup = {
@@ -83,50 +31,61 @@ return { {
   },
   config = function()
     require('mason').setup()
-    require('mason-lspconfig').setup({
-      ensure_installed = {
-        -- Replace these with whatever servers you want to install
-        -- https://github.com/williamboman/mason-lspconfig.nvim
-        'rust_analyzer',
-        'tsserver',
-        'pyright',
-        'lua_ls',
-        'bashls',
-        'jsonls',
-        --    'hls',
-        'taplo',
-        'yamlls'
-      }
-    })
+    require('mason-lspconfig').setup()
 
-    local lspconfig = require("lspconfig")
-    -- local lsp_capabilities =
+    -- Enable the following language servers
+    --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+    --
+    --  Add any additional override configuration in the following tables. They will be passed to
+    --  the `settings` field of the server config. You must look up that documentation yourself.
+    --
+    --  If you want to override the default filetypes that your language server will attach to you can
+    --  define the property 'filetypes' to the map in question.
+    local servers = {
+      -- Replace these with whatever servers you want to install
+      -- https://github.com/williamboman/mason-lspconfig.nvim
+      pyright = {},
+      rust_analyzer = {},
+      jsonls = {},
+      yamlls = {},
+      -- tsserver = {},
+      -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+      bashls = {},
+      lua_ls = {
+        Lua = {
+          workspace = { checkThirdParty = false },
+          telemetry = { enable = false },
+          -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+          -- diagnostics = { disable = { 'missing-fields' } },
+        },
+      },
+    }
 
-    -- TODO , do I want this ???
-    -- vim.cmd [[
-    --  highlight LspDiagnosticsUnderlineError gui=NONE
-    --  highlight LspDiagnosticsUnderlineWarning gui=NONE
-    --  highlight LspDiagnosticsUnderlineInformation gui=NONE
-    --  highlight LspDiagnosticsUnderlineHint gui=NONE
-    -- ]]
-    -- vim.cmd [[
-    --  highlight LspReferenceRead gui=NONE
-    --  highlight LspReferenceText gui=NONE
-    --  highlight LspReferenceWrite gui=NONE
-    -- ]]
+    -- Setup neovim lua configuration
+    require('neodev').setup()
 
-    require('mason-lspconfig').setup_handlers({
+    -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+
+    -- Ensure the servers above are installed
+    local mason_lspconfig = require 'mason-lspconfig'
+
+    mason_lspconfig.setup {
+      ensure_installed = vim.tbl_keys(servers),
+    }
+
+    mason_lspconfig.setup_handlers {
       function(server_name)
-        -- lspconfig[server_name].setup({
-        --   capabilities = lsp_capabilities,
-        -- })
-        lspconfig[server_name].setup({})
+        require('lspconfig')[server_name].setup {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          settings = servers[server_name],
+          filetypes = (servers[server_name] or {}).filetypes,
+        }
       end,
-    })
-
-    lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-      capabilities = require("cmp_nvim_lsp").default_capabilities(),
-    })
+    }
 
     -- using Noice for hover
     -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
@@ -142,39 +101,24 @@ return { {
         })
 
 
-
-    lspconfig.jsonls.setup({
-      on_attach = on_attach,
-      commands = {
-        Format = {
-          function()
-            vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line("$"), 0 })
-          end,
-        },
-      },
-    })
-
-    -- enable completion on all lsp instances
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.textDocument.completion.completionItem.snippetSupport = true
-    local cmp_lsp = require("cmp_nvim_lsp")
-    local cmp_capabilities = cmp_lsp.default_capabilities(capabilities)
 
     -- enable code folding
     -- needs to be on cmp_capabilities or it will get overwritten
-    cmp_capabilities.textDocument.foldingRange = {
+    capabilities.textDocument.foldingRange = {
       dynamicRegistration = false,
       lineFoldingOnly = true
     }
 
-    -- -- These server just use the vanilla setup
-    local servers = { "bashls", "tsserver", "yamlls", "lua_ls" }
-    for _, server in pairs(servers) do
-      lspconfig[server].setup({
-        on_attach = on_attach,
-        capabilities = cmp_capabilities
-      })
-    end
+    -- on_attach is called for both mason_lspconfig and this because nvim-metals is installed via lazy
+    -- rather than via mason, and I want the same keybindings everywhere
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local buffer = args.buf ---@type number
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        on_attach(client, buffer)
+      end,
+    })
 
     -- Uncomment for trace logs from neovim
     --vim.lsp.set_log_level('trace')
@@ -192,10 +136,7 @@ return { {
       end
     }, -- Useful status updates for LSP
     {
-      "folke/neodev.nvim",
-      config = function()
-        require('neodev').setup()
-      end
+      "folke/neodev.nvim"
     }, -- Additional lua configuration
     {
       "ray-x/lsp_signature.nvim",
@@ -204,33 +145,34 @@ return { {
           hint_enable = true
         }
       end
+    },
+    {
+      'nvimdev/lspsaga.nvim',
+      enabled = false,
+      config = function()
+        require('lspsaga').setup({
+          ui = {
+            border = 'rounded',
+          },
+          symbol_in_winbar = {
+            enable = false
+          },
+          lightbulb = {
+            enable = true
+          },
+          outline = {
+            layout = 'float'
+          },
+          finder = {
+            edit = { "o", "<CR>" },
+            vsplit = "s",
+            split = "i",
+            tabe = "t",
+            quit = { ";", "<ESC>" },
+          },
+        })
+      end,
     }
-    -- {
-    --   'nvimdev/lspsaga.nvim',
-    --   config = function()
-    --     require('lspsaga').setup({
-    --       ui = {
-    --         border = 'rounded',
-    --       },
-    --       symbol_in_winbar = {
-    --         enable = false
-    --       },
-    --       lightbulb = {
-    --         enable = true
-    --       },
-    --       outline = {
-    --         layout = 'float'
-    --       },
-    --       finder = {
-    --         edit = { "o", "<CR>" },
-    --         vsplit = "s",
-    --         split = "i",
-    --         tabe = "t",
-    --         quit = { ";", "<ESC>" },
-    --       },
-    --     })
-    --   end,
-    -- }
   }
 },
   {
@@ -386,17 +328,13 @@ return { {
         require("metals").setup_dap()
       end
 
-      --local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
-      --api.nvim_create_autocmd("FileType", {
-      --  pattern = { "scala", "sbt" },
-      --  callback = function()
-      --    vim.notify("Metals initialize")
-      --    require("metals").initialize_or_attach(metals_config)
-      --  end,
-      --  group = nvim_metals_group,
-      --})
-
-      vim.notify("Metals initialize")
-      require("metals").initialize_or_attach(metals_config)
+      local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
+      api.nvim_create_autocmd("FileType", {
+        pattern = { "scala", "sbt", "java" },
+        callback = function()
+          require("metals").initialize_or_attach(metals_config)
+        end,
+        group = nvim_metals_group,
+      })
     end
   } }

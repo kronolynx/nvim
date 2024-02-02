@@ -16,4 +16,3 @@ cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]]) -- yank highlight
 
 -- When vimwindow is resized resize splits
 cmd([[au VimResized * exe "normal! \<c-w>="]])
-

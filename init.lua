@@ -21,3 +21,6 @@ require("config.autocmds")
 require("config.options")
 require("config.keymaps")
 require("config.lazy")
+if vim.g.neovide then
+  require("config.neovide")
+end
