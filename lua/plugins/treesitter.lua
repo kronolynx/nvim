@@ -31,7 +31,7 @@ return {
         "markdown",
         "markdown_inline",
         "python",
-        "query",
+        -- "query",
         "regex",
         "scala",
         "tsx",
