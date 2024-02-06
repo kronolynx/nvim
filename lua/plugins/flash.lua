@@ -1,44 +1,16 @@
 return {
   "folke/flash.nvim",
-  enable = false,
   event = "VeryLazy",
-  config = function()
-    require("flash").setup({
-      search = {
-        multi_window = true,
-        forward = true,
-        mode = "exact", -- Match exactly, or use "search" for regular search, "fuzzy" for fuzzy search
-        incremental = true, -- Behave like `incsearch`
-      },
-      jump = {
-        jumplist = true,
-      }
-    })
-  end,
+  -- vscode = true,
+  ---@type Flash.Config
   opts = {},
+  -- stylua: ignore
   keys = {
-    {
-      "s",
-      mode = { "n" },
-      function()
-        require("flash").jump()
-      end,
-    },
-    {
-      "<leader>s",
-      mode = { "v" },
-      function()
-        require("flash").jump()
-      end,
-    },
-    {
-      "S",
-      mode = { "n" },
-      function()
-        require("flash").treesitter()
-      end,
-      desc = "Flash Treesitter"
-    },
+    { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+    { "S",     mode = { "n", "o", "x" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+    { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+    { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     {
       "<leader><leader>l",
       mode = { "n" },
@@ -50,26 +22,12 @@ return {
         })
       end
     },
-    {
-      "<leader><leader>w",
-      mode = { "n" },
+    { "<leader>*",
       function()
         require("flash").jump({
-          pattern = ".", -- initialize pattern with any char
-          search = {
-            mode = function(pattern)
-              -- remove leading dot
-              if pattern:sub(1, 1) == "." then
-                pattern = pattern:sub(2)
-              end
-              -- return word pattern and proper skip pattern
-              return ([[\<%s\w*\>]]):format(pattern), ([[\<%s]]):format(pattern)
-            end,
-          },
-          -- select the range
-          jump = { pos = "range" },
+          pattern = vim.fn.expand("<cword>"),
         })
       end
     }
-  },
+  }
 }
