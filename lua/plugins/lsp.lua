@@ -153,6 +153,8 @@ return { {
     }, -- Additional lua configuration
     {
       "ray-x/lsp_signature.nvim",
+      -- lsp_signature overrides noice, disabled while noice is in use
+      enabled = false,
       config = function()
         require("lsp_signature").setup {
           hint_enable = true

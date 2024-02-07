@@ -229,25 +229,25 @@ return {
     }
 
     -- Noice config  -- TODO how to exclude mode form show mode ?
-    -- ins_right {
-    --   require("noice").api.status.message.get_hl,
-    --   cond = require("noice").api.status.message.has,
-    -- }
-    -- ins_right {
-    --   require("noice").api.status.command.get,
-    --   cond = require("noice").api.status.command.has,
-    --   color = { fg = colors.darkblue },
-    -- }
-    -- ins_right {
-    --   require("noice").api.status.mode.get,
-    --   cond = require("noice").api.status.mode.has,
-    --   color = { fg = colors.blue },
-    -- }
-    -- ins_right {
-    --   require("noice").api.status.search.get,
-    --   cond = require("noice").api.status.search.has,
-    --   color = { fg = colors.magenta },
-    -- }
+    ins_right {
+      require("noice").api.status.message.get_hl,
+      cond = require("noice").api.status.message.has,
+    }
+    ins_right {
+      require("noice").api.status.command.get,
+      cond = require("noice").api.status.command.has,
+      color = { fg = colors.darkblue },
+    }
+    ins_right {
+      require("noice").api.status.mode.get,
+      cond = require("noice").api.status.mode.has,
+      color = { fg = colors.blue },
+    }
+    ins_right {
+      require("noice").api.status.search.get,
+      cond = require("noice").api.status.search.has,
+      color = { fg = colors.magenta },
+    }
 
     -- Add components to right sections
     ins_right {

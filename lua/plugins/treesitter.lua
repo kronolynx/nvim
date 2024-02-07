@@ -1,14 +1,18 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
-  build = function()
-    local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-    ts_update()
-  end,
+  -- build = function()
+  --   local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+  --   ts_update()
+  -- end,
+  build = ':TSUpdate',
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-refactor',
+    -- 'nvim-treesitter/nvim-treesitter-refactor',
+    'nvim-treesitter/nvim-treesitter-context',
   },
-  config = function()
+  -- See `:help nvim-treesitter`
+  -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
+  config = vim.defer_fn(function()
     require("nvim-treesitter.configs").setup({
       playground = { enable = true },
       query_linter = {
@@ -31,7 +35,7 @@ return {
         "markdown",
         "markdown_inline",
         "python",
-        -- "query",
+        "hocon",
         "regex",
         "scala",
         "tsx",
@@ -39,13 +43,18 @@ return {
         "vim",
         "yaml",
       },
-      ignore_install = { "phpdoc" }, -- List of parsers to ignore installing
-      sync_install = false,          -- install languages synchronously (only applied to `ensure_installed`)
+      ignore_install = {},  -- List of parsers to ignore installing
+      sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
       highlight = {
-        enable = true,               -- false will disable the whole extension
-        disable = { "" },            -- list of language that will be disabled
+        enable = true,      -- false will disable the whole extension
+        disable = { "" },   -- list of language that will be disabled
       },
       indent = { enable = true, disable = { "yaml" } }
     })
-  end
+
+    require("treesitter-context").setup({
+      mode = "cursor",
+      max_lines = 3,
+    })
+  end, 0)
 }
