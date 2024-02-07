@@ -1,7 +1,8 @@
 return {
+  -- TODO switch to heirline
   'nvim-lualine/lualine.nvim',
   event = "VeryLazy",
-  enabled = true,
+  enabled = false,
   config = function()
     -- Eviline config for lualine
     -- Author: shadmansaleh
@@ -164,6 +165,14 @@ return {
       padding = { right = 1 },
     }
 
+    -- ins_left {
+    --   -- recording 
+    --   -- "@" .. vim.fn.reg_recording(),
+    --   function() return "@" .. vim.fn.reg_recording() end,
+    --   cond = vim.fn.reg_recording() ~= "",
+    --   color = { fg = colors.cyan }
+    -- }
+
     ins_left {
       -- filesize component
       'filesize',
@@ -219,7 +228,7 @@ return {
         end
         return msg
       end,
-      icon = '󱙝 LSP',
+      icon = '󱙝 ',
       cond = conditions.hide_in_width,
       color = { fg = colors.white, gui = 'bold' },
     }
@@ -229,24 +238,30 @@ return {
     }
 
     -- Noice config  -- TODO how to exclude mode form show mode ?
-    ins_right {
-      require("noice").api.status.message.get_hl,
-      cond = require("noice").api.status.message.has,
-    }
+    -- ins_right {
+    --   require("noice").api.status.message.get_hl,
+    --   cond = function() return package.loaded["noice"] and require("noice").api.status.message.has end,
+    -- }
     ins_right {
       require("noice").api.status.command.get,
-      cond = require("noice").api.status.command.has,
+      cond = function() return package.loaded["noice"] and require("noice").api.status.command.has end,
       color = { fg = colors.darkblue },
     }
     ins_right {
       require("noice").api.status.mode.get,
-      cond = require("noice").api.status.mode.has,
+      cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has end,
       color = { fg = colors.blue },
     }
+    -- ins_right {
+    --   require("noice").api.status.search.get,
+    --   cond = function() return package.loaded["noice"] and require("noice").api.status.search.has end,
+    --   color = { fg = colors.magenta },
+    -- }
+    --
     ins_right {
-      require("noice").api.status.search.get,
-      cond = require("noice").api.status.search.has,
-      color = { fg = colors.magenta },
+      function() return "  " .. require("dap").status() end,
+      cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+      color = { fg = colors.blue },
     }
 
     -- Add components to right sections

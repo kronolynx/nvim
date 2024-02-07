@@ -1,4 +1,5 @@
 return {
+  -- Problems check https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#troubleshooting
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
   -- build = function()
