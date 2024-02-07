@@ -1,6 +1,11 @@
 local api = vim.api
-local on_attach = function(_, bufnr)
+
+-- local navic = require("nvim-navic")
+local on_attach = function(client, bufnr)
   api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+  -- if client.server_capabilities.documentSymbolProvider then
+  --   navic.attach(client, bufnr)
+  -- end
 end
 
 return { {
@@ -10,7 +15,7 @@ return { {
     { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>",      desc = "[D]efinitions" },
     { "<leader>gr", "<cmd>Telescope lsp_references<CR>",       desc = "[R]eferences" },
     { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>",  desc = "[I]mplementation" },
-    { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]ype definition" },            -- TODO what does this do ?
+    { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]ype definition" }, -- TODO what does this do ?
     { "<leader>vt", "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "[T]ype documentation" },
     {
       "<leader>vt",
@@ -206,8 +211,8 @@ return { {
         desc =
         "Toggle infered type"
       },
-      { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",  desc = "view logs" },
-      { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>", desc = "import build" },
+      { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",             desc = "view logs" },
+      { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>",            desc = "import build" },
       { "<leader>lmd", "<cmd>lua require('metals').find_in_dependency_jars()<CR>", desc = "dependency jars" },
       --{ "<C-A-o>", "<cmd>lua require('metals').organize_imports()<CR>", desc = "organize imports" },
       {

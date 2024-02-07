@@ -23,7 +23,7 @@ return {
         orange = palette.peach,
         purple = palette.mauve,
         cyan = palette.teal,
-        diag_warn = palette.peach,
+        diag_warn = palette.yellow,
         diag_error = palette.maroon,
         diag_hint = palette.sky,
         diag_info = palette.sapphire,
@@ -35,6 +35,10 @@ return {
       local Align = { provider = "%=" }
       local Space = { provider = " " }
       local AlignL = { provider = "%<" }
+      local EndBar = {
+        provider = '▊',
+        hl = { fg = colors.blue },
+      }
 
       local ViMode = {
         -- get vim current mode, this information will be required by the provider
@@ -435,12 +439,12 @@ return {
 
         condition = conditions.has_diagnostics,
 
-        -- static = {
-        --   error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-        --   warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-        --   info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-        --   hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
-        -- },
+        static = {
+          error_icon = ' ',
+          warn_icon = ' ',
+          info_icon = ' ',
+          hint_icon = '?',
+        },
 
         init = function(self)
           self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
@@ -452,7 +456,7 @@ return {
         update = { "DiagnosticChanged", "BufEnter" },
 
         {
-          provider = "![",
+          provider = " ",
         },
         {
           provider = function(self)
@@ -480,7 +484,7 @@ return {
           hl = { fg = colors.diag_hint },
         },
         {
-          provider = "]",
+          provider = " ",
         },
       }
 
@@ -507,34 +511,34 @@ return {
           condition = function(self)
             return self.has_changes
           end,
-          provider = "("
+          provider = " "
         },
         {
           provider = function(self)
             local count = self.status_dict.added or 0
-            return count > 0 and ("+" .. count)
+            return count > 0 and (' ' .. count)
           end,
-          -- hl = { fg = "git_add" },
+          hl = { fg = colors.git_add },
         },
         {
           provider = function(self)
             local count = self.status_dict.removed or 0
-            return count > 0 and ("-" .. count)
+            return count > 0 and (' ' .. count)
           end,
-          -- hl = { fg = "git_del" },
+          hl = { fg = colors.git_del },
         },
         {
           provider = function(self)
             local count = self.status_dict.changed or 0
-            return count > 0 and ("~" .. count)
+            return count > 0 and (' ' .. count)
           end,
-          -- hl = { fg = "git_change" },
+          hl = { fg = colors.git_change },
         },
         {
           condition = function(self)
             return self.has_changes
           end,
-          provider = ")",
+          provider = "",
         },
       }
 
@@ -571,13 +575,13 @@ return {
       ViMode = utils.surround({ "", "" }, colors.bright_bg, { ViMode, MacroRec })
 
       local DefaultStatusline = {
-        ViMode, WorkDir, FileNameBlock,
+        EndBar, ViMode, WorkDir, FileNameBlock,
         AlignL,
         Space, Diagnostics, Align,
         Navic, DAPMessages, Align,
         LSPActive, Space, Git, FileFormat,
         { flexible = 3, { FileEncoding, Space }, { provider = "" } },
-        Space, Ruler, Space, ScrollBar
+        Space, Ruler, Space, ScrollBar, Space, EndBar
       }
 
       local InactiveStatusline = {
