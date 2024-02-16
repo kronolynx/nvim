@@ -1,0 +1,55 @@
+{
+  "pln": {
+    "prefix": "pln",
+    "body": [
+      "println(\"$1\")",
+      "$0"
+    ],
+    "description": "Log output to console"
+  },
+  "ppl": {
+    "prefix": "ppl",
+    "body": [
+      "pprint.log(${1:EXPR}, tag = \"${1:EXPR}\")"
+    ],
+    "description": "pprint log"
+  },
+  "plb": {
+    "prefix": "plb",
+    "body": [
+      "println(Console.${1:COLOR}_B + Console.BLACK + s\"${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print color background"
+  },
+  "plc": {
+    "prefix": "plc",
+    "body": [
+      "println(Console.${1:COLOR} + s\"${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print color"
+  },
+  "ppld": {
+    "prefix": "ppld",
+    "body": [
+      "\"com.lihaoyi\" %% \"pprint\" % \"0.8.1\""
+    ],
+    "description": "pprint dependency"
+  },
+  "todo": {
+    "prefix": "todo",
+    "body": [
+      "// TODO: ${1:todo} "
+    ],
+    "description": "TODO"
+  },
+  "opt": {
+    "prefix": "opt",
+    "body": [
+      "${1:OPTION} match {",
+      "\tcase Some(${2:NAME}) => ${3:SOME}",
+      "\tcase None => ${4:NONE}",
+      "}"
+    ],
+    "description": "Template for matching Option type"
+  }
+}

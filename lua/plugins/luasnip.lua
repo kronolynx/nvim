@@ -2,9 +2,6 @@ return {
   "L3MON4D3/LuaSnip",
   dependencies = {
     "rafamadriz/friendly-snippets",
-    config = function()
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end,
   },
   opts = {
     history = true,                            -- enable history
@@ -15,7 +12,11 @@ return {
   keys = function()
     return {}
   end,
-  -- config = function()
-  --   require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/lua/snippets" })
-  -- end
+  config = function(_, opts)
+    require('luasnip').setup(opts)
+    -- for friendly snippets
+    require("luasnip.loaders.from_vscode").lazy_load()
+    -- for custom snippets
+    require("luasnip.loaders.from_vscode").lazy_load({ paths = "./snippets" })
+  end,
 }
