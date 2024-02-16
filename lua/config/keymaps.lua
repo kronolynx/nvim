@@ -13,15 +13,17 @@ map("v", "uu", "<ESC>")
 -- Yank from cursor to end of line
 map("", "Y", "y$")
 -- save
-map("", "<C-s>", "<esc>:w!<cr>")
+map("n", "<C-s>", "<cmd>w!<cr>")
+map("i", "<C-s>", "<cmd>w!<cr>")
+map("v", "<C-s>", "<cmd>w!<cr>")
 
 -- Sudo write
-map("", "<leader>xs", ":w !sudo tee %<CR>", { noremap = true })
+map("", "<leader>xs", "<cmd>w !sudo tee %<CR>", { noremap = true })
 
-map("n", "<leader>to", ":copen<cr>")
-map("n", "<leader>tc", ":cclose<cr>")
-map("n", "<leader>tn", ":cnext<cr>")
-map("n", "<leader>tp", ":cprevious<cr>")
+map("n", "<leader>to", "<cmd>copen<cr>")
+map("n", "<leader>tc", "<cmd>cclose<cr>")
+map("n", "<leader>tn", "<cmd>cnext<cr>")
+map("n", "<leader>tp", "<cmd>cprevious<cr>")
 
 map("v", "<leader>p", "\"dP")
 
@@ -35,10 +37,10 @@ map("", "<C-j>", "<C-W>j")
 map("", "<C-k>", "<C-W>k")
 map("", "<C-h>", "<C-W>h")
 map("", "<C-l>", "<C-W>l")
-map("", "<A-,>", ":vertical res -5<cr>")
-map("", "<A-.>", ":vertical res +5<cr>")
-map("", "<A-lt>", ":res -5<cr>")
-map("", "<A->> ", ":res +5<cr>")
+map("n", "<A-,>", "<cmd>vertical res -3<cr>")
+map("n", "<A-.>", "<cmd>vertical res +3<cr>")
+map("n", "<A-lt>", "<cmd>horizontal res -3<cr>")
+map("n", "<A-gt> ", "<cmd>horizontal res +3<cr>") -- TODO fix me
 
 -- Make many of the jump commands also center on search term
 map("n", "n", "nzz", { noremap = true })
@@ -49,10 +51,10 @@ map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
 
 -- This unsets the "last search pattern" register by hitting return
-map("n", "<CR>", ":noh<CR><CR>", { noremap = true })
-map("", "<BS>", ":nohlsearch<CR>", { silent = true })
+map("n", "<CR>", "<cmd>noh<CR><CR>", { noremap = true })
+map("", "<BS>", "<cmd>nohlsearch<CR>", { silent = true })
 
-map("n", "<C-1>", ":Neotree toggle<CR>", { noremap = true })
+map("n", "<C-1>", "<cmd>Neotree toggle<CR>", { noremap = true })
 
 map("n", "<A-Left>", "<C-o>", { noremap = true })
 map("n", "<A-Right>", "<C-i>", { noremap = true })

@@ -7,7 +7,7 @@ return {
   },
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons",   -- not strictly required, but recommended
+    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
   deactivate = function()
@@ -27,7 +27,7 @@ return {
 
     require("neo-tree").setup({
       filesystem = {
-        hijack_netrw_behavior = "open_default"   -- "open_default", "open_current", "disabled",
+        hijack_netrw_behavior = "open_default" -- "open_default", "open_current", "disabled",
       },
       default_component_configs = {
         name = {
@@ -48,6 +48,18 @@ return {
           },
         },
       },
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function(_)
+            -- auto close
+            -- vimc.cmd("Neotree close")
+            -- OR
+            require("neo-tree.command").execute({ action = "close" })
+          end
+        },
+
+      }
     })
   end
 }
