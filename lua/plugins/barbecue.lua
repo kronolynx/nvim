@@ -49,5 +49,5 @@ return {
     },
     show_basename = true,
     show_dirname = true,
-  },
+  }
 }

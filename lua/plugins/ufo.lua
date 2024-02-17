@@ -3,7 +3,9 @@ return {
   dependencies = "kevinhwang91/promise-async",
   event = "BufReadPost",
   enabled = false,
-  opts = {},
+  opts = {
+
+  },
 
   init = function()
     -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself

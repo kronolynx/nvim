@@ -32,7 +32,7 @@ return {
         integrations = {
           cmp = true,
           flash = true,
-          gitsigns = true,
+          gitsigns = false,
           lsp_trouble = true,
           native_lsp = {
             enabled = true,

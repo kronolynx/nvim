@@ -4,7 +4,23 @@ return {
   -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
-    'rcarriga/nvim-dap-ui',
+    {
+      'rcarriga/nvim-dap-ui',
+      config = function()
+        require("dapui").setup({
+          layouts = {
+            elements = {
+              {
+                id = "repl",
+                size = 1
+              },
+              position = "bottom",
+              size = 10
+            }
+          }
+        })
+      end,
+    },
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
@@ -13,6 +29,9 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+
+    dap.listeners.before.event_terminated.dapui_config = nil
+    dap.listeners.before.event_exited.dapui_config = nil
 
     dap.configurations.scala = {
       {
