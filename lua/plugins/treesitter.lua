@@ -2,15 +2,8 @@ return {
   -- Problems check https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#troubleshooting
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
-  -- build = function()
-  --   local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-  --   ts_update()
-  -- end,
   build = ':TSUpdate',
-  dependencies = {
-    -- 'nvim-treesitter/nvim-treesitter-refactor',
-    'nvim-treesitter/nvim-treesitter-context',
-  },
+  dependencies = { },
   -- See `:help nvim-treesitter`
   -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
   config = vim.defer_fn(function()
@@ -53,9 +46,11 @@ return {
       indent = { enable = true, disable = { "yaml" } }
     })
 
-    require("treesitter-context").setup({
-      mode = "cursor",
-      max_lines = 3,
-    })
+    -- Ensure Hocon files are recognized as hocon for syntax highlighting
+    local hocon_group = vim.api.nvim_create_augroup("hocon", { clear = true })
+    vim.api.nvim_create_autocmd(
+      { 'BufNewFile', 'BufRead' },
+      { group = hocon_group, pattern = '*/resources/*.conf', command = 'set ft=hocon' }
+    )
   end, 0)
 }

@@ -1,31 +1,30 @@
 local api = vim.api
 
--- local navic = require("nvim-navic")
 local on_attach = function(client, bufnr)
   api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-  -- if client.server_capabilities.documentSymbolProvider then
-  --   navic.attach(client, bufnr)
-  -- end
+  require("lsp-inlayhints").on_attach(client, bufnr)
 end
 
 return { {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   keys = {
-    { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>",      desc = "[D]efinitions" },
-    { "<leader>gr", "<cmd>Telescope lsp_references<CR>",       desc = "[R]eferences" },
-    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>",  desc = "[I]mplementation" },
-    { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "[T]ype definition" }, -- TODO what does this do ?
-    { "<leader>vt", "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "[T]ype documentation" },
+    { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>",      desc = "definitions" },
+    -- { "<leader>gd", "<cmd>lua require('fzf-lua').lsp_definitions()<CR>",     desc = "definitions" },
+    { "<leader>gr", "<cmd>Telescope lsp_references<CR>",       desc = "references" },
+    -- { "<leader>gr", "<cmd>lua require('fzf-lua').lsp_references()<CR>",      desc = "references" },
+    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>", desc = "implementation" },
+    -- { "<leader>gi", "<cmd>lua require('fzf-lua').lsp_implementations()<CR>", desc = "implementation" },
+    { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "type definition" },
+    -- { "<leader>gt", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>",        desc = "type definition" },
+    { "<leader>vh", "<cmd>lua vim.lsp.buf.hover()<CR>",                      desc = "type documentation" },
     {
-      "<leader>vt",
+      "<leader>vh",
       "<cmd>lua vim.lsp.buf.hover()<CR>",
       mode = "v",
       desc =
       "[T]ype documentation"
     },
-    { "<leader>vsd", "<cmd>Telescope lsp_document_symbol<CR>",          desc = "[s]ymbol [D]ocument " },
-    { "<leader>vsw", "<cmd>Telescope lsp_dynamic_workspace_symbol<CR>", desc = "[s]ymbol [W]orkspace " },
     {
       "<C-k>",
       "<cmd>lua vim.lsp.buf.signature_help()<CR>",
@@ -33,14 +32,15 @@ return { {
       desc =
       "Signature help"
     },
-    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "[R]efactor [R]ename symbol" },
-    { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
-    { "<M-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Code action" },
-    { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run<CR>",                 desc = "code [L]ens" },
-    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "Format" },
-    { "<leader>lgx", "<cmd>lua vim.lsp.buf.declaration",                  desc = "Go declaration" }
-    --- check what is used and what should be removed
+    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
+    { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "code action" },
+    -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "Code action" },
+    { "<M-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "code action" },
+    -- { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
+    { "<leader>la",  "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
+    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",                desc = "code lens" },
+    -- { "<leader>ll",  function() vim.lsp.codelens.run end,                 desc = "code [L]ens" },
+    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>",  desc = "format" },
   },
   opts = {
     setup = {
@@ -146,42 +146,36 @@ return { {
     "williamboman/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     {
-      "j-hui/fidget.nvim",
-      enabled = false,
-      tag = 'legacy',
-      config = function()
-        require('fidget').setup()
-      end
-    }, -- Useful status updates for LSP
-    {
       "folke/neodev.nvim"
     }, -- Additional lua configuration
     {
-      "ray-x/lsp_signature.nvim",
-      -- lsp_signature overrides noice, disabled while noice is in use
-      enabled = false,
+      "lvimuser/lsp-inlayhints.nvim",
       config = function()
-        require("lsp_signature").setup {
-          hint_enable = true
-        }
+        require("lsp-inlayhints").setup()
       end
     },
     {
       'nvimdev/lspsaga.nvim',
-      enabled = false,
+      enabled = true,
+      keys = {
+        { "<leader>gR", "<cmd>Lspsaga finder ++normal<CR>",         desc = "saga find" },
+        { "<leader>gT", "<cmd>Lspsaga goto_type_definition<CR>",    desc = "saga goto type" },
+        { "<leader>vt", "<cmd>Lspsaga peek_type_definition<CR>",    desc = "saga peek typedef" },
+        { "<leader>gD", "<cmd>Lspsaga goto_definition<CR>",         desc = "saga go to def" },
+        { "<leader>vd", "<cmd>Lspsaga peek_definition<CR>",         desc = "saga peek def" },
+        { "<leader>ve", "<cmd>Lspsaga show_cursor_diagnostics<CR>", desc = "saga cursor diagnostic" },
+        { "<leader>vH", "<cmd>Lspsaga hover_doc<CR>",               desc = "saga hover" },
+      },
       config = function()
         require('lspsaga').setup({
-          ui = {
-            border = 'rounded',
-          },
           symbol_in_winbar = {
             enable = false
           },
           lightbulb = {
-            enable = true
+            enable = false
           },
           outline = {
-            layout = 'float'
+            layout = 'normal'
           },
           finder = {
             edit = { "o", "<CR>" },
@@ -199,7 +193,7 @@ return { {
     'scalameta/nvim-metals',
     enabled = true,
     keys = {
-      { "<leader>lmc", ":Telescope metals commands<CR>",                                         desc = "Commands" },
+      { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                         desc = "Commands" },
       --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },
       { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "Hover worksheet" },
       -- { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                 desc = "Toggle tree" },
@@ -236,7 +230,6 @@ return { {
       --================================
       local metals_config = require("metals").bare_config()
 
-      local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
       metals_config.tvp = {
         icons = {
           enabled = true
@@ -256,6 +249,7 @@ return { {
         },
       }
 
+      -- using fidget for status
       metals_config.init_options.statusBarProvider = "on"
       -- *READ THIS*
       -- I *highly* recommend setting statusBarProvider to true, however if you do,
