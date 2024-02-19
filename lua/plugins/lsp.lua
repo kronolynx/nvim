@@ -63,6 +63,7 @@ return { {
       -- Replace these with whatever servers you want to install
       -- https://github.com/williamboman/mason-lspconfig.nvim
       pyright = {},
+      kotlin_language_server = {},
       rust_analyzer = {},
       jsonls = {},
       yamlls = {},

@@ -22,20 +22,17 @@ return {
   keys = {
     -- { "<leader>ml", "<cmd>Telescope git_commits<CR>" },
     -- { "<leader>sp", "<cmd>lua require('telescope.builtin').spell_suggest()<cr>" },
-    -- { "<leader>tr", "<cmd>lua require('telescope.builtin').buffers({show_all_buffers = false, sort_mru=true, ignore_current_buffer=true})<cr>", desc = "recent tabs" },
-    -- { "<leader>tr", "lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<CR>", desc = "Buffers" },
     { "<leader>/", telescope_live_grep_open_files, { desc = 'search [/] in Open Files' } },
     { "<leader>bs", "<cmd>Telescope marks<CR>",                                                                  desc = "marks" },
     { "<leader>fp", "<cmd>lua require('telescope.builtin').live_grep()<cr>",                                     desc = "find in files" },
     { "<leader>ft", "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>",                     desc = "find in tab" },
-    { "<leader>gf", "<cmd>Telescope find_files<CR>",                                                             desc = "Find files" },
     { "<leader>gf", "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",                      desc = "find files" },
-    { "<leader>lxq", "<cmd> lua require('telescope.builtin').quickfix()<cr>",                                    desc = "quickfix"},
+    { "<leader>lq", "<cmd>lua require('telescope.builtin').quickfix()<cr>",                                      desc = "quickfix"},
     { "<leader>mf", "<cmd>lua require('telescope.builtin').git_files({show_untracked=true})<cr>",                desc = "files" },
     { "<leader>sp", "<cmd>Telescope live_grep<CR>",                                                              desc = "search in files" },
     { "<leader>ss", "<cmd>Telescope grep_string<CR>",                                                            desc = "search cword in files"},
     { "<leader>to", "<cmd>lua require('telescope.builtin').oldfiles({only_cwd=true, sort_lastused = true})<cr>", desc = "tabs old" },
-    { "<leader>tr", "<cmd>Telescope buffers<CR>",                                                                desc = "Buffers" },
+    { "<leader>tr", "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true})<CR>",                desc = "buffers" },
     { "<leader>vE", "<cmd>Telescope diagnostics<CR>",                                                            desc = "errors" },
     { "<leader>vk", "<cmd>Telescope keymaps<CR>",                                                                desc = "Keymaps" },
   },
@@ -47,8 +44,8 @@ return {
     local function filename_first(_, path)
       local tail = vim.fs.basename(path)
       local parent = vim.fn.fnamemodify(vim.fs.dirname(path), ":.")
-      if(vim.fn.len(parent) > 70) then
-        parent = vim.fn.pathshorten(parent, 2)
+      if(vim.fn.len(parent) > 80) then
+        parent = vim.fn.pathshorten(parent, 3)
       end
       if parent == "." then
         return tail
