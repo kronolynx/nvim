@@ -348,7 +348,7 @@ return {
           error_icon = ' ',
           warn_icon = ' ',
           info_icon = ' ',
-          hint_icon = '?', -- TODO replace with bulb
+          hint_icon = '💡', -- TODO use icon instead of emoji
         },
 
         init = function(self)

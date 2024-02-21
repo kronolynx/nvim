@@ -18,10 +18,10 @@ return {
   },
   config = function()
     require("noice").setup({
-      cmdline = {
-        -- view ="cmdline" -- "cmdline_popup"
-        view = "cmdline_popup"
-      },
+      -- cmdline = {
+      --   -- view ="cmdline" -- "cmdline_popup"
+      --   view = "cmdline_popup"
+      -- },
       lsp = {
         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
         override = {
@@ -35,6 +35,10 @@ return {
         {
           filter = { event = "msg_show", find = '^".*" %d*L, %d*B written$' },
           opts = { skip = true },
+        },
+        {
+          filter = { event = "msg_show", find = "search hit" },
+          skip = true
         },
         -- Ignore `undo` message
         {

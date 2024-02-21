@@ -18,33 +18,44 @@ return {
         require("telescope").load_extension("fzf")
       end,
     },
+    {
+      "nvim-telescope/telescope-live-grep-args.nvim",
+    },
   },
   keys = {
     -- { "<leader>ml", "<cmd>Telescope git_commits<CR>" },
     -- { "<leader>sp", "<cmd>lua require('telescope.builtin').spell_suggest()<cr>" },
-    { "<leader>/", telescope_live_grep_open_files, { desc = 'search [/] in Open Files' } },
+    { "<leader>/",  telescope_live_grep_open_files,                                                              { desc = 'search [/] in Open Files' } },
     { "<leader>bs", "<cmd>Telescope marks<CR>",                                                                  desc = "marks" },
     { "<leader>fp", "<cmd>lua require('telescope.builtin').live_grep()<cr>",                                     desc = "find in files" },
     { "<leader>ft", "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>",                     desc = "find in tab" },
     { "<leader>gf", "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",                      desc = "find files" },
-    { "<leader>lq", "<cmd>lua require('telescope.builtin').quickfix()<cr>",                                      desc = "quickfix"},
+    { "<leader>sf", "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",                      desc = "file" },
+    { "<leader>lq", "<cmd>lua require('telescope.builtin').quickfix()<cr>",                                      desc = "quickfix" },
     { "<leader>mf", "<cmd>lua require('telescope.builtin').git_files({show_untracked=true})<cr>",                desc = "files" },
-    { "<leader>sp", "<cmd>Telescope live_grep<CR>",                                                              desc = "search in files" },
-    { "<leader>ss", "<cmd>Telescope grep_string<CR>",                                                            desc = "search cword in files"},
+    { "<leader>sp", "<cmd>Telescope live_grep<CR>",                                                              desc = "files" },
+    { "<leader>sP", "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",              desc = "files with args" },
+    { "<leader>sr", "<cmd>Telescope resume<CR>",                                                                 desc = "resume" },
+    { "<leader>sc", "<cmd>Telescope grep_string<CR>",                                                            desc = "word at cursor" },
     { "<leader>to", "<cmd>lua require('telescope.builtin').oldfiles({only_cwd=true, sort_lastused = true})<cr>", desc = "tabs old" },
     { "<leader>tr", "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true})<CR>",                desc = "buffers" },
     { "<leader>vE", "<cmd>Telescope diagnostics<CR>",                                                            desc = "errors" },
     { "<leader>vk", "<cmd>Telescope keymaps<CR>",                                                                desc = "Keymaps" },
+    { "<leader>ssd", "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",                desc = "dynamic workspace" },
+    { "<leader>ssw", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>",                        desc = "workspace" },
+    { "<leader>sss", "<cmd>lua require('telescope.builtin').lsp_symbols()<CR>",                                  desc = "symbols" },
+    { "<leader>ssf", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>",                         desc = "file workspace" },
   },
   config = function()
     local action_layout = require("telescope.actions.layout")
     local actions = require("telescope.actions")
     local telescope = require("telescope")
+    local lga_actions = require("telescope-live-grep-args.actions")
 
     local function filename_first(_, path)
       local tail = vim.fs.basename(path)
       local parent = vim.fn.fnamemodify(vim.fs.dirname(path), ":.")
-      if(vim.fn.len(parent) > 80) then
+      if (vim.fn.len(parent) > 80) then
         parent = vim.fn.pathshorten(parent, 3)
       end
       if parent == "." then
@@ -64,18 +75,32 @@ return {
     })
 
     telescope.setup({
-      defaults = {
-        extensions = {
-          ["ui-select"] = {
-            require("telescope.themes").get_dropdown {}
-          },
-          fzf = {
-            fuzzy = true,                   -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true,    -- override the file sorter
-            case_mode = "smart_case",       -- or "ignore_case" or "respect_case", the default case_mode is "smart_case"
-          }
+      extensions = {
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown {}
         },
+        fzf = {
+          fuzzy = true,                     -- false will only do exact matching
+          override_generic_sorter = true,   -- override the generic sorter
+          override_file_sorter = true,      -- override the file sorter
+          case_mode = "smart_case",         -- or "ignore_case" or "respect_case", the default case_mode is "smart_case"
+        },
+        live_grep_args = {
+          auto_quoting = true, -- enable/disable auto-quoting
+          -- define mappings, e.g.
+          mappings = {         -- extend mappings
+            i = {
+              ["<C-k>"] = lga_actions.quote_prompt(),
+              ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+            },
+          },
+          -- ... also accepts theme settings, for example:
+          -- theme = "dropdown", -- use dropdown theme
+          -- theme = { }, -- use own theme spec
+          -- layout_config = { mirror=true }, -- mirror preview pane
+        }
+      },
+      defaults = {
         path_display = filename_first,
         -- path_display = { "smart" },
         pickers = {
@@ -114,5 +139,6 @@ return {
 
     telescope.load_extension("ui-select")
     telescope.load_extension("fzf")
+    telescope.load_extension("live_grep_args")
   end,
 }

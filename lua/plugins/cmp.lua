@@ -48,6 +48,7 @@ return {
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete {},
         ["<C-e>"] = cmp.mapping.abort(),
+        ['<Right>'] = cmp.mapping.confirm {},
         ["<CR>"] = cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Replace,
           select = true
@@ -134,6 +135,8 @@ return {
       mapping = cmp.mapping.preset.cmdline({
         ['<Down>'] = { c = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }) },
         ['<Up>'] = { c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }) },
+        ['<Right>'] = { c = cmp.mapping.confirm {} },
+        ['<CR>'] = { c = cmp.mapping.confirm {} },
       }),
       sources = cmp.config.sources({
         { name = 'path' }

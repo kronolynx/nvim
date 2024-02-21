@@ -164,7 +164,8 @@ return { {
         { "<leader>vt", "<cmd>Lspsaga peek_type_definition<CR>",    desc = "saga peek typedef" },
         { "<leader>gD", "<cmd>Lspsaga goto_definition<CR>",         desc = "saga go to def" },
         { "<leader>vd", "<cmd>Lspsaga peek_definition<CR>",         desc = "saga peek def" },
-        { "<leader>ve", "<cmd>Lspsaga show_cursor_diagnostics<CR>", desc = "saga cursor diagnostic" },
+        -- { "<leader>ve", "<cmd>Lspsaga show_cursor_diagnostics<CR>", desc = "saga cursor diagnostic" },
+        { "<leader>ve", "<cmd>lua vim.diagnostic.open_float()<CR>", desc = "saga cursor diagnostic" },
         { "<leader>vH", "<cmd>Lspsaga hover_doc<CR>",               desc = "saga hover" },
       },
       config = function()
@@ -194,12 +195,11 @@ return { {
     'scalameta/nvim-metals',
     enabled = true,
     keys = {
-      { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                         desc = "Commands" },
+      { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                         desc = "commands" },
       --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },
-      { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "Hover worksheet" },
-      -- { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",                 desc = "Toggle tree" },
-      -- { "<leader>ff",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "Find in tree" },
-      { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "View implicits" },
+      { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "hover worksheet" },
+      { "<leader>lmf",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "find in tree" },
+      { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "view implicits" },
       {
         "<leader>lvt",
         "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",
@@ -209,7 +209,8 @@ return { {
       { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",             desc = "view logs" },
       { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>",            desc = "import build" },
       { "<leader>lmd", "<cmd>lua require('metals').find_in_dependency_jars()<CR>", desc = "dependency jars" },
-      --{ "<C-A-o>", "<cmd>lua require('metals').organize_imports()<CR>", desc = "organize imports" },
+      { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",    desc = "tree view "},
+      { "<leader>lmo", "<cmd>lua require('metals').organize_imports()<CR>",        desc = "organize imports" },
       {
         "<leader>lvt",
         "<Esc><cmd>lua require('metals').type_of_range()<CR>",

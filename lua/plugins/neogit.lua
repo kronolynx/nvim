@@ -8,6 +8,6 @@ return {
   },
   config = true,
   keys = {
-    { "<leader>mo",  "<cmd>:Neogit cwd=%:p:h<CR>",                desc = "[O]pen neogit" },
+    { "<leader>mo",  "<cmd>:Neogit cwd=%:p:h<CR>",                desc = "open neogit" },
   }
 }
