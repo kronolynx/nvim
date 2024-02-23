@@ -67,6 +67,7 @@ return { {
       rust_analyzer = {},
       jsonls = {},
       yamlls = {},
+      marksman = {},
       -- tsserver = {},
       -- html = { filetypes = { 'html', 'twig', 'hbs'} },
       bashls = {},

@@ -61,5 +61,9 @@ opt.listchars = {
 -- opt.wildmode = "list:longest,full"
 -- opt.wildmenu = true
 
--- don't give the "ATTENTION" message when an existing swap file is found
-opt.shortmess:append("A")
+-- suppress messages
+-- :h shortmess 
+opt.shortmess:append("A") -- ATTENTION swap
+opt.shortmess:append("s") -- hit BOTTOM
+opt.shortmess:append("I") -- intro message when starting
+

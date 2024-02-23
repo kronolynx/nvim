@@ -33,12 +33,8 @@ return {
       routes = {
         -- Ignore `written` message
         {
-          filter = { event = "msg_show", find = '^".*" %d*L, %d*B written$' },
+          filter = { event = "msg_show", kind = "", find = "written" },
           opts = { skip = true },
-        },
-        {
-          filter = { event = "msg_show", find = "search hit" },
-          skip = true
         },
         -- Ignore `undo` message
         {

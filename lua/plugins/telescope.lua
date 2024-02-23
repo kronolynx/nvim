@@ -36,7 +36,7 @@ return {
     { "<leader>sp", "<cmd>Telescope live_grep<CR>",                                                              desc = "files" },
     { "<leader>sP", "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",              desc = "files with args" },
     { "<leader>sr", "<cmd>Telescope resume<CR>",                                                                 desc = "resume" },
-    { "<leader>sc", "<cmd>Telescope grep_string<CR>",                                                            desc = "word at cursor" },
+    { "<leader>sw", "<cmd>Telescope grep_string<CR>",                                                            desc = "word at cursor" },
     { "<leader>to", "<cmd>lua require('telescope.builtin').oldfiles({only_cwd=true, sort_lastused = true})<cr>", desc = "tabs old" },
     { "<leader>tr", "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true})<CR>",                desc = "buffers" },
     { "<leader>vE", "<cmd>Telescope diagnostics<CR>",                                                            desc = "errors" },
