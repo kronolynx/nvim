@@ -4,8 +4,7 @@ return {
   opts = {
     -- direction = 'horizontal',
     direction = 'float',
-    open_mapping = [[<c-\>]],
-
+    open_mapping = [[<F2>]],
   },
   config = function(_, opts)
     local Terminal = require('toggleterm.terminal').Terminal
