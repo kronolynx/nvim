@@ -12,6 +12,7 @@ return {
       ["<leader>g"] = { name = "+[g]oto" },
       ["<leader>h"] = { name = "+[h]arpoon" },
       ["<leader>l"] = { name = "+[l]SP" },
+      ["<leader>ld"] = { name = "+[d]ebug" },
       ["<leader>lf"] = { name = "+[f]ind" },
       ["<leader>lg"] = { name = "+[g]oto" },
       ["<leader>lm"] = { name = "+[m]etals" },

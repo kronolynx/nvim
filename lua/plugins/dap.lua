@@ -6,20 +6,20 @@ return {
     -- Creates a beautiful debugger UI
     {
       'rcarriga/nvim-dap-ui',
-      config = function()
-        require("dapui").setup({
-          layouts = {
-            elements = {
-              {
-                id = "repl",
-                size = 1
-              },
-              position = "bottom",
-              size = 10
-            }
-          }
-        })
-      end,
+      'theHamsta/nvim-dap-virtual-text',
+      {
+        'LiadOz/nvim-dap-repl-highlights',
+        config = true,
+        dependencies = {
+          "mfussenegger/nvim-dap",
+          "nvim-treesitter/nvim-treesitter",
+        },
+        build = function()
+          if not require("nvim-treesitter.parsers").has_parser("dap_repl") then
+            vim.cmd(":TSInstall dap_repl")
+          end
+        end,
+      }
     },
 
     -- Installs the debug adapters for you
@@ -30,10 +30,24 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
 
-    dap.listeners.before.event_terminated.dapui_config = nil
-    dap.listeners.before.event_exited.dapui_config = nil
-
+    -- :h metals-nvim-dap
     dap.configurations.scala = {
+      {
+        type = "scala",
+        request = "launch",
+        name = "Run or Test",
+        metals = {
+          runType = "runOrTestFile",
+        }
+      },
+      {
+        type = "scala",
+        request = "launch",
+        name = "Test Target",
+        metals = {
+          runType = "testTarget",
+        },
+      },
       {
         type = "scala",
         request = "launch",
@@ -44,22 +58,6 @@ return {
             local args_string = vim.fn.input("Arguments: ")
             return vim.split(args_string, " +")
           end,
-        },
-      },
-      {
-        type = "scala",
-        request = "launch",
-        name = "Run or Test",
-        metals = {
-          runType = "runOrTestFile",
-        },
-      },
-      {
-        type = "scala",
-        request = "launch",
-        name = "Test Target",
-        metals = {
-          runType = "testTarget",
         },
       },
     }
@@ -81,14 +79,17 @@ return {
     }
 
     --
-    vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'Debug: [c]ontinue/Start' })
-    vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Debug: Step [i]nto' })
-    vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Debug: Step [o]ver' })
-    vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = 'Debug: Step [O]ut' })
-    vim.keymap.set('n', '<leader>dt', dap.toggle_breakpoint, { desc = 'Debug: [t]oggle breakpoint' })
-    vim.keymap.set('n', '<leader>db', function()
+    vim.keymap.set('n', '<leader>ldr', dap.continue, { desc = '[r]un continue/start' })
+    vim.keymap.set('n', '<leader>ldi', dap.step_into, { desc = 'step [i]nto' })
+    vim.keymap.set('n', '<leader>ldo', dap.step_over, { desc = 'step [o]ver' })
+    vim.keymap.set('n', '<leader>ldO', dap.step_out, { desc = 'step [O]ut' })
+    vim.keymap.set('n', '<leader>ldb', dap.toggle_breakpoint, { desc = '[t]oggle breakpoint' })
+    vim.keymap.set('n', '<leader>ldB', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = 'Debug: Set [b]reakpoint' })
+    end, { desc = 'set [B]reakpoint condition' })
+    -- vim.keymap.set('n', '<leader>ldr', dap.toggle_repl, { desc = '[l]ast session result.' })
+    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+    vim.keymap.set('n', '<leader>ldt', dapui.toggle, { desc = '[t]oggle ui' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -97,6 +98,15 @@ return {
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+      mappings = {
+        -- Use a table to apply multiple mappings
+        expand = { "<CR>", "<2-LeftMouse>" },
+        open = "o",
+        remove = "d",
+        edit = "e",
+        repl = "r",
+        toggle = "t",
+      },
       controls = {
         icons = {
           pause = '⏸',
@@ -110,13 +120,66 @@ return {
           disconnect = '⏏',
         },
       },
+
+      -- layouts = {
+      --   elements = {
+      --     {
+      --       id = "repl",
+      --       size = 1
+      --     },
+      --     position = "bottom",
+      --     size = 10
+      --   }
+      -- }
+      layouts = {
+        {
+          elements = {
+            -- Elements can be strings or table with id and size keys.
+            { id = "scopes", size = 0.25 },
+            "breakpoints",
+            "stacks",
+            "watches",
+          },
+          size = 40, -- 40 columns
+          position = "left",
+        },
+        {
+          elements = {
+            "repl",
+            -- "console",
+          },
+          size = 0.25, -- 25% of total lines
+          position = "bottom",
+        },
+      },
+      floating = {
+        max_height = nil, -- These can be integers or a float between 0 and 1.
+        max_width = nil,  -- Floats will be treated as percentage of your screen.
+        mappings = {
+          close = { "q", "<Esc>" },
+        },
+      },
+      windows = { indent = 1 },
+      render = {
+        max_type_length = nil, -- Can be integer or nil.
+      },
     }
 
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Debug: See last session result.' })
 
-    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "", linehl = "", numhl = "" })
+    vim.fn.sign_define("DapStopped", { text = "", texthl = "", linehl = "", numhl = "" })
+
+    -- Automatically open UI
+    dap.listeners.after.event_initialized["dapui_config"] = function()
+      dapui.open()
+    end
+    dap.listeners.after.event_terminated["dapui_config"] = nil
+    -- dap.listeners.after.event_terminated["dapui_config"] = function()
+    --   dapui.close()
+    -- end
+    dap.listeners.before.event_exited["dapui_config"] = nil
+    -- dap.listeners.before.event_exited["dapui_config"] = function()
+    --   dapui.close()
+    -- end
   end,
 }

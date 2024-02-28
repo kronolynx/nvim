@@ -13,11 +13,11 @@ return { {
     -- { "<leader>gd", "<cmd>lua require('fzf-lua').lsp_definitions()<CR>",     desc = "definitions" },
     { "<leader>gr", "<cmd>Telescope lsp_references<CR>",       desc = "references" },
     -- { "<leader>gr", "<cmd>lua require('fzf-lua').lsp_references()<CR>",      desc = "references" },
-    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>", desc = "implementation" },
+    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>",  desc = "implementation" },
     -- { "<leader>gi", "<cmd>lua require('fzf-lua').lsp_implementations()<CR>", desc = "implementation" },
     { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "type definition" },
     -- { "<leader>gt", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>",        desc = "type definition" },
-    { "<leader>vh", "<cmd>lua vim.lsp.buf.hover()<CR>",                      desc = "type documentation" },
+    { "<leader>vh", "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "type documentation" },
     {
       "<leader>vh",
       "<cmd>lua vim.lsp.buf.hover()<CR>",
@@ -32,15 +32,16 @@ return { {
       desc =
       "Signature help"
     },
-    { "<leader>rr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
-    { "<C-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "code action" },
+    { "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
+    -- { "<C-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
+    { "<C-CR>", "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
     -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "Code action" },
-    { "<M-CR>",      "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "code action" },
+    { "<M-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
     -- { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>la",  "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
-    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",                desc = "code lens" },
+    { "<leader>la", "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
+    { "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<CR>",                desc = "code lens" },
     -- { "<leader>ll",  function() vim.lsp.codelens.run end,                 desc = "code [L]ens" },
-    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>",  desc = "format" },
+    { "<leader>=",  "<cmd>lua vim.lsp.buf.format({ async = true })<CR>",  desc = "format" },
   },
   opts = {
     setup = {
@@ -196,10 +197,10 @@ return { {
     'scalameta/nvim-metals',
     enabled = true,
     keys = {
-      { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                         desc = "commands" },
+      { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                     desc = "commands" },
       --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },
       { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "hover worksheet" },
-      { "<leader>lmf",  "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "find in tree" },
+      { "<leader>lmf", "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "find in tree" },
       { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "view implicits" },
       {
         "<leader>lvt",
@@ -210,7 +211,7 @@ return { {
       { "<leader>lml", "<cmd>lua require('metals').toggle_logs()<CR>",             desc = "view logs" },
       { "<leader>lmi", "<cmd>lua require('metals').import_build()<CR>",            desc = "import build" },
       { "<leader>lmd", "<cmd>lua require('metals').find_in_dependency_jars()<CR>", desc = "dependency jars" },
-      { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",    desc = "tree view "},
+      { "<leader>lmt", "<cmd>lua require('metals.tvp').toggle_tree_view()<CR>",    desc = "tree view " },
       { "<leader>lmo", "<cmd>lua require('metals').organize_imports()<CR>",        desc = "organize imports" },
       {
         "<leader>lvt",
@@ -219,6 +220,7 @@ return { {
         desc =
         "View type"
       },
+      { "<leader>lms", "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" }
     },
     ft = { "scala", "sbt" },
     dependencies = {
@@ -240,10 +242,15 @@ return { {
       }
 
       metals_config.settings = {
-        showImplicitArguments = true,
+        -- :h metals-settings
+        showImplicitArguments = false,
         showImplicitConversionsAndClasses = true,
+        defaultBspToBuildTool = true,
+        autoImportBuild = true,
         showInferredType = true,
         superMethodLensesEnabled = true,
+        enableSemanticHighlighting = false,
+        testUserInterface = "Test Explorer",
         excludedPackages = {
           "akka.actor.typed.javadsl",
           "com.github.swagger.akka.javadsl",
@@ -273,32 +280,31 @@ return { {
 
       metals_config.on_attach = function(client, bufnr)
         on_attach(client, bufnr)
-
+        local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
         -- -- A lot of the servers I use won't support document_highlight or codelens,
         -- -- so we juse use them in Metals
-        -- api.nvim_create_autocmd("CursorHold", {
-        --   callback = vim.lsp.buf.document_highlight,
-        --   buffer = bufnr,
-        --   group = lsp_group,
-        -- })
-        -- api.nvim_create_autocmd("CursorMoved", {
-        --   callback = vim.lsp.buf.clear_references,
-        --   buffer = bufnr,
-        --   group = lsp_group,
-        -- })
-        -- api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-        --   callback = vim.lsp.codelens.refresh,
-        --   buffer = bufnr,
-        --   group = lsp_group,
-        -- })
-        -- api.nvim_create_autocmd("FileType", {
-        --   pattern = { "dap-repl" },
-        --   callback = function()
-        --     require("dap.ext.autocompl").attach()
-        --   end,
-        --   group = lsp_group,
-        -- })
-
+        api.nvim_create_autocmd("CursorHold", {
+          callback = vim.lsp.buf.document_highlight,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd("CursorMoved", {
+          callback = vim.lsp.buf.clear_references,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+          callback = vim.lsp.codelens.refresh,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        api.nvim_create_autocmd("FileType", {
+          pattern = { "dap-repl" },
+          callback = function()
+            require("dap.ext.autocompl").attach()
+          end,
+          group = lsp_group,
+        })
 
         require("metals").setup_dap()
       end

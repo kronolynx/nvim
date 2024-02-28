@@ -5,6 +5,7 @@ return {
     -- direction = 'horizontal',
     direction = 'float',
     open_mapping = [[<F2>]],
+    auto_scroll = false
   },
   config = function(_, opts)
     local Terminal = require('toggleterm.terminal').Terminal
