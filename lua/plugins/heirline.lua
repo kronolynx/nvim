@@ -308,16 +308,26 @@ return {
 
         -- You can keep it simple,
         -- provider = " [LSP]",
+        --
+        flexible  = 2,
 
-        -- Or complicate things a bit and get the servers names
-        provider  = function()
-          local names = {}
-          for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            table.insert(names, server.name)
-          end
-          return " [" .. table.concat(names, " ") .. "]"
-        end,
-        hl        = { fg = colors.green, bold = true },
+        {
+          provider = function()
+            local names = {}
+            for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+              table.insert(names, server.name)
+            end
+            return " [" .. table.concat(names, " ") .. "]"
+          end,
+          hl       = { fg = colors.green, bold = true },
+        },
+        {
+          provider = function()
+            return " "
+          end,
+          hl       = { fg = colors.green, bold = true },
+        }
+
       }
 
       local MetalsStatus = {
@@ -348,7 +358,7 @@ return {
           error_icon = ' ',
           warn_icon = ' ',
           info_icon = ' ',
-          hint_icon = '💡', -- TODO use icon instead of emoji
+          hint_icon = '', -- TODO use icon instead of emoji
         },
 
         init = function(self)
@@ -393,7 +403,31 @@ return {
         },
       }
 
-      local Git = {
+      local GitBranch = {
+        condition = conditions.is_git_repo,
+
+        init = function(self)
+          self.status_dict = vim.b.gitsigns_status_dict
+          self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or
+              self.status_dict.changed ~= 0
+        end,
+
+        hl = { fg = colors.orange },
+
+        flexible = 1,
+        { -- git branch name
+          provider = function(self)
+            return " " .. self.status_dict.head
+          end,
+          hl = { bold = true }
+        },
+        {
+          -- evaluates to "", hiding the component
+          provider = "",
+        }
+      }
+
+      local GitChanges = {
         condition = conditions.is_git_repo,
 
         init = function(self)
@@ -405,12 +439,6 @@ return {
         hl = { fg = colors.orange },
 
 
-        { -- git branch name
-          provider = function(self)
-            return " " .. self.status_dict.head
-          end,
-          hl = { bold = true }
-        },
         -- You could handle delimiters, icons and counts similar to Diagnostics
         {
           condition = function(self)
@@ -484,7 +512,7 @@ return {
         AlignL,
         Space, Diagnostics, Align,
         DAPMessages, Align,
-        LSPActive, MetalsStatus, Space, Git, FileFormat,
+        LSPActive, MetalsStatus, Space, GitBranch, GitChanges, FileFormat,
         { flexible = 3, { FileEncoding, Space }, { provider = "" } },
         Space, Ruler, Space, ScrollBar, Space, EndBar
       }
@@ -494,6 +522,7 @@ return {
         FileNameBlock,
         Space,
         Align,
+        GitBranch
       }
 
       local SpecialStatusline = {

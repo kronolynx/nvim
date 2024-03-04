@@ -32,9 +32,9 @@ return { {
       desc =
       "Signature help"
     },
-    { "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
+    { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
     -- { "<C-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
-    { "<C-CR>", "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
+    { "<C-CR>",     "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
     -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "Code action" },
     { "<M-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
     -- { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
@@ -220,7 +220,9 @@ return { {
         desc =
         "View type"
       },
-      { "<leader>lms", "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" }
+      { "<leader>lms",  "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" },
+      { "<leader>ldst", "<cmd>MetalsSelectTestCase<CR>",                                      desc = "test case" },
+      { "<leader>ldss", "<cmd>MetalsSelectTestSuite<CR>",                                     desc = "test suite" },
     },
     ft = { "scala", "sbt" },
     dependencies = {

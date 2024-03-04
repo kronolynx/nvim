@@ -10,8 +10,8 @@ return {
     { "<leader>mhn", "<cmd>Gitsigns next_hunk<CR>",                 desc = "next" },
     { "<leader>mhp", "<cmd>Gitsigns prev_hunk<CR>",                 desc = "previous" },
     { "<leader>mv",  "<cmd>Gitsigns toggle_current_line_blame<CR>", desc = "View blame" },
-    { "<leader>ms",  "<cmd>Gitsigns stage_buffer<CR>",              desc = "stage buffer" },
-    { "<leader>mr",  "<cmd>Gitsigns reset_buffer<CR>",              desc = "reset buffer" },
+    { "<leader>mS",  "<cmd>Gitsigns stage_buffer<CR>",              desc = "stage buffer" },
+    { "<leader>mR",  "<cmd>Gitsigns reset_buffer<CR>",              desc = "reset buffer" },
   },
   opts = {
   },

@@ -37,10 +37,6 @@ map("", "<C-j>", "<C-W>j")
 map("", "<C-k>", "<C-W>k")
 map("", "<C-h>", "<C-W>h")
 map("", "<C-l>", "<C-W>l")
-map("n", "<A-,>", "<cmd>vertical res -3<cr>")
-map("n", "<A-.>", "<cmd>vertical res +3<cr>")
-map("n", "<A-lt>", "<cmd>horizontal res -3<cr>")
-map("n", "<A-gt> ", "<cmd>horizontal res +3<cr>") -- TODO fix me
 
 -- Make many of the jump commands also center on search term
 map("n", "n", "nzz", { noremap = true })
@@ -55,6 +51,3 @@ map("n", "<CR>", "<cmd>noh<CR><CR>", { noremap = true })
 map("", "<BS>", "<cmd>nohlsearch<CR>", { silent = true })
 
 map("n", "<C-1>", "<cmd>Neotree toggle<CR>", { noremap = true })
-
-map("n", "<A-Left>", "<C-o>", { noremap = true })
-map("n", "<A-Right>", "<C-i>", { noremap = true })

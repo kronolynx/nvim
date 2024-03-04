@@ -3,7 +3,7 @@ return {
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
   build = ':TSUpdate',
-  dependencies = { },
+  dependencies = {},
   -- See `:help nvim-treesitter`
   -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
   config = vim.defer_fn(function()
