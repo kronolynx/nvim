@@ -413,6 +413,14 @@ return {
         end,
 
         hl = { fg = colors.orange },
+        on_click = {
+          callback = function()
+            vim.defer_fn(function()
+              vim.cmd("Telescope git_branches")
+            end, 100)
+          end,
+          name = "heirline_git",
+        },
 
         flexible = 1,
         { -- git branch name
