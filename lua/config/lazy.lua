@@ -10,8 +10,6 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-
-vim.opt.rtp:prepend(lazypath)
 --
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
 -- vim.cmd([[
@@ -29,6 +27,19 @@ end
 
 return lazy.setup("plugins",
   {
-    change_detection =
-    { notify = false }
+    change_detection = { notify = false },
+    performance = {
+        rtp = {
+            -- Stuff I don't use.
+            disabled_plugins = {
+                'gzip',
+                'netrwPlugin',
+                'rplugin',
+                'tarPlugin',
+                'tohtml',
+                'tutor',
+                'zipPlugin',
+            },
+        },
+    },
   })
