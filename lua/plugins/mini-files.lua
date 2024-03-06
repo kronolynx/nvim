@@ -25,6 +25,12 @@ local function map_split(buf_id, lhs, direction)
   vim.keymap.set('n', lhs, rhs, { buffer = buf_id, desc = 'Split ' .. string.sub(direction, 12) })
 end
 
+local filter_show = function(fs_entry) return true end
+
+local filter_hide = function(fs_entry)
+  return not vim.startswith(fs_entry.name, '.')
+end
+
 return {
   'echasnovski/mini.files',
   lazy = false,
@@ -41,7 +47,14 @@ return {
           require('mini.files').open(bufname, false)
         end
       end,
-      desc = 'File explorer',
+      desc = 'file explorer',
+    },
+    {
+      '<leader>E',
+      function()
+        require('mini.files').open(vim.loop.cwd(), true)
+      end,
+      desc = 'file explorer pwd',
     },
   },
   opts = {
@@ -51,9 +64,7 @@ return {
       go_out_plus = '<tab>',
     },
     content = {
-      filter = function(entry)
-        return entry.fs_type ~= 'file' or entry.name ~= '.DS_Store'
-      end,
+      filter = filter_hide,
       sort = function(entries)
         local function compare_alphanumerically(e1, e2)
           -- Put directories first.
@@ -102,6 +113,24 @@ return {
     local minifiles = require 'mini.files'
 
     minifiles.setup(opts)
+
+    local show_dotfiles = false
+
+
+    local toggle_dotfiles = function()
+      show_dotfiles = not show_dotfiles
+      local new_filter = show_dotfiles and filter_show or filter_hide
+      minifiles.refresh({ content = { filter = new_filter } })
+    end
+
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'MiniFilesBufferCreate',
+      callback = function(args)
+        local buf_id = args.data.buf_id
+        -- Tweak left-hand side of mapping to your liking
+        vim.keymap.set('n', 'g.', toggle_dotfiles, { buffer = buf_id })
+      end,
+    })
 
     vim.api.nvim_create_autocmd('User', {
       desc = 'Add rounded corners to minifiles window',
