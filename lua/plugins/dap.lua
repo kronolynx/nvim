@@ -1,7 +1,5 @@
 return {
-  -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
-  -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
     {
@@ -89,40 +87,18 @@ return {
     {
       'jbyuki/one-small-step-for-vimkind',
       keys = {
-        { '<leader>ldl', "<cmd>lua require('osv').launch { port = 8086 }<CR>", desc = 'Launch Lua adapter' }
+        { '<leader>dl', "<cmd>lua require('osv').launch { port = 8086 }<CR>", desc = 'Launch Lua adapter' }
       },
-    },
-    {
-      -- Installs the debug adapters for you
-      'williamboman/mason.nvim'
-    },
-    {
-      'jay-babu/mason-nvim-dap.nvim',
-      opts = {
-        -- Makes a best effort to setup the various debuggers with
-        -- reasonable debug configurations
-        automatic_setup = true,
-
-        -- You can provide additional configuration to the handlers,
-        -- see mason-nvim-dap README for more information
-        handlers = {},
-
-        -- You'll need to check that you have the required things installed
-        -- online, please don't ask me how to install them :)
-        ensure_installed = {
-          -- Update this to ensure that you have the debuggers for the langs you want
-        },
-      }
     },
   },
   keys = {
-    { '<leader>ldr', "<cmd>lua require('dap').continue()<CR>",                                           { desc = '[r]un continue/start' } },
-    { '<leader>ldi', "<cmd>lua require('dap').step_into()<CR>",                                          { desc = 'step [i]nto' } },
-    { '<leader>ldo', "<cmd>lua require('dap').step_over()<CR>",                                          { desc = 'step [o]ver' } },
-    { '<leader>ldO', "<cmd>lua require('dap').step_out()<CR>",                                           { desc = 'step [O]ut' } },
-    { '<leader>ldb', "<cmd>lua require('dap').toggle_breakpoint()<CR>",                                  { desc = 'toggle [b]reakpoint' } },
-    { '<leader>ldB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>", { desc = 'set [B]reakpoint condition' } },
-    { '<leader>ldt', "<cmd>lua require('dapui').toggle()<CR>",                                           { desc = '[t]oggle ui' } },
+    { '<leader>dr', "<cmd>lua require('dap').continue()<CR>",                                           desc = '[r]un continue/start' },
+    { '<leader>di', "<cmd>lua require('dap').step_into()<CR>",                                          desc = 'step [i]nto' },
+    { '<leader>do', "<cmd>lua require('dap').step_over()<CR>",                                          desc = 'step [o]ver' },
+    { '<leader>dO', "<cmd>lua require('dap').step_out()<CR>",                                           desc = 'step [O]ut' },
+    { '<leader>db', "<cmd>lua require('dap').toggle_breakpoint()<CR>",                                  desc = 'toggle [b]reakpoint' },
+    { '<leader>dB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>", desc = 'set [B]reakpoint condition' },
+    { '<leader>dt', "<cmd>lua require('dapui').toggle()<CR>",                                           desc = '[t]oggle ui' },
   },
   config = function()
     local dap = require 'dap'

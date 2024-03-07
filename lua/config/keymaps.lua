@@ -27,10 +27,6 @@ map("n", "<leader>tp", "<cmd>cprevious<cr>", {desc = "previous"})
 
 map("v", "<leader>p", "\"dP")
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>[d', vim.diagnostic.open_float, { desc = 'Line diagnostics' })
 
 -- Smart way to move between windows
 map("", "<C-j>", "<C-W>j")

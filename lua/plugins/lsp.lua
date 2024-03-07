@@ -9,21 +9,24 @@ return { {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
   keys = {
-    { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>",      desc = "definitions" },
+    { "<leader>gc",  name = "call" },
+    { "<leader>gci", "<cmd>Telescope lsp_incoming_calls<CR>",   desc = "incoming" },
+    { "<leader>gco", "<cmd>Telescope lsp_outgoing_calls<CR>",   desc = "outgoing" },
+    { "<leader>gd",  "<cmd>Telescope lsp_definitions<CR>",      desc = "definitions" },
     -- { "<leader>gd", "<cmd>lua require('fzf-lua').lsp_definitions()<CR>",     desc = "definitions" },
-    { "<leader>gr", "<cmd>Telescope lsp_references<CR>",       desc = "references" },
+    { "<leader>gr",  "<cmd>Telescope lsp_references<CR>",       desc = "references" },
     -- { "<leader>gr", "<cmd>lua require('fzf-lua').lsp_references()<CR>",      desc = "references" },
-    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>",  desc = "implementation" },
+    { "<leader>gi",  "<cmd>Telescope lsp_implementations<CR>",  desc = "implementation" },
     -- { "<leader>gi", "<cmd>lua require('fzf-lua').lsp_implementations()<CR>", desc = "implementation" },
-    { "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", desc = "type definition" },
+    { "<leader>gt",  "<cmd>Telescope lsp_type_definitions<CR>", desc = "type definition" },
     -- { "<leader>gt", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>",        desc = "type definition" },
-    { "<leader>vh", "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "type documentation" },
+    { "<leader>vh",  "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "type documentation" },
     {
       "<leader>vh",
       "<cmd>lua vim.lsp.buf.hover()<CR>",
       mode = "v",
       desc =
-      "[T]ype documentation"
+      "[t]ype documentation"
     },
     {
       "<C-k>",
@@ -32,16 +35,17 @@ return { {
       desc =
       "Signature help"
     },
-    { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>",                  desc = "refactor rename symbol" },
+    { "<leader>lr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "rename symbol" },
     -- { "<C-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
-    { "<C-CR>",     "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
-    -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "Code action" },
-    { "<M-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
-    -- { "<leader>la",  "<cmd>lua vim.lsp.buf.code_action()<CR>",            desc = "Action" },
-    { "<leader>la", "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
-    { "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<CR>",                desc = "code lens" },
-    -- { "<leader>ll",  function() vim.lsp.codelens.run end,                 desc = "code [L]ens" },
-    { "<leader>=",  "<cmd>lua vim.lsp.buf.format({ async = true })<CR>",  desc = "format" },
+    -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
+    { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "code lens" },
+    { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "format" },
+
+    -- Diagnostic keymaps
+    { "<leader>ldc", "<cmd>lua vim.diagnostic.open_float()<CR>",          desc = "current" },
+    { '<leader>ldp', "<cmd>lua vim.diagnostic.goto_prev()<CR>",           desc = 'previous' },
+    { '<leader>ldn', "<cmd>lua vim.diagnostic.goto_next()<CR>",           desc = 'next' },
+    { "<leader>ldv", "<cmd>Telescope diagnostics<CR>",                    desc = "view" },
   },
   opts = {
     setup = {
@@ -51,6 +55,7 @@ return { {
   config = function()
     require('mason').setup()
     require('mason-lspconfig').setup()
+
 
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -152,6 +157,29 @@ return { {
       "folke/neodev.nvim"
     }, -- Additional lua configuration
     {
+      "aznhe21/actions-preview.nvim",
+      keys = {
+        { "<C-CR>", '<cmd>lua require("actions-preview").code_actions()<CR>', mode = { "v", "n" } },
+      },
+      config = function()
+        require("actions-preview").setup {
+          telescope = {
+            sorting_strategy = "ascending",
+            layout_strategy = "vertical",
+            layout_config = {
+              width = 0.8,
+              height = 0.9,
+              prompt_position = "top",
+              preview_cutoff = 20,
+              preview_height = function(_, _, max_lines)
+                return max_lines - 15
+              end,
+            },
+          },
+        }
+      end,
+    },
+    {
       "lvimuser/lsp-inlayhints.nvim",
       config = function()
         require("lsp-inlayhints").setup()
@@ -161,14 +189,12 @@ return { {
       'nvimdev/lspsaga.nvim',
       enabled = true,
       keys = {
-        { "<leader>gR", "<cmd>Lspsaga finder ++normal<CR>",         desc = "saga find" },
-        { "<leader>gT", "<cmd>Lspsaga goto_type_definition<CR>",    desc = "saga goto type" },
-        { "<leader>vt", "<cmd>Lspsaga peek_type_definition<CR>",    desc = "saga peek typedef" },
-        { "<leader>gD", "<cmd>Lspsaga goto_definition<CR>",         desc = "saga go to def" },
-        { "<leader>vd", "<cmd>Lspsaga peek_definition<CR>",         desc = "saga peek def" },
-        -- { "<leader>ve", "<cmd>Lspsaga show_cursor_diagnostics<CR>", desc = "saga cursor diagnostic" },
-        { "<leader>ve", "<cmd>lua vim.diagnostic.open_float()<CR>", desc = "saga cursor diagnostic" },
-        { "<leader>vH", "<cmd>Lspsaga hover_doc<CR>",               desc = "saga hover" },
+        { "<leader>gR", "<cmd>Lspsaga finder ++normal<CR>",      desc = "saga find" },
+        { "<leader>gT", "<cmd>Lspsaga goto_type_definition<CR>", desc = "saga goto type" },
+        { "<leader>vt", "<cmd>Lspsaga peek_type_definition<CR>", desc = "saga peek typedef" },
+        { "<leader>gD", "<cmd>Lspsaga goto_definition<CR>",      desc = "saga go to def" },
+        { "<leader>vd", "<cmd>Lspsaga peek_definition<CR>",      desc = "saga peek def" },
+        { "<leader>vH", "<cmd>Lspsaga hover_doc<CR>",            desc = "saga hover" },
       },
       config = function()
         require('lspsaga').setup({
@@ -196,12 +222,14 @@ return { {
   {
     'scalameta/nvim-metals',
     enabled = true,
+    event = 'VeryLazy',
     keys = {
       { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                     desc = "commands" },
       --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },
       { "<leader>lmw", "<cmd>lua require('metals').hover_worksheet({ border = 'single' })<CR>",  desc = "hover worksheet" },
       { "<leader>lmf", "<cmd>lua require('metals.tvp').reveal_in_tree()<CR>",                    desc = "find in tree" },
       { "<leader>lvi", "<cmd>lua require('metals').toggle_setting('showImplicitArguments')<CR>", desc = "view implicits" },
+
       {
         "<leader>lvt",
         "<cmd>lua require('metals').toggle_setting('showInferredType')<CR>",
@@ -220,9 +248,9 @@ return { {
         desc =
         "View type"
       },
-      { "<leader>lms",  "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" },
-      { "<leader>ldst", "<cmd>MetalsSelectTestCase<CR>",                                      desc = "test case" },
-      { "<leader>ldss", "<cmd>MetalsSelectTestSuite<CR>",                                     desc = "test suite" },
+      { "<leader>lms", "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" },
+      { "<leader>dst", "<cmd>MetalsSelectTestCase<CR>",                                      desc = "test case" },
+      { "<leader>dss", "<cmd>MetalsSelectTestSuite<CR>",                                     desc = "test suite" },
     },
     ft = { "scala", "sbt" },
     dependencies = {
@@ -232,9 +260,15 @@ return { {
       "nvim-lspconfig"
     },
     config = function()
+      -- require('mini.clue').set_mapping_desc('n', '<leader>lm', '+metals')
+
       --================================
       -- Metals specific setup
       --================================
+
+      -- local miniclue = require 'mini.clue'
+      -- miniclue.set_mapping_desc('n', '<leader>lm', 'metals')
+
       local metals_config = require("metals").bare_config()
 
       metals_config.tvp = {

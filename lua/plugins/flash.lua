@@ -20,14 +20,16 @@ return {
           label = { after = { 0, 0 } },
           pattern = "^"
         })
-      end
+      end,
+      desc = "select line"
     },
-    { "<leader>*",
+    { "<leader><leader>w",
       function()
         require("flash").jump({
           pattern = vim.fn.expand("<cword>"),
         })
-      end
+      end,
+      desc = "select current word"
     }
   }
 }
