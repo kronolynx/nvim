@@ -17,9 +17,6 @@ map("n", "<C-s>", "<cmd>update!<cr>")
 map("i", "<C-s>", "<cmd>update!<cr>")
 map("v", "<C-s>", "<cmd>update!<cr>")
 
--- Sudo write
-map("", "<leader>xs", "<cmd>w !sudo tee %<CR>", { noremap = true })
-
 map("n", "<leader>to", "<cmd>copen<cr>", {desc = "open"})
 map("n", "<leader>tc", "<cmd>cclose<cr>", {desc = "close"})
 map("n", "<leader>tn", "<cmd>cnext<cr>", {desc = "next"})

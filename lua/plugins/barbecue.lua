@@ -1,4 +1,5 @@
 return {
+  -- bread crumbs
   "utilyre/barbecue.nvim",
   name = "barbecue",
   version = "*",

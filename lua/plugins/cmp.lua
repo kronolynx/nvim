@@ -6,7 +6,6 @@ return {
     { "hrsh7th/cmp-cmdline" },
     { "hrsh7th/cmp-emoji" },
     { "hrsh7th/cmp-nvim-lsp" },
-    { "hrsh7th/cmp-nvim-lsp-signature-help" },
     { "hrsh7th/cmp-path" },
     { "onsails/lspkind.nvim" },
     { "saadparwaiz1/cmp_luasnip" },
