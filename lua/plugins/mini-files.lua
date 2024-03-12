@@ -105,7 +105,11 @@ return {
         end, sorted)
       end,
     },
-    windows = { width_nofocus = 25 },
+    windows = {
+      width_nofocus = 25,
+      preview = false,
+      width_preview = 80
+    },
     -- Move stuff to the minifiles trash instead of it being gone forever.
     options = { permanent_delete = false },
   },
@@ -114,8 +118,22 @@ return {
 
     minifiles.setup(opts)
 
-    local show_dotfiles = false
+    local show_preview = false
 
+    local toggle_preview = function()
+      show_preview = not show_preview
+      minifiles.refresh({ windows = { preview = show_preview } })
+    end
+
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'MiniFilesBufferCreate',
+      callback = function(args)
+        local buf_id = args.data.buf_id
+        vim.keymap.set('n', '<M-p>', toggle_preview, { buffer = buf_id })
+      end,
+    })
+
+    local show_dotfiles = false
 
     local toggle_dotfiles = function()
       show_dotfiles = not show_dotfiles

@@ -3,7 +3,6 @@ return {
   event = "WinNew",
   dependencies = {
     { "anuvyklack/middleclass" },
-    { "anuvyklack/animation.nvim", enabled = false },
   },
   keys = {
     { "<M-z>", "<cmd>WindowsMaximize<cr>", desc = "Zoom" },
