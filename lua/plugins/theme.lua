@@ -66,7 +66,7 @@ return {
         highlight_overrides = {
           all = function(colors)
             return {
-              Search = { bg = colors.flamingo, fg = colors.mantle },
+              Search = { bg = colors.surface1 },
               LineNr = { fg = colors.overlay0 },
               CursorLine = { bg = colors.Surface1 },
               IndentBlanklineChar = { fg = colors.mantle },

@@ -58,10 +58,15 @@ return {
     },
   },
   opts = {
+    -- Module mappings created only inside explorer.
+    -- Use `''` (empty string) to not create one.
     mappings = {
-      show_help = '?',
-      go_in_plus = '<cr>',
+      go_in_plus  = '<cr>',
       go_out_plus = '<tab>',
+      reset       = '<BS>',
+      reveal_cwd  = '_',
+      show_help   = 'gh',
+      synchronize = '=',
     },
     content = {
       filter = filter_hide,

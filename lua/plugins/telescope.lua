@@ -21,30 +21,49 @@ return {
     {
       "nvim-telescope/telescope-live-grep-args.nvim",
     },
+    {
+      "isak102/telescope-git-file-history.nvim",
+      dependencies = { "tpope/vim-fugitive" }
+    }
   },
   keys = {
     -- { "<leader>sp", "<cmd>lua require('telescope.builtin').spell_suggest()<cr>" },
     -- { "<leader>sp",   "<cmd>Telescope live_grep<CR>",                                                              desc = "files" },
-    { "<leader>bs",  "<cmd>Telescope marks<CR>",                                                                  desc = "marks" },
-    { "<leader>gf",  "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",                      desc = "find files" },
-    { "<leader>lq",  "<cmd>lua require('telescope.builtin').quickfix()<cr>",                                      desc = "quickfix" },
-    { "<leader>mb",  "<cmd>lua require('telescope.builtin').git_branches()<cr>",                                  desc = "branches" },
-    { "<leader>mc",  "<cmd>lua require('telescope.builtin').git_commits()<cr>",                                   desc = "commits" },
-    { "<leader>ms",  "<cmd>lua require('telescope.builtin').git_status()<cr>",                                    desc = "status" },
-    { "<leader>sP",  "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",              desc = "files with args" },
-    { "<leader>sb",  "<cmd>Telescope current_buffer_fuzzy_find fuzzy=false<CR>",                                  desc = "buffer" },
-    { "<leader>sf",  "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",                      desc = "file" },
-    { "<leader>so",  telescope_live_grep_open_files,                                                              desc = 'open Files' },
-    { "<leader>sp",  "<cmd>lua require('telescope.builtin').live_grep()<cr>",                                     desc = "files" },
-    { "<leader>sr",  "<cmd>Telescope resume<CR>",                                                                 desc = "resume" },
-    { "<leader>ssd", "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",                 desc = "dynamic workspace" },
-    { "<leader>ssf", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>",                          desc = "file workspace" },
-    { "<leader>ssw", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>",                         desc = "workspace" },
-    { "<leader>st",  "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>",                     desc = "current tab" },
-    { "<leader>sw",  "<cmd>Telescope grep_string<CR>",                                                            desc = "word at cursor" },
-    { "<leader>to",  "<cmd>lua require('telescope.builtin').oldfiles({only_cwd=true, sort_lastused = true})<cr>", desc = "old" },
-    { "<leader>tr",  "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true})<CR>",                desc = "recent" },
-    { "<leader>vk",  "<cmd>Telescope keymaps<CR>",                                                                desc = "Keymaps" },
+    { "<leader>bs",  "<cmd>Telescope marks<CR>",                                                         desc = "marks" },
+    { "<leader>gf",  "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",             desc = "find files" },
+    { "<leader>lq",  "<cmd>lua require('telescope.builtin').quickfix()<cr>",                             desc = "quickfix" },
+    -- git
+    { "<leader>mb",  "<cmd>lua require('telescope.builtin').git_branches()<cr>",                         desc = "branches" },
+    { "<leader>mc",  "<cmd>lua require('telescope.builtin').git_commits()<cr>",                          desc = "commits" },
+    { "<leader>ms",  "<cmd>lua require('telescope.builtin').git_status()<cr>",                           desc = "status" },
+    { "<leader>mp",  "<cmd>lua require('telescope').extensions.git_file_history.git_file_history()<cr>", desc = "preview history" },
+    -- search
+    { "<leader>sP",  "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",     desc = "files with args" },
+    { "<leader>sb",  "<cmd>Telescope current_buffer_fuzzy_find fuzzy=false<CR>",                         desc = "buffer" },
+    { "<leader>sf",  "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",             desc = "file" },
+    { "<leader>so",  telescope_live_grep_open_files,                                                     desc = 'open Files' },
+    { "<leader>sp",  "<cmd>lua require('telescope.builtin').live_grep()<cr>",                            desc = "files" },
+    { "<leader>sr",  "<cmd>Telescope resume<CR>",                                                        desc = "resume" },
+    { "<leader>ssd", "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",        desc = "dynamic workspace" },
+    { "<leader>ssf", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>",                 desc = "file workspace" },
+    {
+      "<leader>ssw",
+      function()
+        vim.ui.input({ prompt = "Workspace symbols: " }, function(query)
+          require("telescope.builtin").lsp_workspace_symbols({ query = query })
+        end)
+      end,
+      desc = "workspace"
+    },
+    { "<leader>st", "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>",                     desc = "current tab" },
+    { "<leader>sw", "<cmd>Telescope grep_string<CR>",                                                            desc = "word at cursor" },
+    -- help
+    { "<leader>gh", "<cmd>lua require('telescope.builtin').help_tags()<CR>",                                     desc = "help" },
+    -- buffers
+    { "<leader>to", "<cmd>lua require('telescope.builtin').oldfiles({only_cwd=true, sort_lastused = true})<cr>", desc = "old" },
+    { "<leader>tr", "<cmd>lua require('telescope.builtin').buffers({ sort_lastused = true})<CR>",                desc = "recent" },
+
+    { "<leader>vk", "<cmd>Telescope keymaps<CR>",                                                                desc = "Keymaps" },
   },
   config = function()
     local action_layout = require("telescope.actions.layout")
@@ -137,5 +156,6 @@ return {
     telescope.load_extension("ui-select")
     telescope.load_extension("fzf")
     telescope.load_extension("live_grep_args")
+    telescope.load_extension("git_file_history")
   end,
 }

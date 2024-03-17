@@ -21,6 +21,7 @@ return {
       { "<leader>gt",  "<cmd>Telescope lsp_type_definitions<CR>", desc = "type definition" },
       -- { "<leader>gt", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>",        desc = "type definition" },
       { "<leader>vh",  "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "type documentation" },
+      { "<leader>h",   "<cmd>lua vim.lsp.buf.hover()<CR>",        desc = "hover type documentation" },
       {
         "<leader>vh",
         "<cmd>lua vim.lsp.buf.hover()<CR>",

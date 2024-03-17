@@ -63,7 +63,8 @@ opt.listchars = {
 
 -- suppress messages
 -- :h shortmess 
-opt.shortmess:append("A") -- ATTENTION swap
+opt.shortmess:append("c") -- "match 1 of 2", "The only match", "Pattern not found", "Back at original", etc.
 opt.shortmess:append("s") -- hit BOTTOM
+opt.shortmess:append("A") -- ATTENTION swap
 opt.shortmess:append("I") -- intro message when starting
 
