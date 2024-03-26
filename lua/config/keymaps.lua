@@ -23,7 +23,7 @@ map("n", "<leader>tn", "<cmd>cnext<cr>", {desc = "next"})
 map("n", "<leader>tp", "<cmd>cprevious<cr>", {desc = "previous"})
 
 map("v", "<leader>p", "\"dP")
-
+map("n", "<F1>", "<Esc>")
 
 -- Smart way to move between windows
 map("", "<C-j>", "<C-W>j")

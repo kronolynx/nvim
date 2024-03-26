@@ -40,13 +40,13 @@ return {
       -- { "<C-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
       -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
       { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "code lens" },
-      { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "format" },
+      -- { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "format" },
 
       -- Diagnostic keymaps
       { "<leader>ldc", "<cmd>lua vim.diagnostic.open_float()<CR>",          desc = "current" },
       { '<leader>ldp', "<cmd>lua vim.diagnostic.goto_prev()<CR>",           desc = 'previous' },
       { '<leader>ldn', "<cmd>lua vim.diagnostic.goto_next()<CR>",           desc = 'next' },
-      { "<leader>ldv", "<cmd>Telescope diagnostics<CR>",                    desc = "view" },
+      { "<leader>lds", "<cmd>Telescope diagnostics<CR>",                    desc = "show" },
     },
     opts = {
       setup = {
@@ -78,7 +78,7 @@ return {
         -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
         bashls = {},
-        lua_ls = {
+        lua_ls = { -- TODO fix maybe name is lua-language_server
           Lua = {
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
@@ -154,6 +154,7 @@ return {
       "folke/neodev.nvim",
       {
         "aznhe21/actions-preview.nvim",
+        event = 'VeryLazy',
         keys = {
           { "<C-CR>", '<cmd>lua require("actions-preview").code_actions()<CR>', mode = { "v", "n" } },
         },
@@ -180,7 +181,8 @@ return {
   {
     'scalameta/nvim-metals',
     enabled = true,
-    event = 'VeryLazy',
+    -- event = 'VeryLazy',
+    lazy = true,
     keys = {
       { "<leader>lmc", "<cmd>Telescope metals commands<CR>",                                     desc = "commands" },
       --{ "<leader>lmc", "<cmd>lua require('telescope').extensions.metals.commands()<CR>",        desc = "Commands" },

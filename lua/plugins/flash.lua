@@ -1,6 +1,6 @@
 return {
   "folke/flash.nvim",
-  event = "VeryLazy",
+  lazy = true,
   -- vscode = true,
   ---@type Flash.Config
   opts = {},
@@ -23,7 +23,8 @@ return {
       end,
       desc = "select line"
     },
-    { "<leader><leader>w",
+    {
+      "<leader><leader>w",
       function()
         require("flash").jump({
           pattern = vim.fn.expand("<cword>"),

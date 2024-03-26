@@ -1,6 +1,6 @@
 return {
   "sontungexpt/url-open",
-  event = "VeryLazy",
+  lazy = true,
   cmd = "URLOpenUnderCursor",
   keys = {
     { "<leader>gx", "<cmd>URLOpenUnderCursor<CR>", desc = "Open URL" }

@@ -1,6 +1,7 @@
 return {
   'echasnovski/mini.bufremove',
   config = true,
+  lazy = true,
   keys = {
     {
       '<leader>td',

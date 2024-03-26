@@ -1,6 +1,6 @@
 return {
   "folke/trouble.nvim",
-  event = "VeryLazy",
+  lazy = true,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     use_diagnostic_signs = true

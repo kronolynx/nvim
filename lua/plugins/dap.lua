@@ -1,9 +1,11 @@
 return {
   'mfussenegger/nvim-dap',
+  lazy = true,
   dependencies = {
     -- Creates a beautiful debugger UI
     {
       'rcarriga/nvim-dap-ui',
+      dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
       -- For more information, see |:help nvim-dap-ui|
       opts = {
         -- Set icons to characters that are more likely to work in every terminal.

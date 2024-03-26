@@ -1,5 +1,6 @@
 return {
   "NeogitOrg/neogit",
+  lazy = true,
   dependencies = {
     "nvim-lua/plenary.nvim",         -- required
     "nvim-telescope/telescope.nvim", -- optional
@@ -7,6 +8,6 @@ return {
   },
   config = true,
   keys = {
-    { "<leader>mo",  "<cmd>:Neogit cwd=%:p:h<CR>",                desc = "open neogit" },
+    { "<leader>mo", "<cmd>:Neogit cwd=%:p:h<CR>", desc = "open neogit" },
   }
 }

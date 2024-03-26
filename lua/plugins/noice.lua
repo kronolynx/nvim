@@ -49,6 +49,10 @@ return {
           filter = { event = "msg_show", find = "^%d+ .*; after #%d+  %d+.*ago$" },
           opts = { skip = true },
         },
+        {
+          filter = { event = "msg_show", find = "^E486: Pattern not found:.*" },
+          opts = { skip = true },
+        },
       },
       -- you can enable a preset for easier configuration
       presets = {
