@@ -1,11 +1,20 @@
 return {
   "folke/trouble.nvim",
   lazy = true,
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  opts = {
-    use_diagnostic_signs = true
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
+  keys = {
+    {
+      "<leader>dt",
+      "<cmd>TroubleToggle workspace_diagnostics<cr>",
+      desc = "Diagnostics (Trouble)",
+    },
+    {
+      "<leader>dT",
+      "<cmd>TroubleToggle document_diagnostics<cr>",
+      desc = "Buffer Diagnostics (Trouble)",
+    },
   },
+  opts = {
+    use_diagnostic_signs = true,
+    auto_close = true,
+  }
 }
