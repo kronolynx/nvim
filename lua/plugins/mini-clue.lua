@@ -97,11 +97,11 @@ return {
       clues = {
         -- Leader/movement groups.
         { mode = 'n', keys = '<leader>b',  desc = '+buffers' },
-        { mode = 'n', keys = '<leader>d',  desc = '+debug' },
+        { mode = 'n', keys = '<leader>d',  desc = '+diagnostics' },
         { mode = 'n', keys = '<leader>g',  desc = '+goto' },
         { mode = 'n', keys = '<leader>gc', desc = '+call' },
         { mode = 'n', keys = '<leader>l',  desc = '+lsp' },
-        { mode = 'n', keys = '<leader>ld', desc = '+diagnostics' },
+        { mode = 'n', keys = '<leader>ld', desc = '+debug' },
         { mode = 'n', keys = '<leader>lm', desc = '+metals' },
         { mode = 'n', keys = '<leader>lv', desc = '+view' },
         { mode = 'n', keys = '<leader>m',  desc = '+magit' },

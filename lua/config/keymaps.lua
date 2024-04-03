@@ -31,6 +31,9 @@ map("", "<C-k>", "<C-W>k")
 map("", "<C-h>", "<C-W>h")
 map("", "<C-l>", "<C-W>l")
 
+
+map("", "<M-m>", "<C-W>x") -- swap window
+
 -- Make many of the jump commands also center on search term
 map("n", "n", "nzz", { noremap = true })
 map("n", "N", "Nzz", { noremap = true })

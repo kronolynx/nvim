@@ -36,17 +36,17 @@ return {
         desc =
         "Signature help"
       },
-      { "<leader>lr",  "<cmd>lua vim.lsp.buf.rename()<CR>",                 desc = "rename symbol" },
+      { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>",        desc = "rename symbol" },
       -- { "<C-CR>",     "<cmd>lua vim.lsp.buf.code_action()<CR>",             desc = "code action" },
       -- { "<C-CR>",      "<cmd>lua require('fzf-lua').lsp_code_actions()<CR>", desc = "action" },
-      { "<leader>ll",  "<cmd>lua vim.lsp.codelens.run()<CR>",               desc = "code lens" },
+      { "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<CR>",      desc = "code lens" },
       -- { "<leader>=",   "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", desc = "format" },
 
       -- Diagnostic keymaps
-      { "<leader>ldc", "<cmd>lua vim.diagnostic.open_float()<CR>",          desc = "current" },
-      { '<leader>ldp', "<cmd>lua vim.diagnostic.goto_prev()<CR>",           desc = 'previous' },
-      { '<leader>ldn', "<cmd>lua vim.diagnostic.goto_next()<CR>",           desc = 'next' },
-      { "<leader>lds", "<cmd>Telescope diagnostics<CR>",                    desc = "show" },
+      { "<leader>dc", "<cmd>lua vim.diagnostic.open_float()<CR>", desc = "current" },
+      { '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>",  desc = 'previous' },
+      { '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>",  desc = 'next' },
+      { "<leader>ds", "<cmd>Telescope diagnostics<CR>",           desc = "show" },
     },
     opts = {
       setup = {
@@ -208,9 +208,9 @@ return {
         desc =
         "View type"
       },
-      { "<leader>lms", "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" },
-      { "<leader>dst", "<cmd>MetalsSelectTestCase<CR>",                                      desc = "test case" },
-      { "<leader>dss", "<cmd>MetalsSelectTestSuite<CR>",                                     desc = "test suite" },
+      { "<leader>lms",  "lua require('metals').toggle_setting('enableSemanticHighlighting')", desc = "toggle semantics highlighting" },
+      { "<leader>ldst", "<cmd>MetalsSelectTestCase<CR>",                                      desc = "test case" },
+      { "<leader>ldss", "<cmd>MetalsSelectTestSuite<CR>",                                     desc = "test suite" },
     },
     ft = { "scala", "sbt" },
     dependencies = {
@@ -239,7 +239,7 @@ return {
         showImplicitArguments = false,
         showImplicitConversionsAndClasses = true,
         defaultBspToBuildTool = true,
-        autoImportBuild = true,
+        autoImportBuild = "all", -- initial, all, off
         showInferredType = true,
         superMethodLensesEnabled = true,
         enableSemanticHighlighting = false,

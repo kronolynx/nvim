@@ -68,3 +68,6 @@ opt.shortmess:append("s") -- hit BOTTOM
 opt.shortmess:append("A") -- ATTENTION swap
 opt.shortmess:append("I") -- intro message when starting
 
+--  delay (in milliseconds) after which the cursor is considered idle and triggers certain events, such as the CursorHold event
+vim.api.nvim_set_option('updatetime', 300)
+

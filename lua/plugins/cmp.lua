@@ -79,8 +79,7 @@ return {
         end, { 'i', 's' }),
       },
       completion = {
-        -- completeopt = "menu,menuone,preview,noinsert,noselect",
-        completeopt = "menu,menuone,noinsert",
+        completeopt = "menuone,preview,noinsert,noselect",
       },
       sources = {
         { name = "nvim_lsp" },

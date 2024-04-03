@@ -65,7 +65,7 @@ return {
       go_out_plus = '<tab>',
       reset       = '<BS>',
       reveal_cwd  = '_',
-      show_help   = 'gh',
+      show_help   = 'g?',
       synchronize = '=',
     },
     content = {

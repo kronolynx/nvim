@@ -19,7 +19,6 @@ return {
       -- ensure_installed = "all",
       ensure_installed = {
         "bash",
-        "dap_repl",
         "diff",
         "haskell",
         "hocon",
