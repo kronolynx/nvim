@@ -89,18 +89,18 @@ return {
     {
       'jbyuki/one-small-step-for-vimkind',
       keys = {
-        { '<leader>dl', "<cmd>lua require('osv').launch { port = 8086 }<CR>", desc = 'Launch Lua adapter' }
+        { '<leader>ldl', "<cmd>lua require('osv').launch { port = 8086 }<CR>", desc = 'Launch Lua adapter' }
       },
     },
   },
   keys = {
-    { '<leader>dr', "<cmd>lua require('dap').continue()<CR>",                                           desc = '[r]un continue/start' },
-    { '<leader>di', "<cmd>lua require('dap').step_into()<CR>",                                          desc = 'step [i]nto' },
-    { '<leader>do', "<cmd>lua require('dap').step_over()<CR>",                                          desc = 'step [o]ver' },
-    { '<leader>dO', "<cmd>lua require('dap').step_out()<CR>",                                           desc = 'step [O]ut' },
-    { '<leader>db', "<cmd>lua require('dap').toggle_breakpoint()<CR>",                                  desc = 'toggle [b]reakpoint' },
-    { '<leader>dB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>", desc = 'set [B]reakpoint condition' },
-    { '<leader>dt', "<cmd>lua require('dapui').toggle()<CR>",                                           desc = '[t]oggle ui' },
+    { '<leader>ldr', "<cmd>lua require('dap').continue()<CR>",                                           desc = '[r]un continue/start' },
+    { '<leader>ldi', "<cmd>lua require('dap').step_into()<CR>",                                          desc = 'step [i]nto' },
+    { '<leader>ldo', "<cmd>lua require('dap').step_over()<CR>",                                          desc = 'step [o]ver' },
+    { '<leader>ldO', "<cmd>lua require('dap').step_out()<CR>",                                           desc = 'step [O]ut' },
+    { '<leader>ldb', "<cmd>lua require('dap').toggle_breakpoint()<CR>",                                  desc = 'toggle [b]reakpoint' },
+    { '<leader>ldB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>", desc = 'set [B]reakpoint condition' },
+    { '<leader>ldt', "<cmd>lua require('dapui').toggle()<CR>",                                           desc = '[t]oggle ui' },
   },
   config = function()
     local dap = require 'dap'

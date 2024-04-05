@@ -11,7 +11,7 @@ return {
         suggestion = {
           auto_trigger = true,
           keymap = {
-            accept = "<CR>",
+            accept = false,
             accept_word = "<M-Right>",
             accept_line = "<M-Up>",
             next = "<C-n>",
@@ -33,10 +33,10 @@ return {
       debug = false, -- Enable debugging
     },
     keys = {
-      { "<leader>cc", "<cmd>CopilotChatToggle<CR>",        { desc = "copilot chat" } },
-      { "<leader>ce", "<cmd>CopilotChatExplain<CR>",       mode = "v", { desc = "copilot explain" } },
-      { "<leader>cf", "<cmd>CopilotChatFix<CR>",           { desc = "copilot fix" } },
-      { "<leader>cd", "<cmd>CopilotChatFixDiagnostic<CR>", { desc = "copilot fix diagnostic" } }
+      { "<leader>cc", "<cmd>CopilotChatToggle<CR>",        desc = "copilot chat" },
+      { "<leader>ce", "<cmd>CopilotChatExplain<CR>",       desc = "copilot explain",       mode = "v" },
+      { "<leader>cf", "<cmd>CopilotChatFix<CR>",           desc = "copilot fix" },
+      { "<leader>cd", "<cmd>CopilotChatFixDiagnostic<CR>", desc = "copilot fix diagnostic" }
     }
   },
 }

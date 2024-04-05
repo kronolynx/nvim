@@ -35,14 +35,14 @@ return {
     -- git
     { "<leader>mb",  "<cmd>lua require('telescope.builtin').git_branches()<cr>",                         desc = "branches" },
     { "<leader>mc",  "<cmd>lua require('telescope.builtin').git_commits()<cr>",                          desc = "commits" },
-    { "<leader>ms",  "<cmd>lua require('telescope.builtin').git_status()<cr>",                           desc = "status" },
-    { "<leader>mp",  "<cmd>lua require('telescope').extensions.git_file_history.git_file_history()<cr>", desc = "preview history" },
+    { "<leader>mg",  "<cmd>lua require('telescope.builtin').git_status()<cr>",                           desc = "git status" },
+    { "<leader>mh",  "<cmd>lua require('telescope').extensions.git_file_history.git_file_history()<cr>", desc = "history" },
     -- search
-    { "<leader>sP",  "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",     desc = "files with args" },
+    -- { "<leader>sp",  "<cmd>lua require('telescope.builtin').live_grep()<cr>",                            desc = "files" },
+    { "<leader>sp",  "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",     desc = "files with args" },
     { "<leader>sb",  "<cmd>Telescope current_buffer_fuzzy_find fuzzy=false<CR>",                         desc = "buffer" },
     { "<leader>sf",  "<cmd>lua require('telescope.builtin').find_files({hidden=false})<cr>",             desc = "file" },
     { "<leader>so",  telescope_live_grep_open_files,                                                     desc = 'open Files' },
-    { "<leader>sp",  "<cmd>lua require('telescope.builtin').live_grep()<cr>",                            desc = "files" },
     { "<leader>sc",  "<cmd>Telescope resume<CR>",                                                        desc = "continue previous search" },
     { "<leader>ssd", "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",        desc = "dynamic workspace" },
     { "<leader>ssf", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>",                 desc = "file workspace" },
@@ -70,6 +70,7 @@ return {
     local actions = require("telescope.actions")
     local telescope = require("telescope")
     local lga_actions = require("telescope-live-grep-args.actions")
+    local entry_display = require('telescope.pickers.entry_display')
 
     local function filename_first(_, path)
       local tail = vim.fs.basename(path)
@@ -93,8 +94,6 @@ return {
       end,
     })
 
-
-    local entry_display = require('telescope.pickers.entry_display')
 
     local symbol_to_icon_map = {
       ['class'] = { icon = ' ', hi = 'TelescopeResultClass' },
