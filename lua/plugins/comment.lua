@@ -3,13 +3,15 @@ return {
   event = "VeryLazy",
   config = function()
     require('Comment').setup({
+      -- ignores empty lines
+      ignore = '^$',
       toggler = {
-        line = '<C-/>',
-        block = '<C-S-/>'
+        line = 'gcc',
+        block = 'gbc'
       },
       opleader = {
-        line = '<C-/>',
-        block = '<C-S-/>',
+        line = 'gc',
+        block = 'gb',
       },
     })
   end
