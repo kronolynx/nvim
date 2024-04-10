@@ -17,6 +17,13 @@ return {
         end,
         desc = 'Open file explorer',
       },
+      {
+        '<leader>fe',
+        function()
+          require('nvim-tree.api').tree.toggle()
+        end,
+        desc = 'Open file explorer',
+      },
     },
     config = function()
       vim.api.nvim_create_autocmd("BufEnter", {
@@ -31,9 +38,45 @@ return {
       })
       require("nvim-tree").setup(
         {
+          filters = {
+            dotfiles = true,
+          },
           hijack_netrw = false,
-          -- diagnostics = { enable = true, icons = icons.nerdtree },
           respect_buf_cwd = true,
+          renderer = {
+            add_trailing = true,
+            highlight_git = true,
+            indent_markers = { enable = true },
+            special_files = { 'Makefile', 'README.md' },
+            icons = {
+              glyphs = {
+                git = {
+                  unstaged = '',
+                  staged = '',
+                  unmerged = '',
+                  renamed = '',
+                  untracked = '',
+                  deleted = '',
+                  ignored = '',
+                },
+              },
+            },
+          },
+          git = {
+            ignore = false,
+          },
+          view = {
+            adaptive_size = true,
+            width = 40,
+            side = 'left',
+          },
+          actions = {
+            file_popup = {
+              open_win_config = {
+                border = 'rounded',
+              },
+            },
+          },
           on_attach = function(bufnr)
             local api = require('nvim-tree.api')
 
@@ -88,41 +131,9 @@ return {
             vim.keymap.set('n', '<C-s>', api.node.open.horizontal, opts('open horizontal'))
             vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts('open vertical'))
             vim.keymap.set('n', '<M-p>', api.node.open.preview, opts('open preview'))
+            vim.keymap.set('n', 'za', api.tree.toggle_hidden_filter, opts('toggle hidden files'))
+            vim.keymap.set('n', 'zg', api.tree.toggle_gitignore_filter, opts('toggle git files'))
           end,
-          renderer = {
-            add_trailing = true,
-            highlight_git = true,
-            indent_markers = { enable = true },
-            special_files = { 'Makefile', 'README.md' },
-            icons = {
-              glyphs = {
-                git = {
-                  unstaged = '',
-                  staged = '',
-                  unmerged = '',
-                  renamed = '',
-                  untracked = '',
-                  deleted = '',
-                  ignored = '',
-                },
-              },
-            },
-          },
-          git = {
-            ignore = false,
-          },
-          view = {
-            adaptive_size = true,
-            width = 40,
-            side = 'left',
-          },
-          actions = {
-            file_popup = {
-              open_win_config = {
-                border = 'rounded',
-              },
-            },
-          },
         }
 
       )
