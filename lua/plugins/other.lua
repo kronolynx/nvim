@@ -17,7 +17,7 @@ return {
       "<cmd>OtherSplit<CR>",
       desc = "Open target file in horizontal split",
     },
-    -- TODO add mapping that created the target file
+    -- TODO add mapping that create the target file
   },
   config = function()
     require("other-nvim").setup({
