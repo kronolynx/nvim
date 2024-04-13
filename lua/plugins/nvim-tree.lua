@@ -26,16 +26,6 @@ return {
       },
     },
     config = function()
-      vim.api.nvim_create_autocmd("BufEnter", {
-        group = vim.api.nvim_create_augroup("NvimTreeClose", { clear = true }),
-        pattern = "NvimTree_*",
-        callback = function()
-          local layout = vim.api.nvim_call_function("winlayout", {})
-          if layout[1] == "leaf" and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), "filetype") == "NvimTree" and layout[3] == nil then
-            vim.cmd("confirm quit")
-          end
-        end
-      })
       require("nvim-tree").setup(
         {
           filters = {
@@ -84,6 +74,7 @@ return {
               return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
             end
 
+            -- used to navigate using h,l
             local function edit_or_open()
               local node = api.tree.get_node_under_cursor()
 
@@ -94,7 +85,7 @@ return {
                 -- open file
                 api.node.open.edit()
                 -- Close the tree if file was opened
-                api.tree.close()
+                -- api.tree.close()
               end
             end
 
@@ -122,9 +113,10 @@ return {
 
             api.config.mappings.default_on_attach(bufnr)
 
-            vim.keymap.set('n', '<CR>', edit_or_open, opts('edit or open'))
+            vim.keymap.set('n', '<CR>', api.node.open.no_window_picker, opts('edit'))
+            vim.keymap.set('n', '<S-CR>', api.node.open.edit, opts('edit'))
             vim.keymap.set('n', 'l', api.node.open.edit, opts('open'))
-            vim.keymap.set('n', '<2-LeftMouse>', edit_or_open, opts('edit or open'))
+            vim.keymap.set('n', '<2-LeftMouse>', api.node.open.no_window_picker, opts('open'))
             vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('close directory'))
             vim.keymap.set('n', 'H', api.tree.collapse_all, opts('close all'))
             vim.keymap.set('n', 's', git_add, opts('git un/stage'))
@@ -137,6 +129,16 @@ return {
         }
 
       )
+    end,
+  },
+  {
+    "antosha417/nvim-lsp-file-operations",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-tree.lua",
+    },
+    config = function()
+      require("lsp-file-operations").setup()
     end,
   },
 }
