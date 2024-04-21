@@ -72,18 +72,6 @@ return {
     local lga_actions = require("telescope-live-grep-args.actions")
     local entry_display = require('telescope.pickers.entry_display')
 
-    local function filename_first(_, path)
-      local tail = vim.fs.basename(path)
-      local parent = vim.fn.fnamemodify(vim.fs.dirname(path), ":.")
-      if (vim.fn.len(parent) > 80) then
-        parent = vim.fn.pathshorten(parent, 3)
-      end
-      if parent == "." then
-        return tail
-      end
-      return string.format("%s\t\t%s", tail, parent)
-    end
-
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "TelescopeResults",
       callback = function(ctx)
@@ -93,7 +81,6 @@ return {
         end)
       end,
     })
-
 
     local symbol_to_icon_map = {
       ['class'] = { icon = ' ', hi = 'TelescopeResultClass' },
@@ -177,8 +164,11 @@ return {
         }
       },
       defaults = {
-        path_display = filename_first,
-        -- path_display = { "smart" },
+        path_display = {
+          filename_first = {
+            reverse_directories = true
+          }
+        },
         pickers = {
           buffers = {
             -- sort_mru = true,
