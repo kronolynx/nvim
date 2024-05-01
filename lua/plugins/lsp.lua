@@ -22,30 +22,6 @@ return {
       "nvim-lua/plenary.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       "folke/neodev.nvim",
-      {
-        "aznhe21/actions-preview.nvim",
-        event = 'VeryLazy',
-        keys = {
-          { "<C-CR>", '<cmd>lua require("actions-preview").code_actions()<CR>', mode = { "v", "n" } },
-        },
-        config = function()
-          require("actions-preview").setup {
-            telescope = {
-              sorting_strategy = "ascending",
-              layout_strategy = "vertical",
-              layout_config = {
-                width = 0.8,
-                height = 0.9,
-                prompt_position = "top",
-                preview_cutoff = 20,
-                preview_height = function(_, _, max_lines)
-                  return max_lines - 15
-                end,
-              },
-            },
-          }
-        end,
-      },
     },
     config = function()
       require('mason').setup()
@@ -99,14 +75,14 @@ return {
 
 
       vim.lsp.handlers["textDocument/publishDiagnostics"] =
-        vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-          -- Disable underline, it's very annoying
-          underline = false,
-          -- Enable virtual text, override spacing to 4
-          -- virtual_text = { spacing = 4 },
-          signs = true,
-          update_in_insert = false
-        })
+          vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+            -- Disable underline, it's very annoying
+            underline = false,
+            -- Enable virtual text, override spacing to 4
+            -- virtual_text = { spacing = 4 },
+            signs = true,
+            update_in_insert = false
+          })
 
 
       capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -118,30 +94,23 @@ return {
         lineFoldingOnly = true
       }
 
-
-
       local on_attach = function(client, bufnr)
-        -- LSP agnostic mappings
-        map("n", "K", vim.lsp.buf.hover)
-        map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
-        map("n", "<leader>gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "definitions telescope" })
-        map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
-        map("n", "<leader>gt", "<cmd>Telescope lsp_type_definitions<CR>", { desc = "type definition telescope" })
-        map("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
-        map("n", "<leader>gi", "<cmd>Telescope lsp_implementations<CR>", { desc = "implementation telescope" })
-        map("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
-        map("n", "<leader>gr", "<cmd>Telescope lsp_references<CR>", { desc = "references telescope" })
+        -- map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
+        -- map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
+        -- map("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
+        -- map("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
         map("n", "<leader>lvs", vim.lsp.buf.signature_help, { desc = "signature" })
         map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
         map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
         map("v", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
         map("n", "<leader>ll", vim.lsp.codelens.run, { desc = "code lens" })
         map("n", "<leader>lw", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
+        map("n", "K", vim.lsp.buf.hover)
+
 
         if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then -- only available in nightly
           vim.keymap.set('n', '<leader>lvh', function()
-            vim.lsp.inlay_hint.enable(bufnr, not vim.lsp.inlay_hint.is_enabled(bufnr))
-            --     vim.lsp.inlay_hint(bufnr, nil) -- TODO
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
           end, {
             desc = 'inlay hints',
           })
@@ -149,9 +118,8 @@ return {
 
         -- Diagnostic keymaps
         map("n", "<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "line" })
-        map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>",  { desc = 'previous' })
-        map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>",  { desc = 'next' })
-        map("n", "<leader>ds", "<cmd>Telescope diagnostics<CR>",           { desc = "show" })
+        map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = 'previous' })
+        map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = 'next' })
 
         if client.server_capabilities.completionProvider then
           api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -171,8 +139,7 @@ return {
       }
 
       -- Uncomment for trace logs from neovim
-      --vim.lsp.set_log_level('trace')
-
+      -- vim.lsp.set_log_level('trace')
 
       local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
       --================================
@@ -205,7 +172,10 @@ return {
         --testUserInterface = "Test Explorer"
       }
 
+      -- https://scalameta.org/metals/docs/integrations/new-editor/#initializationoptions
       metals_config.init_options = {
+        compilerOptions = {},
+        disableColorOutput = false,
         statusBarProvider = "on",
         icons = "unicode"
       }
@@ -221,15 +191,28 @@ return {
           require("metals").hover_worksheet({ border = "single" })
         end, { desc = "hover worksheet" })
 
-        map("n", "<leader>lmt", require("metals.tvp").toggle_tree_view,{ desc = "tree view"})
+        map("n", "<leader>lmt", require("metals.tvp").toggle_tree_view, { desc = "tree view" })
 
-        map("n", "<leader>lmf", require("metals.tvp").reveal_in_tree, { desc = "find in tree"})
+        map("n", "<leader>lmf", require("metals.tvp").reveal_in_tree, { desc = "find in tree" })
 
         map("n", "<leader>lmk", require("metals").commands, { desc = "commands" })
+        map("n", "<leader>lmi", require("metals").import_build, { desc = "import build" })
+        map("n", "<leader>lmd", require("metals").find_in_dependency_jars, { desc = "find in jars" })
+        map("n", "<leader>lmo", require("metals").organize_imports, { desc = "find in jars" })
+        map("n", "<leader>lmw", require("metals").hover_worksheet, { desc = "hover worksheet" })
+        map("n", "<leader>lml", require("metals").toggle_logs, { desc = "toggle logs" })
 
         map("n", "<leader>lvi", function()
           require("metals").toggle_setting("showImplicitArguments")
         end, { desc = "view implicits" })
+
+        map("n", "<leader>lvs", function()
+          require("metals").toggle_setting("enableSemanticHighlighting")
+        end, { desc = "view semanting highlighting" })
+
+        map("n", "<leader>lvt", function()
+          require("metals").toggle_setting("showInferredType")
+        end, { desc = "view inferred type" })
 
         -- A lot of the servers I use won't support document_highlight or codelens,
         -- so we juse use them in Metals
