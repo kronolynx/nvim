@@ -1,17 +1,19 @@
 return {
   "ibhagwan/fzf-lua",
   enabled = true,
-  -- optional for icon support
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
     { "<C-CR>",      '<cmd>FzfLua lsp_code_actions<CR>',           mode = { "v", "n" } },
 
-    -- { "<leader>gD",  "<cmd>FzfLua lsp_declarations<cr>",           desc = "lsp declarations" },
-    { "<leader>gd",  "<cmd>FzfLua lsp_definitions<cr>",            desc = "lsp definitions" },
+    -- { "<leader>gD",  "<cmd>FzfLua lsp_declarations<cr>",           desc = "lsp declarations" }, -- not supported by metals
     { "<leader>gf",  "<cmd>FzfLua files<cr>",                      desc = "find files" },
     { "<leader>gh",  "<cmd>FzfLua helptags<cr>",                   desc = "help tags" },
+    { "<leader>gj",  "<cmd>FzfLua jumps<cr>",                      desc = "jumps" },
+    { "<leader>gk",  "<cmd>FzfLua keymaps<cr>",                    desc = "keymaps" },
+    { "<leader>gm",  "<cmd>FzfLua marks<cr>",                      desc = "marks" },
 
     -- lsp
+    { "<leader>gd",  "<cmd>FzfLua lsp_definitions<cr>",            desc = "lsp definitions" },
     { "<leader>gi",  "<cmd>FzfLua lsp_implementations<cr>",        desc = "lsp implementations" },
     { "<leader>gr",  "<cmd>FzfLua lsp_references<cr>",             desc = "lsp references" },
     { "<leader>gsb", "<cmd>FzfLua lsp_document_symbols<cr>",       desc = "lsp symbols buffer" },
@@ -25,40 +27,41 @@ return {
     { "<leader>lf",  "<cmd>FzfLua lsp_finder<cr>",                 desc = "lsp finder" },
 
     -- git
-    { "<leader>mb",  "<cmd>FzfLua git_branches<cr>",               desc = "git branches" },
+    { "<leader>mB",  "<cmd>FzfLua git_branches<cr>",               desc = "git branches" },
     { "<leader>mc",  "<cmd>FzfLua git_commits<cr>",                desc = "git commits" },
+    { "<leader>mbc", "<cmd>FzfLua git_bcommits<cr>",               desc = "git commits buffer" },
     { "<leader>mf",  "<cmd>FzfLua git_files<cr>",                  desc = "git files" },
-    { "<leader>mg",  "<cmd>FzfLua git_status<cr>",                 desc = "git status" },
+    { "<leader>mm",  "<cmd>FzfLua git_status<cr>",                 desc = "git status" },
+    { "<leader>ms",  "<cmd>FzfLua git_stash<cr>",                  desc = "git stash" },
 
     -- search
-    { "<leader>ss",  "<cmd>FzfLua live_grep<cr>",                  desc = "search path" },
     { "<leader>sr",  "<cmd>FzfLua resume<cr>",                     desc = "resume" },
-
-    { "<leader>vk",  "<cmd>FzfLua keymaps<cr>",                    desc = "keymaps" },
+    { "<leader>ss",  "<cmd>FzfLua live_grep<cr>",                  desc = "search path" },
+    { "<leader>sw",  "<cmd>FzfLua grep_cword<cr>",                 desc = "search cursor" },
 
     -- buffers
     { "<leader>to",  "<cmd>FzfLua oldfiles<cr>",                   desc = "old tabs" },
     { "<leader>tr",  "<cmd>FzfLua buffers<cr>",                    desc = "recent tabs" },
-    -- TODO find keys for the following
-    { "<leader>xmb", "<cmd>FzfLua git_bcommits<cr>",               desc = "git commits buffer" },
-    { "<leader>xms", "<cmd>FzfLua git_stash<cr>",                  desc = "git stash" },
-    { "<leader>xgL", "<cmd>FzfLua blines<cr>",                     desc = "buffer lines" },
-    { "<leader>xgc", "<cmd>FzfLua changes<cr>",                    desc = "changes" },
-    { "<leader>xgj", "<cmd>FzfLua jumps<cr>",                      desc = "jumps" },
-    { "<leader>xgl", "<cmd>FzfLua lines<cr>",                      desc = "lines" },
-    { "<leader>xgm", "<cmd>FzfLua marks<cr>",                      desc = "marks" },
-    -- TODO decide if want to keep
-    { "<leader>xdb", "<cmd>FzfLua lsp_document_diagnostics<cr>",   desc = "lsp diagnostics buffer" },
-    { "<leader>xdw", "<cmd>FzfLua lsp_workspace_diagnostics<cr>",  desc = "lsp diagnostics workspace" },
 
-    -- TODO add  dap_breakpoints, dap_variables, command_history, search_history, other grep stuff, registers
+    -- diagnostics
+    { "<leader>db",  "<cmd>FzfLua lsp_document_diagnostics<cr>",   desc = "lsp diagnostics buffer" },
+    { "<leader>dw",  "<cmd>FzfLua lsp_workspace_diagnostics<cr>",  desc = "lsp diagnostics workspace" },
 
+    -- dap
+    { "<leader>lds", "<cmd>FzfLua dap_breakpoints<cr>",            desc = "debug breakpoints" },
+    { "<leader>lds", "<cmd>FzfLua dap_variables<cr>",              desc = "debug variables" },
   },
   config = function()
-    -- calling `setup` is optional for customization
     local actions = require "fzf-lua.actions"
 
     require 'fzf-lua'.setup {
+      "telescope", -- :FzfLua profiles
+      defaults    = {
+        formatter  = "path.filename_first",
+        cwd_only   = true,
+        sync       = false, -- TODO find out what this do ???
+        file_icons = true,
+      },
       winopts     = {
         height     = 0.85,       -- window height
         width      = 0.80,       -- window width
@@ -72,97 +75,61 @@ return {
         },
       },
       fzf_opts    = {
-        -- options are sent as `<left>=<right>`
-        -- set to `false` to remove a flag
-        -- set to `true` for a no-value flag
-        -- for raw args use `fzf_args` instead
         ["--ansi"]   = true,
-        ["--info"]   = "inline-right", -- fzf < v0.42 = "inline"
+        ["--info"]   = "inline-right",
         ["--height"] = "100%",
         ["--layout"] = "default",
         ["--border"] = "none",
       },
       files       = {
-        -- previewer      = "bat",          -- uncomment to override previewer
-        -- (name from 'previewers' table)
-        -- set to 'false' to disable
         prompt       = 'Files❯ ',
         multiprocess = true, -- run command in a separate process
         git_icons    = true, -- show git icons?
-        file_icons   = true, -- show file icons?
         color_icons  = true, -- colorize file|git icons
-        -- path_shorten   = 1,              -- 'true' or number, shorten path?
-        -- custom vscode-like formatter where the filename is first:
-        formatter    = "path.filename_first",
         actions      = {
-          -- inherits from 'actions.files', here we can override
-          -- or set bind to 'false' to disable a default action
-          -- action to toggle `--no-ignore`, requires fd or rg installed
           ["ctrl-g"] = { actions.toggle_ignore },
-          -- uncomment to override `actions.file_edit_or_qf`
-          --   ["default"]   = actions.file_edit,
-          -- custom actions are available too
-          --   ["ctrl-y"]    = function(selected) print(selected[1]) end,
         }
       },
       grep        = {
-        cwd_only  = true,
-        formatter = "path.filename_first",
-        rg_glob   = true, -- always parse globs in both 'grep' and 'live_grep'
-      },
-      buffers     = {
-        cwd_only  = true,
-        formatter = "path.filename_first",
-      },
-      oldfiles    = {
-        cwd_only  = true,
-        formatter = "path.filename_first",
+        rg_glob = true, -- always parse globs in both 'grep' and 'live_grep'
       },
       lsp         = {
-        prompt_postfix     = '❯ ', -- will be appended to the LSP label
-        -- to override use 'prompt' instead
-        cwd_only           = true,
-        formatter          = "path.filename_first",
-        async_or_timeout   = 5000, -- timeout(ms) or 'true' for async calls
-        file_icons         = true,
-        git_icons          = false,
-        -- The equivalent of using `includeDeclaration` in lsp buf calls, e.g:
-        -- :lua vim.lsp.buf.references({includeDeclaration = false})
-        includeDeclaration = false, -- include current declaration in LSP context
-        -- settings for 'lsp_{document|workspace|lsp_live_workspace}_symbols'
+        prompt_postfix        = '❯ ', -- will be appended to the LSP label
+        jump_to_single_result = true,
+        ignore_current_line   = true, -- not sure if I want this behaviour
+        includeDeclaration    = false, -- include current declaration in LSP context
+        async_or_timeout      = 5000, -- timeout(ms) or 'true' for async calls
+        git_icons             = false,
+        finder                = {
+          includeDeclaration = false, -- include current declaration in LSP context
+        },
+        symbols               = {
+          symbol_style = 2 -- 1: icon+kind, 2: icon only, 3: kind only, false: disable
+        }
+      },
+      git         = {
+        status = {
+          actions = {
+            ["right"]  = false,
+            ["left"]   = false,
+            ["ctrl-x"] = { fn = actions.git_reset, reload = true },
+            ["ctrl-s"] = { fn = actions.git_stage_unstage, reload = true },
+          }
+        }
       },
       diagnostics = {
         prompt       = 'Diagnostics❯ ',
-        cwd_only     = true,
-        formatter    = "path.filename_first",
-        file_icons   = true,
         git_icons    = false,
         diag_icons   = true,
-        diag_source  = true, -- display diag source (e.g. [pycodestyle])
-        icon_padding = '',   -- add padding for wide diagnostics signs
-        multiline    = true, -- concatenate multi-line diags into a single line
-        -- set to `false` to display the first line only
-        -- by default icons and highlights are extracted from 'DiagnosticSignXXX'
-        -- and highlighted by a highlight group of the same name (which is usually
-        -- set by your colorscheme, for more info see:
-        --   :help DiagnosticSignHint'
-        --   :help hl-DiagnosticSignHint'
-        -- only uncomment below if you wish to override the signs/highlights
-        -- define only text, texthl or both (':help sign_define()' for more info)
-        -- signs = {
-        --   ["Error"] = { text = "", texthl = "DiagnosticError" },
-        --   ["Warn"]  = { text = "", texthl = "DiagnosticWarn" },
-        --   ["Info"]  = { text = "", texthl = "DiagnosticInfo" },
-        --   ["Hint"]  = { text = "󰌵", texthl = "DiagnosticHint" },
-        -- },
-        -- limit to specific severity, use either a string or num:
-        --   1 or "hint"
-        --   2 or "information"
-        --   3 or "warning"
-        --   4 or "error"
-        -- severity_only:   keep any matching exact severity
-        -- severity_limit:  keep any equal or more severe (lower)
-        -- severity_bound:  keep any equal or less severe (higher)
+        diag_source  = false, -- display diag source (e.g. [pycodestyle])
+        icon_padding = ' ',   -- add padding for wide diagnostics signs
+        multiline    = true,  -- concatenate multi-line diags into a single line
+        signs        = {
+          ["Error"] = { text = '', texthl = "DiagnosticError" },
+          ["Warn"]  = { text = '', texthl = "DiagnosticWarn" },
+          ["Info"]  = { text = '', texthl = "DiagnosticInfo" },
+          ["Hint"]  = { text = '', texthl = "DiagnosticHint" },
+        },
       },
     }
   end
