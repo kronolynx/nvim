@@ -54,7 +54,9 @@ return {
   config = function()
     local actions = require "fzf-lua.actions"
 
-    require 'fzf-lua'.setup {
+    local fzf = require('fzf-lua')
+
+    fzf.setup {
       "telescope", -- :FzfLua profiles
       defaults    = {
         formatter  = "path.filename_first",
@@ -132,5 +134,7 @@ return {
         },
       },
     }
+
+    fzf.register_ui_select()
   end
 }
