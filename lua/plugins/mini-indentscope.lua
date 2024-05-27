@@ -1,7 +1,7 @@
 return {
   "echasnovski/mini.indentscope",
-  version = false,   -- wait till new 0.7.0 release to put it back on semver
-  -- event = "LazyFile",
+  version = false, -- wait till new 0.7.0 release to put it back on semver
+  event = "VeryLazy",
   opts = {
     -- symbol = "▏",
     symbol = "│",
@@ -14,6 +14,7 @@ return {
         "alpha",
         "dashboard",
         "neo-tree",
+        "nvimtree",
         "Trouble",
         "trouble",
         "lazy",
@@ -21,6 +22,7 @@ return {
         "notify",
         "toggleterm",
         "lazyterm",
+        "fzf",
       },
       callback = function()
         vim.b.miniindentscope_disable = true

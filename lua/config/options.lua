@@ -10,7 +10,7 @@ g.maplocalleader = ' '
  -- disable netrw
 g.loaded_netrwPlugin = 1
 
-global_opt.scrolloff = 5
+global_opt.scrolloff = 7
 
 opt.clipboard = { "unnamed", "unnamedplus" } -- use the system clipboard
 opt.history = 1000                         -- store the last 1000 commands entered

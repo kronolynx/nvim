@@ -85,7 +85,7 @@ return {
             rm = "M",
             ["r?"] = "?",
             ["!"] = "!",
-            t = "T",
+            t = "",
           },
           mode_colors = {
             n = colors.red,
@@ -254,8 +254,6 @@ return {
         end,
         hl = { fg = colors.blue, bold = true },
 
-        flexible = 1,
-
         {
           -- evaluates to directory
           provider = function(self)
@@ -264,10 +262,6 @@ return {
             return self.icon .. cwd .. " "
           end,
         },
-        {
-          -- evaluates to "", hiding the component
-          provider = "",
-        }
       }
 
       local FileFormat = {
@@ -279,13 +273,19 @@ return {
 
       -- We're getting minimalists here!
       local Ruler = {
-        -- %l = current line number
-        -- %L = number of lines in the buffer
-        -- %c = column number
-        -- %P = percentage through file of displayed window
-        provider = "%7(%l/%3L%):%2c %P",
-      }
 
+        flexible = 1,
+        {
+          -- %l = current line number
+          -- %L = number of lines in the buffer
+          -- %c = column number
+          -- %P = percentage through file of displayed window
+          provider = "%7(%l/%3L%):%2c %P",
+        },
+        {
+          provider = ""
+        }
+      }
       -- I take no credits for this! :lion:
       local ScrollBar = {
         static = {
@@ -306,58 +306,63 @@ return {
         condition = conditions.lsp_attached,
         update    = { 'LspAttach', 'LspDetach' },
 
-        -- You can keep it simple,
-        -- provider = " [LSP]",
-        --
         flexible  = 2,
 
         {
           provider = function()
-            local names = {}
+            local dev_icons = require("nvim-web-devicons").get_icon_by_filetype
+            local icons = {
+              lua_ls = dev_icons("lua"),
+              copilot = "",
+              metals = dev_icons("scala"),
+              pyright = dev_icons("python"),
+              kotlin_language_server = dev_icons("kotlin"),
+              jsonls = dev_icons("json"),
+              rust_analyzer = dev_icons("rust"),
+              yamlls = dev_icons("yaml"),
+              bashls = dev_icons("bash"),
+              marksman = dev_icons("markdown"),
+            }
+            local icon_or_name = {}
+
             for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-              table.insert(names, server.name)
+              table.insert(icon_or_name, icons[server.name] or server.name)
             end
-            return " [" .. table.concat(names, " ") .. "]"
+
+
+            return " " .. table.concat(icon_or_name, " ") .. " "
           end,
-          hl       = { fg = colors.green, bold = true },
+          hl       = { fg = colors.cyan, bold = true },
         },
         {
           provider = function()
             return " "
           end,
-          hl       = { fg = colors.green, bold = true },
+          hl       = { fg = colors.cyan, bold = true },
         }
 
       }
 
-      local MetalsStatus = {
-        -- condition = conditions.lsp_attached and vim.g['metals_status'] ~= nil,
-        condition = conditions.lsp_attached,
+      local LspStatus = {
+        condition = conditions.lsp_attached and package.loaded['noice'] and
+            require('noice').api.status.lsp_progress.has(),
+        -- condition = conditions.lsp_attached,
         -- update    = { 'LspAttach', 'LspDetach' },
         provider  = function()
-          return vim.g['metals_status']
+          return require('noice').api.status.lsp_progress.get_hl()
         end,
         hl        = { fg = colors.cyan, bold = true },
 
       }
-
-      -- See lsp-status/README.md for configuration options.
-
-      -- Note: check "j-hui/fidget.nvim" for a nice statusline-free alternative.
-      -- local LSPMessages = {
-      --   provider = require("lsp-status").status,
-      --   hl = { fg = colors.gray },
-      -- }
-      -- Awesome plugin
 
       local Diagnostics = {
 
         condition = conditions.has_diagnostics,
 
         static = {
-          error_icon = ' ',
-          warn_icon = ' ',
-          info_icon = ' ',
+          error_icon = '',
+          warn_icon = '',
+          info_icon = '',
           hint_icon = '',
         },
 
@@ -416,7 +421,7 @@ return {
         on_click = {
           callback = function()
             vim.defer_fn(function()
-              vim.cmd("Telescope git_branches")
+              vim.cmd("FzfLua git_branches")
             end, 100)
           end,
           name = "heirline_git",
@@ -520,7 +525,7 @@ return {
         AlignL,
         Space, Diagnostics, Align,
         DAPMessages, Align,
-        LSPActive, MetalsStatus, Space, GitBranch, GitChanges, FileFormat,
+        LspStatus, LSPActive, Space, GitBranch, GitChanges, FileFormat,
         { flexible = 3, { FileEncoding, Space }, { provider = "" } },
         Space, Ruler, Space, ScrollBar, Space, EndBar
       }
@@ -586,6 +591,11 @@ return {
       require("heirline").setup({
         colors = colors,
         statusline = StatusLines
+      })
+      -- Update the statusline with the latest LSP message.
+      vim.api.nvim_create_autocmd('LspProgress', {
+        pattern = '*',
+        command = 'redrawstatus',
       })
     end
   },

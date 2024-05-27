@@ -33,6 +33,10 @@ return {
           silent = false -- set to true to not show a message if hover is not available
         }
       },
+      status = {
+        -- Statusline component for LSP progress notifications.
+        lsp_progress = { event = 'lsp', kind = 'progress' },
+      },
       routes = {
         -- Ignore `written` message
         {
@@ -51,6 +55,14 @@ return {
         },
         {
           filter = { event = "msg_show", find = "^E486: Pattern not found:.*" },
+          opts = { skip = true },
+        },
+        -- Don't show these in the default view.
+        {
+          filter = {
+            event = 'lsp',
+            kind = 'progress',
+          },
           opts = { skip = true },
         },
       },

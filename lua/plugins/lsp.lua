@@ -44,7 +44,8 @@ return {
         rust_analyzer = {},
         jsonls = {},
         yamlls = {},
-        marksman = {},
+        -- marksman = {},
+        markdown_oxide = {},
         -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
         bashls = {},
@@ -65,6 +66,11 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+      capabilities.workspace = {
+        didChangeWatchedFiles = {
+          dynamicRegistration = true,
+        },
+      }
 
       -- Ensure the servers above are installed
       local mason_lspconfig = require 'mason-lspconfig'
@@ -95,11 +101,12 @@ return {
       }
 
       local on_attach = function(client, bufnr)
-        -- map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
-        -- map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
-        -- map("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
-        -- map("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
-        map("n", "<leader>lvs", vim.lsp.buf.signature_help, { desc = "signature" })
+        map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
+        map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
+        map("n", "<leader>ji", vim.lsp.buf.implementation, { desc = "implementation" })
+        map("n", "<leader>jr", vim.lsp.buf.references, { desc = "references" })
+        map("n", "H", vim.lsp.buf.signature_help, { desc = "signature help" })
+        map("i", "<M-h>", vim.lsp.buf.signature_help, { desc = "signature" })
         map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
         map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
         map("v", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
@@ -163,7 +170,7 @@ return {
         --disabledMode = true,
         autoImportBuild = "initial", -- initial, all, off
         defaultBspToBuildTool = true,
-        enableSemanticHighlighting = true,
+        enableSemanticHighlighting = false,
         showImplicitArguments = true,
         showImplicitConversionsAndClasses = true,
         showInferredType = true,
