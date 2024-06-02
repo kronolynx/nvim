@@ -89,6 +89,7 @@ return {
         { name = 'spell' },
         { name = 'treesitter',             keyword_length = 5, max_item_count = 3 },
         { name = "nvim_lua",               group_index = 1 },
+        { name = "lazydev",                group_index = 0} -- set group index to 0 to skip loading LuaLS completions 
       },
       formatting = {
         format = lspkind.cmp_format({

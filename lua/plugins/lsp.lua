@@ -21,7 +21,21 @@ return {
       "mfussenegger/nvim-dap",
       "nvim-lua/plenary.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
-      "folke/neodev.nvim",
+      {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+          library = {
+            -- Library items can be absolute paths
+            -- "~/projects/my-awesome-lib",
+            -- Or relative, which means they will be resolved as a plugin
+            -- "LazyVim",
+            -- When relative, you can also provide a path to the library in the plugin dir
+            "luvit-meta/library", -- see below
+          },
+        },
+      },
+      { "Bilal2453/luvit-meta", lazy = true }
     },
     config = function()
       require('mason').setup()
@@ -58,9 +72,6 @@ return {
           },
         },
       }
-
-      -- Setup neovim lua configuration
-      require('neodev').setup()
 
       -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
       local capabilities = vim.lsp.protocol.make_client_capabilities()
