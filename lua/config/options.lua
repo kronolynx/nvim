@@ -14,7 +14,6 @@ global_opt.scrolloff = 7
 
 opt.clipboard = { "unnamed", "unnamedplus" } -- use the system clipboard
 opt.history = 1000                         -- store the last 1000 commands entered
-opt.magic = true       -- set magic on, for regular expressions
 
 -- searching
 opt.ignorecase = true  -- case insensitive searching
@@ -24,10 +23,6 @@ opt.incsearch = true   -- set incremental search, like modern browsers
 
 opt.lazyredraw = false -- don't redraw while executing macros
 opt.magic = true       -- set magic on, for regular expressions
-
--- opt.autowrite = true -- save on buffer change
-opt.autowriteall = true -- save on buffer change -- TODO compare with autowrite
-
 
 -- disable wrap of long lines
 opt.wrap = false

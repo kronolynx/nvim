@@ -16,7 +16,7 @@
       },
       {
         "language": [
-          "scala"
+          "scala", "sbt", "sc"
         ],
         "path": "./scala.json"
       }

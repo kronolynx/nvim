@@ -115,9 +115,8 @@ return {
         })
       },
       window = {
-        documentation = {
-          border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-        },
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
       },
     })
 
@@ -131,11 +130,13 @@ return {
 
     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline(':', {
+      -- TODO decide how to complete, should enter be used ?
       mapping = cmp.mapping.preset.cmdline({
         ['<Down>'] = { c = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }) },
         ['<Up>'] = { c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }) },
         ['<Right>'] = { c = cmp.mapping.abort {} },
         ['<CR>'] = { c = cmp.mapping.confirm {} },
+        ["<C-e>"] = { c = cmp.mapping.abort {} }, -- TODO find better
       }),
       sources = cmp.config.sources({
         { name = 'path' }

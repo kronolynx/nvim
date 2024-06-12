@@ -3,12 +3,12 @@ return {
     'kyazdani42/nvim-tree.lua',
     keys = {
       {
-        '<leader>ff',
+        '<leader>gc',
         function()
           local api = require('nvim-tree.api').tree
           api.open({ focus = true, find_file = true })
         end,
-        desc = 'Locate file in explorer',
+        desc = 'current file in explorer',
       },
       {
         '<C-1>',
@@ -18,11 +18,11 @@ return {
         desc = 'Open file explorer',
       },
       {
-        '<leader>fe',
+        '<leader>ge',
         function()
           require('nvim-tree.api').tree.toggle()
         end,
-        desc = 'Open file explorer',
+        desc = 'file explorer',
       },
     },
     config = function()
@@ -39,6 +39,9 @@ return {
             indent_markers = { enable = true },
             special_files = { 'Makefile', 'README.md' },
             icons = {
+              git_placement = "after",
+              diagnostics_placement = "after",
+              modified_placement = "after",
               glyphs = {
                 git = {
                   unstaged = '',
@@ -72,21 +75,6 @@ return {
 
             local function opts(desc)
               return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-            end
-
-            -- used to navigate using h,l
-            local function edit_or_open()
-              local node = api.tree.get_node_under_cursor()
-
-              if node.nodes ~= nil then
-                -- expand or collapse folder
-                api.node.open.edit()
-              else
-                -- open file
-                api.node.open.edit()
-                -- Close the tree if file was opened
-                -- api.tree.close()
-              end
             end
 
             local git_add = function()

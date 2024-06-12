@@ -23,6 +23,9 @@ return {
       --   view = "cmdline_popup"
       -- },
       lsp = {
+        progress = {
+          enabled = true
+        },
         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,

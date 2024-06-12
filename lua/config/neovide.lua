@@ -1,5 +1,5 @@
 -- https://neovide.dev/configuration.html
-vim.o.guifont = "Fantasque Sans Mono,Symbols Nerd Font Mono:h14"
+vim.o.guifont = "Rec Mono Duotone,Symbols Nerd Font Mono:h14"
 
 vim.g.neovide_padding_top = 15
 vim.g.neovide_padding_bottom = 5

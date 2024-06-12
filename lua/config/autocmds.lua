@@ -10,9 +10,12 @@ cmd([[autocmd BufReadPost,BufNewFile .html,*.txt,*.md,*.adoc set spell spelllang
 cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
 
 -- save on focus lost
-cmd([[au FocusLost * silent! :wall]])
+cmd([[au FocusLost * if &modified | silent! :wall | endif]])
+cmd([[au BufLeave * if &modified | silent! :wall | endif]])
+-- cmd([[au InsertLeave * if &modified | silent! :up | endif ]])
 
 cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]]) -- yank highlight
+
 
 -- When vimwindow is resized resize splits
 -- cmd([[au VimResized * exe "normal! \<c-w>="]])

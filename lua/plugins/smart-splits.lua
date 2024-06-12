@@ -10,12 +10,21 @@ return {
     { "<M-Right>", "<cmd>lua require('smart-splits').move_cursor_right()<CR>" },
     { "<M-Up>",    "<cmd>lua require('smart-splits').move_cursor_up()<CR>" },
     { "<M-Down>",  "<cmd>lua require('smart-splits').move_cursor_down()<CR>" },
+    { "<M-S-Left>",  "<cmd>lua require('smart-splits').swap_buf_left()<CR>" },
+    { "<M-S-Right>", "<cmd>lua require('smart-splits').swap_buf_right()<CR>" },
+    { "<M-S-Up>",    "<cmd>lua require('smart-splits').swap_buf_up()<CR>" },
+    { "<M-S-Down>",  "<cmd>lua require('smart-splits').swap_buf_down()<CR>" },
+    { "<C-S-h>",  "<cmd>lua require('smart-splits').swap_buf_left()<CR>" },
+    { "<C-S-l>", "<cmd>lua require('smart-splits').swap_buf_right()<CR>" },
+    { "<C-S-k>",    "<cmd>lua require('smart-splits').swap_buf_up()<CR>" },
+    { "<C-S-j>",  "<cmd>lua require('smart-splits').swap_buf_down()<CR>" },
   },
   config = function()
     require("smart-splits").setup({
       at_edge = "wrap",
-      multiplexer_integration = "tmux",
-      ignored_filetypes = { 'NeoTree' },
+      ignored_filetypes = { 
+        'NvimTree',
+      },
     })
   end
 }
