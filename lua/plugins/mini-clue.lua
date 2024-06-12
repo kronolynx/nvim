@@ -106,6 +106,7 @@ return {
         { mode = 'v', keys = '<leader>l',  desc = '+lsp' },
         { mode = 'n', keys = '<leader>ld', desc = '+debug' },
         { mode = 'n', keys = '<leader>lm', desc = '+metals' },
+        { mode = 'n', keys = '<leader>lo', desc = '+other' },
         { mode = 'n', keys = '<leader>lv', desc = '+view' },
         -- GIT
         { mode = 'n', keys = '<leader>m',  desc = '+git' },
@@ -114,13 +115,12 @@ return {
         { mode = 'v', keys = '<leader>mh', desc = '+hunk' },
         { mode = 'n', keys = '<leader>mb', desc = '+buffer' },
         { mode = 'v', keys = '<leader>mb', desc = '+buffer' },
+
         { mode = 'n', keys = '<leader>n',  desc = '+noice' },
         { mode = 'n', keys = '<leader>s',  desc = '+search' },
         { mode = 'n', keys = '<leader>ss', desc = '+symbol' },
         { mode = 'n', keys = '<leader>t',  desc = '+tabs' },
         { mode = 'n', keys = '<leader>v',  desc = '+view' },
-        -- { mode = 'n', keys = '[',          desc = '+prev' },
-        -- { mode = 'n', keys = ']',          desc = '+next' },
         -- Builtins.
         miniclue.gen_clues.builtin_completion(),
         miniclue.gen_clues.g(),

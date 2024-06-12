@@ -90,15 +90,38 @@ return {
         ensure_installed = vim.tbl_keys(servers),
       }
 
+      -- Configuration for diagnostics
+      local signs = {
+        { name = 'DiagnosticSignError', text = '' },
+        { name = 'DiagnosticSignWarn', text = '' },
+        { name = 'DiagnosticSignHint', text = '' },
+        { name = 'DiagnosticSignInfo', text = '' },
+      }
+
+      for _, sign in ipairs(signs) do
+        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
+      end
 
       vim.lsp.handlers["textDocument/publishDiagnostics"] =
           vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
             -- Disable underline, it's very annoying
-            underline = false,
-            -- Enable virtual text, override spacing to 4
+            underline = true,
+            -- Enable virtual text, overrde spacing to 4
             -- virtual_text = { spacing = 4 },
-            signs = true,
-            update_in_insert = false
+        --
+            signs = false,
+            -- signs = {
+            --   active = signs
+            -- },
+            update_in_insert = false,
+            float = {
+              focusable = true,
+              style = 'minimal',
+              border = 'single',
+              source = 'always',
+              header = 'Diagnostic',
+              prefix = '',
+            },
           })
 
 
@@ -177,7 +200,6 @@ return {
 
       -- :h metals-settings
       metals_config.settings = {
-        --bloopVersion = "1.5.6-253-5faffd8d-SNAPSHOT",
         --disabledMode = true,
         autoImportBuild = "initial", -- initial, all, off
         defaultBspToBuildTool = true,
@@ -186,7 +208,7 @@ return {
         showImplicitConversionsAndClasses = true,
         showInferredType = true,
         serverVersion = "latest.snapshot",
-        --serverVersion = "1.2.3-SNAPSHOT",
+        scalafixConfigPath = vim.env.HOME .. "/.config/scalafix.conf",
         --testUserInterface = "Test Explorer"
       }
 
@@ -194,8 +216,10 @@ return {
       metals_config.init_options = {
         compilerOptions = {},
         disableColorOutput = false,
-        statusBarProvider = "on",
-        icons = "unicode"
+        statusBarProvider = "off",
+        inlineDecorationProvider = true,
+        decorationProvider = true,
+        -- icons = "unicode"
       }
 
       metals_config.capabilities = capabilities
@@ -213,10 +237,10 @@ return {
 
         map("n", "<leader>lmf", require("metals.tvp").reveal_in_tree, { desc = "find in tree" })
 
-        map("n", "<leader>lmk", require("metals").commands, { desc = "commands" })
+        map("n", "<leader>lmc", require("metals").commands, { desc = "commands" })
         map("n", "<leader>lmi", require("metals").import_build, { desc = "import build" })
         map("n", "<leader>lmd", require("metals").find_in_dependency_jars, { desc = "find in jars" })
-        map("n", "<leader>lmo", require("metals").organize_imports, { desc = "find in jars" })
+        map("n", "<leader>lmo", require("metals").organize_imports, { desc = "organize imports" })
         map("n", "<leader>lmw", require("metals").hover_worksheet, { desc = "hover worksheet" })
         map("n", "<leader>lml", require("metals").toggle_logs, { desc = "toggle logs" })
 

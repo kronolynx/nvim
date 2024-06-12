@@ -3,7 +3,7 @@ return {
   enabled = true,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
-    { "<C-CR>",      '<cmd>FzfLua lsp_code_actions<CR>',           mode = { "v", "n" } },
+    { "<M-CR>",      '<cmd>FzfLua lsp_code_actions<CR>',           mode = { "v", "n" } },
 
     -- { "<leader>gD",  "<cmd>FzfLua lsp_declarations<cr>",           desc = "lsp declarations" }, -- not supported by metals
     { "<leader>gf",  "<cmd>FzfLua files<cr>",                      desc = "find files" },
@@ -31,8 +31,8 @@ return {
     { "<leader>mc",  "<cmd>FzfLua git_commits<cr>",                desc = "git commits" },
     { "<leader>mbc", "<cmd>FzfLua git_bcommits<cr>",               desc = "git commits buffer" },
     { "<leader>mf",  "<cmd>FzfLua git_files<cr>",                  desc = "git files" },
-    { "<leader>mm",  "<cmd>FzfLua git_status<cr>",                 desc = "git status" },
-    { "<leader>ms",  "<cmd>FzfLua git_stash<cr>",                  desc = "git stash" },
+    { "<leader>ms",  "<cmd>FzfLua git_status<cr>",                 desc = "git status" },
+    { "<leader>mS",  "<cmd>FzfLua git_stash<cr>",                  desc = "git stash" },
 
     -- search
     { "<leader>sr",  "<cmd>FzfLua resume<cr>",                     desc = "resume" },
@@ -61,7 +61,7 @@ return {
       defaults    = {
         formatter  = "path.filename_first",
         cwd_only   = true,
-        sync       = false, -- TODO find out what this do ???
+        sync       = false, -- TODO find out what does this do ???
         file_icons = true,
       },
       winopts     = {
@@ -115,7 +115,7 @@ return {
             ["right"]  = false,
             ["left"]   = false,
             ["ctrl-x"] = { fn = actions.git_reset, reload = true },
-            ["ctrl-s"] = { fn = actions.git_stage_unstage, reload = true },
+            ["tab"] = { fn = actions.git_stage_unstage, reload = true },
           }
         }
       },
