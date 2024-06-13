@@ -248,7 +248,7 @@ return {
           require("metals").toggle_setting("showImplicitArguments")
         end, { desc = "view implicits" })
 
-        map("n", "<leader>lvs", function()
+        map("n", "<leader>lvS", function()
           require("metals").toggle_setting("enableSemanticHighlighting")
         end, { desc = "view semanting highlighting" })
 
