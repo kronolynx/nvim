@@ -417,7 +417,7 @@ return {
               self.status_dict.changed ~= 0
         end,
 
-        hl = { fg = colors.orange },
+        hl = { fg = colors.purple },
         on_click = {
           callback = function()
             vim.defer_fn(function()
