@@ -3,17 +3,17 @@ return {
   lazy = true,
   keys = {
     {
-      "<leader>oo",
+      "<leader>loo",
       "<cmd>Other<CR>",
       desc = "Open target file",
     },
     {
-      "<leader>ov",
+      "<leader>lov",
       "<cmd>OtherVSplit<CR>",
       desc = "Open target file in vertical split",
     },
     {
-      "<leader>oh",
+      "<leader>loh",
       "<cmd>OtherSplit<CR>",
       desc = "Open target file in horizontal split",
     },
