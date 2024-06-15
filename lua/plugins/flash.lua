@@ -6,11 +6,10 @@ return {
   },
   -- stylua: ignore
   keys = {
-    { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-    -- { "Z",     mode = { "n", "o", "x" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-    { "S",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+    { "<leader><leader>s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "flash" },
+    { "<leader><leader>t", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "flash Treesitter" },
+    { "<leader><leader>r", mode = "o",               function() require("flash").remote() end,     desc = "remote Flash" },
     -- { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-    -- { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     {
       "<leader><leader>l",
       mode = { "n" },
@@ -27,15 +26,6 @@ return {
         })
       end,
       desc = "select line"
-    },
-    {
-      "<leader><leader>w",
-      function()
-        require("flash").jump({
-          pattern = vim.fn.expand("<cword>"),
-        })
-      end,
-      desc = "select current word"
     },
     {
       "<leader><leader>j",
@@ -56,14 +46,31 @@ return {
       desc = "select word backward"
     },
     {
-      "<leader><leader>f",
+      "<leader><leader>w",
       function()
         require("flash").jump({
           search = { forward = true, wrap = false, multi_window = false },
           pattern = vim.fn.expand("<cword>"),
         })
       end,
-      desc = "select word forward"
+      desc = "select current word"
+    },
+    {
+      "<leader><leader>b",
+      function()
+        require("flash").jump({
+          search = { forward = false, wrap = false, multi_window = false },
+          pattern = vim.fn.expand("<cword>"),
+        })
+      end,
+      desc = "select word backward"
+    },
+    {
+      "<leader><leader>c",
+      function()
+        require("flash").jump({ continue = true })
+      end,
+      desc = "continue search"
     },
     {
       "<leader><leader>d",
@@ -89,12 +96,5 @@ return {
       end,
       desc = "diagnostic at target advanced"
     },
-    {
-      "<leader><leader>c",
-      function()
-        require("flash").jump({ continue = true })
-      end,
-      desc = "continue search"
-    }
   }
 }
