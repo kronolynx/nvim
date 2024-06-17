@@ -24,6 +24,7 @@ opt.incsearch = true   -- set incremental search, like modern browsers
 opt.lazyredraw = false -- don't redraw while executing macros
 opt.magic = true       -- set magic on, for regular expressions
 
+opt.conceallevel = 2   -- show conceals
 -- disable wrap of long lines
 opt.wrap = false
 

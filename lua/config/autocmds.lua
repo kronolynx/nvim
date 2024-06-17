@@ -14,7 +14,7 @@ cmd([[au FocusLost * if &modified | silent! :wall | endif]])
 cmd([[au BufLeave * if &modified | silent! :wall | endif]])
 -- cmd([[au InsertLeave * if &modified | silent! :up | endif ]])
 
-cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]]) -- yank highlight
+cmd([[au TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=300}]]) -- yank highlight
 
 
 -- When vimwindow is resized resize splits

@@ -63,7 +63,7 @@ return {
           pattern = vim.fn.expand("<cword>"),
         })
       end,
-      desc = "select word backward"
+      desc = "select current word backward"
     },
     {
       "<leader><leader>c",
