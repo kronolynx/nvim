@@ -1,5 +1,6 @@
 local api = vim.api
 local map = vim.keymap.set
+local icons = require('util.icons')
 
 vim.diagnostic.config {
   virtual_text = false,
@@ -92,10 +93,10 @@ return {
 
       -- Configuration for diagnostics
       local signs = {
-        { name = 'DiagnosticSignError', text = '' },
-        { name = 'DiagnosticSignWarn', text = '' },
-        { name = 'DiagnosticSignHint', text = '' },
-        { name = 'DiagnosticSignInfo', text = '' },
+        { name = 'DiagnosticSignError', text = icons.diagnostics.ERROR },
+        { name = 'DiagnosticSignWarn',  text = icons.diagnostics.WARN },
+        { name = 'DiagnosticSignHint',  text = icons.diagnostics.HINT },
+        { name = 'DiagnosticSignInfo',  text = icons.diagnostics.INFO },
       }
 
       for _, sign in ipairs(signs) do

@@ -11,6 +11,7 @@ return {
       local conditions = require("heirline.conditions")
       local utils = require("heirline.utils")
       local palette = require("catppuccin.palettes").get_palette "frappe"
+      local icons = require('util.icons')
 
       local colors = {
         bright_bg = palette.mantle,
@@ -360,10 +361,10 @@ return {
         condition = conditions.has_diagnostics,
 
         static = {
-          error_icon = '',
-          warn_icon = '',
-          info_icon = '',
-          hint_icon = '',
+          error_icon = icons.diagnostics.ERROR,
+          warn_icon = icons.diagnostics.WARN,
+          info_icon = icons.diagnostics.HINT,
+          hint_icon = icons.diagnostics.INFO,
         },
 
         init = function(self)
@@ -504,7 +505,7 @@ return {
         condition = function()
           return vim.fn.reg_recording() ~= "" and vim.o.cmdheight == 0
         end,
-        provider = " " .. " ",
+        provider = " " .. icons.misc.circle_dot,
         hl = { fg = colors.orange, bold = true },
         utils.surround({ "[", "]" }, nil, {
           provider = function()

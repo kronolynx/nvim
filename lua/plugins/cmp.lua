@@ -4,10 +4,8 @@ return {
   dependencies = {
     { "hrsh7th/cmp-buffer" },
     { "hrsh7th/cmp-cmdline" },
-    { "hrsh7th/cmp-emoji" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/cmp-path" },
-    { "onsails/lspkind.nvim" },
     { "saadparwaiz1/cmp_luasnip" },
     { 'f3fora/cmp-spell' },
     { 'hrsh7th/cmp-cmdline' },
@@ -29,8 +27,8 @@ return {
 
     local luasnip = require("luasnip")
     local cmp = require("cmp")
-    local lspkind = require('lspkind')
-    lspkind.init()
+    local icons = require('util.icons')
+    local symbol_kinds = icons.symbol_kinds
 
     cmp.setup({
       snippet = {
@@ -89,30 +87,28 @@ return {
         { name = 'spell' },
         { name = 'treesitter',             keyword_length = 5, max_item_count = 3 },
         { name = "nvim_lua",               group_index = 1 },
-        { name = "lazydev",                group_index = 0} -- set group index to 0 to skip loading LuaLS completions 
+        { name = "lazydev",                group_index = 0 } -- set group index to 0 to skip loading LuaLS completions
       },
       formatting = {
-        format = lspkind.cmp_format({
-          mode = 'symbol',       -- show only symbol annotations
-          maxwidth = 50,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-          ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-          menu = {
-            luasnip = "[snip]",
-            nvim_lsp = "[LSP]",
-            buffer = "[buf]",
-            path = "[path]",
-            spell = "[spell]",
-            tags = "[tag]",
-            treesitter = "[TS]",
-            emoji = "[emoji]",
-          },
+        format = function(_, vim_item)
+          local MAX_ABBR_WIDTH, MAX_MENU_WIDTH = 45, 50
+          local ellipsis = icons.misc.ellipsis
 
-          -- The function below will be called before any actual modifications from lspkind
-          -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-          before = function(_, vim_item)
-            return vim_item
+          -- Add the icon.
+          vim_item.kind = (symbol_kinds[vim_item.kind] or symbol_kinds.Text) .. ' ' .. vim_item.kind
+
+          -- Truncate the label.
+          if vim.api.nvim_strwidth(vim_item.abbr) > MAX_ABBR_WIDTH then
+            vim_item.abbr = vim.fn.strcharpart(vim_item.abbr, 0, MAX_ABBR_WIDTH) .. ellipsis
           end
-        })
+
+          -- Truncate the description part.
+          if vim.api.nvim_strwidth(vim_item.menu or '') > MAX_MENU_WIDTH then
+            vim_item.menu = vim.fn.strcharpart(vim_item.menu, 0, MAX_MENU_WIDTH) .. ellipsis
+          end
+
+          return vim_item
+        end,
       },
       window = {
         completion = cmp.config.window.bordered(),
