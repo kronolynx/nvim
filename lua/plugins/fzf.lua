@@ -11,6 +11,7 @@ return {
     { "<leader>gj",  "<cmd>FzfLua jumps<cr>",                      desc = "jumps" },
     { "<leader>gk",  "<cmd>FzfLua keymaps<cr>",                    desc = "keymaps" },
     { "<leader>gm",  "<cmd>FzfLua marks<cr>",                      desc = "marks" },
+    { "<leader>gr",  "<cmd>FzfLua registers<cr>",                  desc = "registers" },
 
     -- lsp
     { "<leader>gd",  "<cmd>FzfLua lsp_definitions<cr>",            desc = "lsp definitions" },
@@ -40,8 +41,8 @@ return {
     { "<leader>sw",  "<cmd>FzfLua grep_cword<cr>",                 desc = "search cursor" },
 
     -- buffers
-    { "<leader>to",  "<cmd>FzfLua oldfiles<cr>",                   desc = "old tabs" },
-    { "<leader>tr",  "<cmd>FzfLua buffers<cr>",                    desc = "recent tabs" },
+    { "<leader>to",  "<cmd>FzfLua oldfiles<cr>",                   desc = "old files" },
+    { "<leader>tr",  "<cmd>FzfLua buffers<cr>",                    desc = "recent files" },
 
     -- diagnostics
     { "<leader>db",  "<cmd>FzfLua lsp_document_diagnostics<cr>",   desc = "lsp diagnostics buffer" },
@@ -53,7 +54,7 @@ return {
   },
   config = function()
     local actions = require "fzf-lua.actions"
-
+    local icons = require('util.icons')
     local fzf = require('fzf-lua')
 
     fzf.setup {
@@ -93,6 +94,7 @@ return {
         }
       },
       grep        = {
+        header_prefix = icons.misc.search .. ' ',
         rg_glob = true, -- always parse globs in both 'grep' and 'live_grep'
       },
       lsp         = {
@@ -106,6 +108,7 @@ return {
           includeDeclaration = false, -- include current declaration in LSP context
         },
         symbols               = {
+          symbol_icons = icons.symbol_kinds,
           symbol_style = 2 -- 1: icon+kind, 2: icon only, 3: kind only, false: disable
         }
       },
@@ -115,7 +118,7 @@ return {
             ["right"]  = false,
             ["left"]   = false,
             ["ctrl-x"] = { fn = actions.git_reset, reload = true },
-            ["tab"] = { fn = actions.git_stage_unstage, reload = true },
+            ["tab"]    = { fn = actions.git_stage_unstage, reload = true },
           }
         }
       },

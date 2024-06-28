@@ -13,14 +13,14 @@ map("v", "uu", "<ESC>")
 -- Yank from cursor to end of line
 map("", "Y", "y$")
 -- save only when buffer has changed
-map("n", "<C-s>", "<cmd>update!<cr>")
-map("i", "<C-s>", "<cmd>update!<cr>")
-map("v", "<C-s>", "<cmd>update!<cr>")
+map("n", "<C-s>", "<cmd>update!<cr>", { silent = true, noremap = true })
+map("i", "<C-s>", "<cmd>update!<cr>", { silent = true, noremap = true })
+map("v", "<C-s>", "<cmd>update!<cr>", { silent = true, noremap = true })
 
-map("n", "<leader>to", "<cmd>copen<cr>", {desc = "open"})
-map("n", "<leader>tc", "<cmd>cclose<cr>", {desc = "close"})
-map("n", "<leader>tn", "<cmd>cnext<cr>", {desc = "next"})
-map("n", "<leader>tp", "<cmd>cprevious<cr>", {desc = "previous"})
+map("n", "<leader>to", "<cmd>copen<cr>", { desc = "open" })
+map("n", "<leader>tc", "<cmd>cclose<cr>", { desc = "close" })
+map("n", "<leader>tn", "<cmd>cnext<cr>", { desc = "next" })
+map("n", "<leader>tp", "<cmd>cprevious<cr>", { desc = "previous" })
 
 map("v", "<leader>p", "\"dP")
 map("n", "<F1>", "<Esc>")
