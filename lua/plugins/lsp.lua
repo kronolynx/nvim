@@ -1,6 +1,7 @@
 local api = vim.api
 local map = vim.keymap.set
 local icons = require('util.icons')
+local methods = vim.lsp.protocol.Methods
 
 vim.diagnostic.config {
   virtual_text = false,
@@ -15,6 +16,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
+    enabled = os.getenv("LSP_ENABLED") ~= "false", -- use `alias no="LSP_ENABLED=false nvim"` to disable LSP
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -109,7 +111,6 @@ return {
             underline = true,
             -- Enable virtual text, overrde spacing to 4
             -- virtual_text = { spacing = 4 },
-        --
             signs = false,
             -- signs = {
             --   active = signs
@@ -134,6 +135,8 @@ return {
         dynamicRegistration = false,
         lineFoldingOnly = true
       }
+
+      local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
 
       local on_attach = function(client, bufnr)
         map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
@@ -166,6 +169,30 @@ return {
         if client.server_capabilities.completionProvider then
           api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
         end
+
+        if client.supports_method(methods.textDocument_documentHighlight) then
+          vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'BufEnter' }, {
+            group = lsp_group,
+            desc = 'Highlight references under the cursor',
+            buffer = bufnr,
+            callback = vim.lsp.buf.document_highlight,
+          })
+          vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter', 'BufLeave' }, {
+            group = lsp_group,
+            desc = 'Clear highlight references',
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+          })
+        end
+
+        if client.supports_method(methods.codeLens_resolve) then
+          api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+            group = lsp_group,
+            desc = 'Refresh code lens',
+            buffer = bufnr,
+            callback = vim.lsp.codelens.refresh,
+          })
+        end
       end
 
 
@@ -180,10 +207,98 @@ return {
         end,
       }
 
+      --- https://github.com/MariaSolOs/dotfiles/blob/c5000d1eba7b2a153112300301e75b19a63bb25b/config/nvim/lua/lsp.lua#L177
+      --- Adds extra inline highlights to the given buffer.
+      ---@param buf integer
+      local function add_inline_highlights(buf)
+        for l, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+          for pattern, hl_group in pairs {
+            ['@%S+'] = '@parameter',
+            ['^%s*(Parameters:)'] = '@text.title',
+            ['^%s*(Return:)'] = '@text.title',
+            ['^%s*(See also:)'] = '@text.title',
+            ['{%S-}'] = '@parameter',
+            ['|%S-|'] = '@text.reference',
+          } do
+            local from = 1 ---@type integer?
+            while from do
+              local to
+              from, to = line:find(pattern, from)
+              if from then
+                vim.api.nvim_buf_set_extmark(buf, "lsp_float", l - 1, from - 1, {
+                  end_col = to,
+                  hl_group = hl_group,
+                })
+              end
+              from = to and to + 1 or nil
+            end
+          end
+        end
+      end
+
+      --- https://github.com/MariaSolOs/dotfiles/blob/c5000d1eba7b2a153112300301e75b19a63bb25b/config/nvim/lua/lsp.lua#L208
+      --- LSP handler that adds extra inline highlights, keymaps, and window options.
+      --- Code inspired from `noice`.
+      ---@param handler fun(err: any, result: any, ctx: any, config: any): integer?, integer?
+      ---@param focusable boolean
+      ---@return fun(err: any, result: any, ctx: any, config: any)
+      local function enhanced_float_handler(handler, focusable)
+        return function(err, result, ctx, config)
+          local bufnr, winnr = handler(
+            err,
+            result,
+            ctx,
+            vim.tbl_deep_extend('force', config or {}, {
+              border = 'rounded',
+              focusable = focusable,
+              max_height = math.floor(vim.o.lines * 0.5),
+              max_width = math.floor(vim.o.columns * 0.4),
+            })
+          )
+
+          if not bufnr or not winnr then
+            return
+          end
+
+          -- Conceal everything.
+          vim.wo[winnr].concealcursor = 'n'
+
+          -- Extra highlights.
+          add_inline_highlights(bufnr)
+
+          -- Add keymaps for opening links.
+          if focusable and not vim.b[bufnr].markdown_keys then
+            vim.keymap.set('n', 'K', function()
+              -- Vim help links.
+              local url = (vim.fn.expand '<cWORD>' --[[@as string]]):match '|(%S-)|'
+              if url then
+                return vim.cmd.help(url)
+              end
+
+              -- Markdown links.
+              local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+              local from, to
+              from, to, url = vim.api.nvim_get_current_line():find '%[.-%]%((%S-)%)'
+              if from and col >= from and col <= to then
+                vim.system({ 'xdg-open', url }, nil, function(res)
+                  if res.code ~= 0 then
+                    vim.notify('Failed to open URL' .. url, vim.log.levels.ERROR)
+                  end
+                end)
+              end
+            end, { buffer = bufnr, silent = true })
+            vim.b[bufnr].markdown_keys = true
+          end
+        end
+      end
+      vim.lsp.handlers[methods.textDocument_hover] = enhanced_float_handler(vim.lsp.handlers.hover, true)
+      vim.lsp.handlers[methods.textDocument_signatureHelp] = enhanced_float_handler(vim.lsp.handlers.signature_help,
+        false)
+
+
       -- Uncomment for trace logs from neovim
       -- vim.lsp.set_log_level('trace')
 
-      local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
       --================================
       -- Metals specific setup
       --================================
@@ -228,7 +343,7 @@ return {
       metals_config.on_attach = function(client, bufnr)
         on_attach(client, bufnr)
 
-        map("v", "K", require("metals").type_of_range)
+        map("v", "K", require("metals").type_of_range, { desc = "type of range" })
 
         map("n", "<leader>lmw", function()
           require("metals").hover_worksheet({ border = "single" })
@@ -257,25 +372,6 @@ return {
           require("metals").toggle_setting("showInferredType")
         end, { desc = "view inferred type" })
 
-        -- A lot of the servers I use won't support document_highlight or codelens,
-        -- so we juse use them in Metals
-        api.nvim_create_autocmd("CursorHold", {
-          callback = vim.lsp.buf.document_highlight,
-          buffer = bufnr,
-          group = lsp_group,
-        })
-        api.nvim_create_autocmd("CursorMoved", {
-          callback = function()
-            vim.lsp.buf.clear_references()
-          end,
-          buffer = bufnr,
-          group = lsp_group,
-        })
-        api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
-          callback = vim.lsp.codelens.refresh,
-          buffer = bufnr,
-          group = lsp_group,
-        })
         api.nvim_create_autocmd("FileType", {
           pattern = { "dap-repl" },
           callback = function()
