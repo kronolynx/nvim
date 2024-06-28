@@ -344,18 +344,6 @@ return {
 
       }
 
-      local LspStatus = {
-        condition = conditions.lsp_attached and package.loaded['noice'] and
-            require('noice').api.status.lsp_progress.has(),
-        -- condition = conditions.lsp_attached,
-        -- update    = { 'LspAttach', 'LspDetach' },
-        provider  = function()
-          return require('noice').api.status.lsp_progress.get_hl()
-        end,
-        hl        = { fg = colors.cyan, bold = true },
-
-      }
-
       local Diagnostics = {
 
         condition = conditions.has_diagnostics,
@@ -495,7 +483,7 @@ return {
           return session ~= nil
         end,
         provider = function()
-          return " " .. require("dap").status()
+          return icons.misc.bug .. require("dap").status()
         end,
         hl = "Debug"
         -- see Click-it! section for clickable actions
@@ -519,6 +507,23 @@ return {
         }
       }
 
+      local SearchCount = {
+        condition = function()
+          return vim.v.hlsearch ~= 0 and vim.o.cmdheight == 0
+        end,
+        hl = { fg = colors.purple, bold = true },
+        init = function(self)
+          local ok, search = pcall(vim.fn.searchcount)
+          if ok and search.total then
+            self.search = search
+          end
+        end,
+        provider = function(self)
+          local search = self.search
+          return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
+        end,
+      }
+
       ViMode = utils.surround({ "", "" }, colors.bright_bg, { ViMode, MacroRec })
 
       local DefaultStatusline = {
@@ -526,7 +531,7 @@ return {
         AlignL,
         Space, Diagnostics, Align,
         DAPMessages, Align,
-        LspStatus, LSPActive, Space, GitBranch, GitChanges, FileFormat,
+        SearchCount, Space, LSPActive, Space, GitBranch, GitChanges, FileFormat,
         { flexible = 3, { FileEncoding, Space }, { provider = "" } },
         Space, Ruler, Space, ScrollBar, Space, EndBar
       }

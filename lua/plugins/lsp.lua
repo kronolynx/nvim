@@ -38,6 +38,16 @@ return {
           },
         },
       },
+      {
+        "j-hui/fidget.nvim",
+        opts = {
+          progress = {
+            display = {
+              render_limit = 4
+            }
+          },
+        },
+      },
       { "Bilal2453/luvit-meta", lazy = true }
     },
     config = function()
