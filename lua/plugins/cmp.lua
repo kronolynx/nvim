@@ -7,8 +7,6 @@ return {
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/cmp-path" },
     { "saadparwaiz1/cmp_luasnip" },
-    { 'f3fora/cmp-spell' },
-    { 'hrsh7th/cmp-cmdline' },
     { 'ray-x/cmp-treesitter' },
     { "hrsh7th/cmp-nvim-lua" },
     {
@@ -43,15 +41,21 @@ return {
         ['<Up>'] = cmp.mapping.select_prev_item(),
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        -- Explicitly request completions.
         ['<C-Space>'] = cmp.mapping.complete {},
         ["<C-e>"] = cmp.mapping.abort(),
+        ['<C-/>'] = cmp.mapping.close(),
         ['<Right>'] = cmp.mapping.abort {},
         ["<CR>"] = cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Replace,
           select = true
         }),
         ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
+          local copilot = require 'copilot.suggestion'
+
+          if copilot.is_visible() then
+            copilot.accept()
+          elseif cmp.visible() then
             -- cmp.confirm({ select = true })
             cmp.select_next_item()
           elseif luasnip.expand_or_locally_jumpable() then
@@ -68,7 +72,7 @@ return {
           if cmp.visible() then
             cmp.select_prev_item()
           elseif luasnip.expand_or_locally_jumpable() then
-            luasnip.expand_or_jump()
+            luasnip.expand_or_jump(-1)
             -- elseif luasnip.jumpable(-1) then
             --   luasnip.jump(-1)
           else
@@ -84,7 +88,6 @@ return {
         { name = "nvim_lsp_signature_help" },
         { name = "luasnip",                keyword_length = 3, max_item_count = 3 },
         { name = "buffer",                 keyword_length = 5, max_item_count = 3 },
-        { name = 'spell' },
         { name = 'treesitter',             keyword_length = 5, max_item_count = 3 },
         { name = "nvim_lua",               group_index = 1 },
         { name = "lazydev",                group_index = 0 } -- set group index to 0 to skip loading LuaLS completions
@@ -132,7 +135,7 @@ return {
         ['<Up>'] = { c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }) },
         ['<Right>'] = { c = cmp.mapping.abort {} },
         ['<CR>'] = { c = cmp.mapping.confirm {} },
-        ["<C-e>"] = { c = cmp.mapping.abort {} }, -- TODO find better
+        ["<C-/>"] = { c = cmp.mapping.abort {} }, -- TODO find better
       }),
       sources = cmp.config.sources({
         { name = 'path' }

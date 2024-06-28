@@ -4,12 +4,16 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
+      local cmp = require 'cmp'
+      local copilot = require 'copilot.suggestion'
+      local luasnip = require 'luasnip'
+
       require("copilot").setup({
         filetypes = {
           ["*"] = true -- all files
         },
         panel = {
-          enabled = true,
+          enabled = false,
           auto_refresh = false,
           keymap = {
             jump_prev = "[[",
@@ -26,16 +30,33 @@ return {
         suggestion = {
           auto_trigger = true,
           keymap = {
-            accept = "<M-CR>",
+            accept = "<M-A>",
             accept_word = "<M-w>",
-            accept_line = "<M-S-CR>",
-            next = "<C-Space>",
-            prev = "<C-S-Space>",
-            dismiss = "<C-c>",
+            accept_line = "<M-a>",
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "/",
 
           }
         }
       })
+
+      ---@param trigger boolean
+      local function set_trigger(trigger)
+        if not trigger and copilot.is_visible() then
+          copilot.dismiss()
+        end
+        vim.b.copilot_suggestion_auto_trigger = trigger
+        vim.b.copilot_suggestion_hidden = not trigger
+      end
+
+      -- Hide suggestions when the completion menu is open.
+      cmp.event:on('menu_opened', function()
+        set_trigger(false)
+      end)
+      cmp.event:on('menu_closed', function()
+        set_trigger(not luasnip.expand_or_locally_jumpable())
+      end)
     end
   },
   {
@@ -89,14 +110,14 @@ return {
       },
     },
     keys = {
-      { "<M-c>",      "<cmd>CopilotChatToggle<CR>",        desc = "copilot chat",          mode = "n" },
-      { "<M-c>",      "<Esc><cmd>CopilotChatToggle<CR>",   desc = "copilot chat",          mode = "i" },
-      { "<leader>ce", "<cmd>CopilotChatExplain<CR>",       desc = "copilot explain",       mode = "v" },
-      { "<leader>cf", "<cmd>CopilotChatFix<CR>",           desc = "copilot fix" },
-      { "<leader>cd", "<cmd>CopilotChatFixDiagnostic<CR>", desc = "copilot fix diagnostic" },
+      { "<M-c>",      "<cmd>CopilotChatToggle<CR>",        desc = "copilot chat",           mode = "n" },
+      { "<M-c>",      "<Esc><cmd>CopilotChatToggle<CR>",   desc = "copilot chat",           mode = "i" },
+      { "<leader>ce", "<cmd>CopilotChatExplain<CR>",       desc = "copilot explain",        mode = "v" },
+      { "<leader>cf", "<cmd>CopilotChatFix<CR>",           desc = "copilot fix",            mode = "v" },
+      { "<leader>cd", "<cmd>CopilotChatFixDiagnostic<CR>", desc = "copilot fix diagnostic", mode = "v" },
       -- Show help actions with fzf-lua
       {
-        "<leader>cch",
+        "<leader>ch",
         function()
           local actions = require("CopilotChat.actions")
           require("CopilotChat.integrations.fzflua").pick(actions.help_actions())
@@ -105,7 +126,7 @@ return {
       },
       -- Show prompts actions with fzf-lua
       {
-        "<leader>ccp",
+        "<leader>cp",
         function()
           local actions = require("CopilotChat.actions")
           require("CopilotChat.integrations.fzflua").pick(actions.prompt_actions())
