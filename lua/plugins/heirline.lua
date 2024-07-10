@@ -282,6 +282,7 @@ return {
           -- %c = column number
           -- %P = percentage through file of displayed window
           provider = "%7(%l/%3L%):%2c %P",
+          hl = { fg = colors.gray, bg = colors.bright_bg },
         },
         {
           provider = ""

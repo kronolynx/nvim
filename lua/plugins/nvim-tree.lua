@@ -11,18 +11,11 @@ return {
         desc = 'current file in explorer',
       },
       {
-        '<C-1>',
+        '<leader>f',
         function()
           require('nvim-tree.api').tree.toggle()
         end,
         desc = 'Open file explorer',
-      },
-      {
-        '<leader>ge',
-        function()
-          require('nvim-tree.api').tree.toggle()
-        end,
-        desc = 'file explorer',
       },
     },
     config = function()

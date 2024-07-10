@@ -1,6 +1,6 @@
 return {
   'akinsho/toggleterm.nvim',
-  event = 'VeryLazy',
+  event = "VeryLazy",
   opts = {
     -- direction = 'horizontal',
     direction = 'float',
