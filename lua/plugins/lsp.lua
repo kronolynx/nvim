@@ -330,8 +330,8 @@ return {
         autoImportBuild = "initial", -- initial, all, off
         defaultBspToBuildTool = true,
         enableSemanticHighlighting = false,
-        showImplicitArguments = true,
-        showImplicitConversionsAndClasses = true,
+        showImplicitArguments = false,
+        showImplicitConversionsAndClasses = false,
         showInferredType = true,
         serverVersion = "latest.snapshot",
         scalafixConfigPath = vim.env.HOME .. "/.config/scalafix.conf",
@@ -353,6 +353,8 @@ return {
       metals_config.on_attach = function(client, bufnr)
         on_attach(client, bufnr)
 
+        vim.lsp.inlay_hint.enable(true)
+
         map("v", "K", require("metals").type_of_range, { desc = "type of range" })
 
         map("n", "<leader>lmw", function()
@@ -370,15 +372,19 @@ return {
         map("n", "<leader>lmw", require("metals").hover_worksheet, { desc = "hover worksheet" })
         map("n", "<leader>lml", require("metals").toggle_logs, { desc = "toggle logs" })
 
-        map("n", "<leader>lvi", function()
+        map("n", "<leader>lmva", function()
           require("metals").toggle_setting("showImplicitArguments")
-        end, { desc = "view implicits" })
+        end, { desc = "view implicit arguments" })
 
-        map("n", "<leader>lvS", function()
+        map("n", "<leader>lmvc", function()
+          require("metals").toggle_setting("showImplicitConversionsAndClasses")
+        end, { desc = "view implicit conversions" })
+
+        map("n", "<leader>lmvs", function()
           require("metals").toggle_setting("enableSemanticHighlighting")
         end, { desc = "view semanting highlighting" })
 
-        map("n", "<leader>lvt", function()
+        map("n", "<leader>lmvt", function()
           require("metals").toggle_setting("showInferredType")
         end, { desc = "view inferred type" })
 
