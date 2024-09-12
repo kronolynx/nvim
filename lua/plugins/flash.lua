@@ -3,6 +3,10 @@ return {
   lazy = true,
   ---@type Flash.Config
   opts = {
+    jump = {
+      -- automatically jump when there is only one match
+      autojump = true,
+    },
   },
   -- stylua: ignore
   keys = {

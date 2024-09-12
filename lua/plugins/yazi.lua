@@ -10,14 +10,14 @@ return {
       function()
         require("yazi").yazi(nil, vim.fn.getcwd())
       end,
-      desc = "file manager (working directory)",
+      desc = "file explorer (yazi working directory)",
     },
     {
       "<leader>e",
       function()
         require("yazi").yazi(nil, vim.fn.expand('%:p:h'))
       end,
-      desc = "file manager (file directory)",
+      desc = "file explorer (yazi file directory)",
     },
   },
   opts = {
