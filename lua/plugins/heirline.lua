@@ -10,27 +10,26 @@ return {
     config = function()
       local conditions = require("heirline.conditions")
       local utils = require("heirline.utils")
-      local palette = require("catppuccin.palettes").get_palette "frappe"
       local icons = require('util.icons')
 
       local colors = {
-        bright_bg = palette.mantle,
-        bright_fg = palette.text,
-        red = palette.maroon,
-        dark_red = palette.red,
-        green = palette.green,
-        blue = palette.blue,
-        gray = palette.surface2,
-        orange = palette.peach,
-        purple = palette.mauve,
-        cyan = palette.teal,
-        diag_warn = palette.yellow,
-        diag_error = palette.maroon,
-        diag_hint = palette.sky,
-        diag_info = palette.sapphire,
-        git_del = palette.maroon,
-        git_add = palette.teal,
-        git_change = palette.yellow,
+        bright_bg = utils.get_highlight("Normal").bg,
+        bright_fg = utils.get_highlight("Folded").fg,
+        red = utils.get_highlight("DiagnosticError").fg,
+        dark_red = utils.get_highlight("DiffDelete").bg,
+        green = utils.get_highlight("String").fg, -- TODO find a better green
+        blue = utils.get_highlight("Function").fg,
+        gray = utils.get_highlight("NonText").fg,
+        orange = utils.get_highlight("Constant").fg,
+        purple = utils.get_highlight("Statement").fg,
+        cyan = utils.get_highlight("Special").fg, -- TODO this is pink not cyan
+        diag_warn = utils.get_highlight("DiagnosticWarn").fg,
+        diag_error = utils.get_highlight("DiagnosticError").fg,
+        diag_hint = utils.get_highlight("DiagnosticHint").fg,
+        diag_info = utils.get_highlight("DiagnosticInfo").fg,
+        git_del = utils.get_highlight("diffDeleted").fg,
+        git_add = utils.get_highlight("diffAdded").fg,
+        git_change = utils.get_highlight("diffChanged").fg,
       }
 
       local Align = { provider = "%=" }
@@ -54,10 +53,10 @@ return {
         static = {
           mode_names = { -- change the strings if you like it vvvvverbose!
             n = "",
-            no = "N?",
-            nov = "N?",
-            noV = "N?",
-            ["no\22"] = "N?",
+            no = "",
+            nov = "",
+            noV = "",
+            ["no\22"] = "",
             niI = "Ni",
             niR = "Nr",
             niV = "Nv",
@@ -110,7 +109,7 @@ return {
         -- Same goes for the highlight. Now the foreground will change according to the current mode.
         hl = function(self)
           local mode = self.mode:sub(1, 1) -- get only the first mode character
-          return { fg = self.mode_colors[mode], bold = true, }
+          return { fg = self.mode_colors[mode],bg = colors.bright_bg, bold = true, }
         end,
         -- Re-evaluate the component only on ModeChanged event!
         -- Also allows the statusline to be re-evaluated when entering operator-pending mode
@@ -282,7 +281,7 @@ return {
           -- %c = column number
           -- %P = percentage through file of displayed window
           provider = "%7(%l/%3L%):%2c %P",
-          hl = { fg = colors.gray, bg = colors.bright_bg },
+          hl = { fg = colors.gray },
         },
         {
           provider = ""
@@ -496,7 +495,7 @@ return {
         end,
         provider = " " .. icons.misc.circle_dot,
         hl = { fg = colors.orange, bold = true },
-        utils.surround({ "[", "]" }, nil, {
+        utils.surround({ " [", "]" }, nil, {
           provider = function()
             return vim.fn.reg_recording()
           end,
