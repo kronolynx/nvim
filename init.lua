@@ -17,10 +17,11 @@ if vim.fn.has "nvim-0.6.1" ~= 1 then
   vim.cmd "cquit"
 end
 
-require("config.autocmds")
-require("config.options")
-require("config.keymaps")
-require("config.lazy")
+require("core.autocmds")
+require("core.options")
+require("core.keymaps")
+require("core.lazy")
 if vim.g.neovide then
-  require("config.neovide")
+  require("core.neovide")
 end
+-- require("config.msg").init()
