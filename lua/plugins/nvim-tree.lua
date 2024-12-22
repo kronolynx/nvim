@@ -1,6 +1,7 @@
 return {
   {
-    'kyazdani42/nvim-tree.lua',
+    'nvim-tree/nvim-tree.lua',
+    lazy = true,
     keys = {
       {
         '<leader>gc',
@@ -114,6 +115,7 @@ return {
   },
   {
     "antosha417/nvim-lsp-file-operations",
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-tree.lua",
