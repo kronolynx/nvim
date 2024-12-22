@@ -2,7 +2,7 @@
   "pln": {
     "prefix": "pln",
     "body": [
-      "println(\"$1\")",
+      "println(\"<<<>>>  $1\")",
       "$0"
     ],
     "description": "Log output to console"
@@ -14,26 +14,61 @@
     ],
     "description": "pprint log"
   },
+  "ply": {
+    "prefix": "ply",
+    "body": [
+      "println(Console.YELLOW_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print yellow background"
+  },
+  "plm": {
+    "prefix": "plm",
+    "body": [
+      "println(Console.MAGENTA_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print magenta background"
+  },
   "plb": {
     "prefix": "plb",
     "body": [
-      "println(Console.${1:COLOR}_B + Console.BLACK + s\"${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.BLUE_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
-    "description": "print color background"
+    "description": "print magenta background"
   },
   "plc": {
     "prefix": "plc",
     "body": [
-      "println(Console.${1:COLOR} + s\"${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.CYAN_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
-    "description": "print color"
+    "description": "print magenta background"
   },
-  "ppld": {
-    "prefix": "ppld",
+  "plr": {
+    "prefix": "plr",
     "body": [
-      "\"com.lihaoyi\" %% \"pprint\" % \"0.8.1\""
+      "println(Console.RED_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
-    "description": "pprint dependency"
+    "description": "print red background"
+  },
+  "plg": {
+    "prefix": "plg",
+    "body": [
+      "println(Console.GREEN_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print green background"
+  },
+  "plw": {
+    "prefix": "plw",
+    "body": [
+      "println(Console.WHITE_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print white background"
+  },
+  "plf": {
+    "prefix": "plf",
+    "body": [
+      "println(Conssole.BLACK_B + Console.${1:COLOR} + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print color foreground"
   },
   "todo": {
     "prefix": "todo",
