@@ -3,6 +3,7 @@ local icons = require("util.icons")
 return {
   -- bread crumbs
   "utilyre/barbecue.nvim",
+  event = "VeryLazy",
   name = "barbecue",
   version = "*",
   dependencies = {
