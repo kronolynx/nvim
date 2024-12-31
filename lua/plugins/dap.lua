@@ -101,6 +101,9 @@ return {
     { '<leader>ldb', "<cmd>lua require('dap').toggle_breakpoint()<CR>",                                  desc = 'toggle [b]reakpoint' },
     { '<leader>ldB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>", desc = 'set [B]reakpoint condition' },
     { '<leader>ldt', "<cmd>lua require('dapui').toggle()<CR>",                                           desc = '[t]oggle ui' },
+    --- FZF
+    { "<leader>lds", "<cmd>FzfLua dap_breakpoints<cr>",                                                  desc = "debug breakpoints" },
+    { "<leader>ldv", "<cmd>FzfLua dap_variables<cr>",                                                    desc = "debug variables" },
   },
   config = function()
     local dap = require 'dap'

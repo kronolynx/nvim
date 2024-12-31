@@ -37,12 +37,12 @@ map('v', 'J', ":m '>+1<cr>gv=gv")
 map('v', 'K', ":m '<-2<cr>gv=gv")
 
 -- Helpful for copy and paste
-map('x', '<leader>p', '"_dP')
-map('n', '<leader>y', '"+y')
-map('v', '<leader>y', '"+y')
-map('n', '<leader>Y', '"+Y')
-map('n', '<leader>d', '"_d')
-map('v', '<leader>d', '"_d')
+-- map('x', '<leader>p', '"_dP')
+-- map('n', '<leader>y', '"+y')
+-- map('v', '<leader>y', '"+y')
+-- map('n', '<leader>Y', '"+Y')
+-- map('n', '<leader>d', '"_d')
+-- map('v', '<leader>d', '"_d')
 
 map("", "<M-m>", "<C-W>x") -- swap window
 
@@ -60,14 +60,14 @@ map("n", "#", "#zz", { noremap = true })
 map('n', '<C-c>', '<cmd>nohlsearch<cr>')
 
 -- navigate quicklist
-map('n', '<leader>fo', ':copen<CR>', { desc = "open"})
-map('n', '<leader>fc', ':cclose<CR>' , { desc = "close"})
-map('n', '<leader>fn', ':cnext<CR>', { desc = "next"})
-map('n', '<leader>fp', ':cprev<CR>', { desc = "previous"})
-map('n', '<leader>ff', ':cfirst<CR>', { desc = "first"})
-map('n', '<leader>fl', ':clast<CR>', { desc = "last"})
-map('n', '<leader>fr', ':call setqflist([], "r", {"idx": line(".")})<CR>', { desc = "remove"})
-map('n', '<leader>fx', ':call setqflist([])<CR>', { desc = "clear"})
+map('n', '<leader>qo', ':copen<CR>', { desc = "open"})
+map('n', '<leader>qc', ':cclose<CR>' , { desc = "close"})
+map('n', '<leader>qn', ':cnext<CR>', { desc = "next"})
+map('n', '<leader>qp', ':cprev<CR>', { desc = "previous"})
+map('n', '<leader>qf', ':cfirst<CR>', { desc = "first"})
+map('n', '<leader>ql', ':clast<CR>', { desc = "last"})
+map('n', '<leader>qr', ':call setqflist([], "r", {"idx": line(".")})<CR>', { desc = "remove"})
+map('n', '<leader>qx', ':call setqflist([])<CR>', { desc = "clear"})
 
 -- map("n", "<C-1>", "<cmd>Neotree toggle<CR>", { noremap = true })
 

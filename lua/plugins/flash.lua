@@ -10,12 +10,12 @@ return {
   },
   -- stylua: ignore
   keys = {
-    { "<leader><leader>s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "flash" },
-    { "<leader><leader>t", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "flash Treesitter" },
-    { "<leader><leader>r", mode = "o",               function() require("flash").remote() end,     desc = "remote Flash" },
+    { "<leader><leader>", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "flash" },
+    { "<leader>jt", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "flash Treesitter" },
+    { "<leader>jr", mode = "o",               function() require("flash").remote() end,     desc = "remote Flash" },
     -- { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
     {
-      "<leader><leader>l",
+      "<leader>jl",
       mode = { "n" },
       function()
         require("flash").jump({
@@ -32,7 +32,7 @@ return {
       desc = "select line"
     },
     {
-      "<leader><leader>j",
+      "<leader>jf",
       function()
         require("flash").jump({
           search = { forward = true, wrap = false, multi_window = false },
@@ -41,7 +41,7 @@ return {
       desc = "select word forward"
     },
     {
-      "<leader><leader>k",
+      "<leader>jb",
       function()
         require("flash").jump({
           search = { forward = false, wrap = false, multi_window = false },
@@ -50,7 +50,7 @@ return {
       desc = "select word backward"
     },
     {
-      "<leader><leader>w",
+      "<leader>jcf",
       function()
         require("flash").jump({
           search = { forward = true, wrap = false, multi_window = false },
@@ -60,24 +60,24 @@ return {
       desc = "select current word"
     },
     {
-      "<leader><leader>b",
+      "<leader>jcb",
       function()
         require("flash").jump({
-          search = { forward = false, wrap = false, multi_window = false },
+         search = { forward = false, wrap = false, multi_window = false },
           pattern = vim.fn.expand("<cword>"),
         })
       end,
       desc = "select current word backward"
     },
     {
-      "<leader><leader>c",
+      "<leader>jr",
       function()
         require("flash").jump({ continue = true })
       end,
-      desc = "continue search"
+      desc = "resume search"
     },
     {
-      "<leader><leader>d",
+      "<leader>dt",
       function()
         require("flash").jump({
           matcher = function(win)
@@ -98,7 +98,7 @@ return {
           end,
         })
       end,
-      desc = "diagnostic at target advanced"
+      desc = "diagnostic at target (flash)"
     },
   }
 }

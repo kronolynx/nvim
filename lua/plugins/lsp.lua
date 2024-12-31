@@ -150,8 +150,8 @@ return {
       local on_attach = function(client, bufnr)
         map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
         map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
-        map("n", "<leader>ji", vim.lsp.buf.implementation, { desc = "implementation" })
-        map("n", "<leader>jr", vim.lsp.buf.references, { desc = "references" })
+        map("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
+        map("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
         map("n", "H", vim.lsp.buf.signature_help, { desc = "signature help" })
         map("i", "<M-h>", vim.lsp.buf.signature_help, { desc = "signature" })
         map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
@@ -161,6 +161,19 @@ return {
         map("n", "<leader>lw", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
         map("n", "K", vim.lsp.buf.hover)
 
+        -- FZF
+        map("n", "<leader>gd", "<cmd>FzfLua lsp_definitions<cr>", { desc = "lsp definitions" })
+        map("n", "<leader>gi", "<cmd>FzfLua lsp_implementations<cr>", { desc = "lsp implementations" })
+        map("n", "<leader>gr", "<cmd>FzfLua lsp_references<cr>", { desc = "lsp references" })
+        map("n", "<leader>gSb", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "lsp symbols buffer" })
+        map("n", "<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", { desc = "lsp live workspace symbols" })
+        map("n", "<leader>gSw", "<cmd>FzfLua lsp_workspace_symbols<cr>", { desc = "lsp symbols workspace" })
+        map("n", "<leader>gt", "<cmd>FzfLua lsp_typedefs<cr>", { desc = "lsp typedefs" })
+
+        map("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", { desc = "lsp code actions" })
+        map("n", "<leader>lci", "<cmd>FzfLua lsp_incoming_calls<cr>", { desc = "lsp calls incoming" })
+        map("n", "<leader>lco", "<cmd>FzfLua lsp_outgoing_calls<cr>", { desc = "lsp calls outgoing" })
+        map("n", "<leader>lf", "<cmd>FzfLua lsp_finder<cr>", { desc = "lsp finder" })
 
         if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then -- only available in nightly
           vim.keymap.set('n', '<leader>lvh', function()
@@ -170,10 +183,6 @@ return {
           })
         end
 
-        -- Diagnostic keymaps
-        map("n", "<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "line" })
-        map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = 'previous' })
-        map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = 'next' })
 
         if client.server_capabilities.completionProvider then
           api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -352,7 +361,7 @@ return {
       metals_config.on_attach = function(client, bufnr)
         on_attach(client, bufnr)
 
-        vim.lsp.inlay_hint.enable(true)
+        map("n", "<leader>gs", require("metals").goto_super_method, { desc = "super method" })
 
         map("v", "K", require("metals").type_of_range, { desc = "type of range" })
 

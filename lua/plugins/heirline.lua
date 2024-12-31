@@ -2,7 +2,6 @@ return {
   {
     "rebelot/heirline.nvim",
     event = "ColorScheme",
-    enabled = true,
     dependencies = {
       "lewis6991/gitsigns.nvim",
       -- "nvim-lua/lsp-status.nvim"

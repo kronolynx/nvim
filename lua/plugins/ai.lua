@@ -23,6 +23,7 @@ return {
   {
     "olimorris/codecompanion.nvim",
     -- enabled = false,
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -30,8 +31,8 @@ return {
       { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
     },
     keys = {
-      { "<leader>ccl", "<cmd>CodeCompanion<CR>",     desc = "Inline" },
-      { "<leader>ccc", "<cmd>CodeCompanionChat<CR>", desc = "Chat" },
+      { "<leader>al", "<cmd>CodeCompanion<CR>",     desc = "Inline" },
+      { "<leader>ac", "<cmd>CodeCompanionChat<CR>", desc = "Chat" },
     },
     config = function()
       require("codecompanion").setup({
