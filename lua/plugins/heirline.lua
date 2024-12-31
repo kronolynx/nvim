@@ -50,41 +50,41 @@ return {
         -- corresponding string and color. We can put these into `static` to compute
         -- them at initialisation time.
         static = {
-          mode_names = { -- change the strings if you like it vvvvverbose!
-            n = "",
-            no = "",
-            nov = "",
-            noV = "",
-            ["no\22"] = "",
-            niI = "Ni",
-            niR = "Nr",
-            niV = "Nv",
-            nt = "Nt",
-            v = "",
-            vs = "Vs",
-            V = "",
-            Vs = "Vs",
-            ["\22"] = "^",
-            ["\22s"] = "^",
-            s = "S",
-            S = "S_",
-            ["\19"] = "^S",
-            i = "",
-            ic = "Ic",
-            ix = "Ix",
-            R = "R",
-            Rc = "Rc",
-            Rx = "Rx",
-            Rv = "Rv",
-            Rvc = "Rv",
-            Rvx = "Rv",
-            c = "",
-            cv = "Ex",
-            r = "...",
-            rm = "M",
-            ["r?"] = "?",
-            ["!"] = "!",
-            t = "",
+          mode_names = {    -- change the strings if you like it vvvvverbose!
+            n = "",         -- Normal mode
+            no = "",        -- Operator-pending mode
+            nov = "",       -- Operator-pending mode (after `v`)
+            noV = "",       -- Operator-pending mode (after `V`)
+            ["no\22"] = "", -- Operator-pending mode (after `Ctrl-V`)
+            niI = "Ni",     -- Normal mode (insert mode completion)
+            niR = "Nr",     -- Normal mode (replace mode completion)
+            niV = "Nv",     -- Normal mode (visual mode completion)
+            nt = "Nt",      -- Normal mode (terminal)
+            v = "",         -- Visual mode
+            vs = "Vs",      -- Visual mode (select mode)
+            V = "",         -- Visual line mode
+            Vs = "Vs",      -- Visual line mode (select mode)
+            ["\22"] = "^",  -- Visual block mode (Ctrl-V)
+            ["\22s"] = "^", -- Visual block mode (select mode)
+            s = "S",        -- Select mode
+            S = "S_",       -- Select line mode
+            ["\19"] = "^S", -- Select block mode (Ctrl-S)
+            i = "",         -- Insert mode
+            ic = "Ic",      -- Insert mode (completion)
+            ix = "Ix",      -- Insert mode (completion)
+            R = "R",        -- Replace mode
+            Rc = "Rc",      -- Replace mode (completion)
+            Rx = "Rx",      -- Replace mode (completion)
+            Rv = "Rv",      -- Replace mode (visual mode)
+            Rvc = "Rv",     -- Replace mode (visual mode completion)
+            Rvx = "Rv",     -- Replace mode (visual mode completion)
+            c = "",         -- Command-line mode
+            cv = "Ex",      -- Command-line mode (Vim Ex mode)
+            r = "...",      -- Hit-enter prompt
+            rm = "M",       -- More prompt
+            ["r?"] = "?",   -- Confirm prompt
+            ["!"] = "!",    -- Shell or external command is executing
+            t = "",         -- Terminal mode
           },
           mode_colors = {
             n = colors.red,
@@ -108,7 +108,7 @@ return {
         -- Same goes for the highlight. Now the foreground will change according to the current mode.
         hl = function(self)
           local mode = self.mode:sub(1, 1) -- get only the first mode character
-          return { fg = self.mode_colors[mode],bg = colors.bright_bg, bold = true, }
+          return { fg = self.mode_colors[mode], bg = colors.bright_bg, bold = true, }
         end,
         -- Re-evaluate the component only on ModeChanged event!
         -- Also allows the statusline to be re-evaluated when entering operator-pending mode
