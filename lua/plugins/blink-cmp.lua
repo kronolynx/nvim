@@ -25,7 +25,7 @@ return {
         },
       },
       -- Insert completion item on selection, don't select by default
-      list = { selection = 'auto_insert' },
+      list = { selection = { preselect = false, auto_insert = true } },
       -- Show documentation when selecting a completion item
       documentation = {
         auto_show = true,
@@ -51,9 +51,9 @@ return {
     -- your own keymap.
     keymap = {
       -- preset = 'enter',
-      ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-      ['<C-e>'] = { 'hide' },
-      ["<CR>"] = { "select_and_accept", "fallback" },
+      ['<C-space>'] = { "show", "show_documentation", "hide_documentation" },
+      ['<C-e'] = { "cancel", "fallback" },
+      ["<CR>"] = { "accept", "fallback" },
 
       ["<C-p>"] = { "select_prev", "fallback" },
       ["<C-n>"] = { "select_next", "fallback" },
