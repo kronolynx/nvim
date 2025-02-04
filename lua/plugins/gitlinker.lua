@@ -5,7 +5,7 @@ return
   lazy = true,
   keys = {
     {
-      '<leader>my',
+      '<leader>mY',
       function()
         local mode = string.lower(vim.fn.mode())
         require("gitlinker").get_buf_range_url(mode)
@@ -14,7 +14,7 @@ return
       desc = 'yank perma link'
     },
     {
-      '<leader>mY',
+      '<leader>my',
       function()
         local mode = string.lower(vim.fn.mode())
         require("gitlinker").get_buf_range_url(mode, { action_callback = require("gitlinker.actions").open_in_browser })

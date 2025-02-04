@@ -25,7 +25,7 @@ return {
         },
       },
       -- Insert completion item on selection, don't select by default
-      list = { selection = { preselect = false, auto_insert = true } },
+      list = { selection = { preselect = false, auto_insert = false } },
       -- Show documentation when selecting a completion item
       documentation = {
         auto_show = true,
