@@ -11,6 +11,8 @@ return {
       }
     },
     completion = {
+      -- Recommended to avoid unnecessary request for AI completions
+      trigger = { prefetch_on_insert = false },
       accept = {
         -- experimental auto-brackets support
         auto_brackets = {
@@ -37,6 +39,14 @@ return {
     },
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },
+      -- For manual completion only, remove 'minuet' from default
+      providers = {
+        minuet = {
+          name = 'minuet',
+          module = 'minuet.blink',
+          score_offset = 8,       -- Gives minuet higher priority among suggestions
+        },
+      },
     },
 
     fuzzy = {
@@ -66,6 +76,8 @@ return {
 
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
+      -- Manually invoke minuet completion.
+      ['<A-y>'] = require('minuet').make_blink_map(),
     },
   },
   -- config = function (_, opts)
