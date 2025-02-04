@@ -3,7 +3,7 @@ return {
     'milanglacier/minuet-ai.nvim',
     enabled = true,
     keys = {
-      { "<leader>av", "<cmd>Minuet virtualtext toggle<CR>",     desc = "Toggle virtual text" },
+      { "<leader>av", "<cmd>Minuet virtualtext toggle<CR>", desc = "Toggle virtual text" },
     },
     config = function()
       require('minuet').setup {
@@ -26,9 +26,9 @@ return {
             accept = '<A-A>',
             accept_line = '<A-a>',
             -- Cycle to prev completion item, or manually invoke completion
-            prev = '<A-[>',
+            prev = '<A-n>',
             -- Cycle to next completion item, or manually invoke completion
-            next = '<A-]>',
+            next = '<A-p>',
             dismiss = '<A-e>',
           },
         },
@@ -46,8 +46,13 @@ return {
       { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
     },
     keys = {
-      { "<leader>al", "<cmd>CodeCompanion<CR>",     desc = "Inline" },
-      { "<leader>ac", "<cmd>CodeCompanionChat<CR>", desc = "Chat" },
+      { "<leader>al", "<cmd>CodeCompanion<CR>", desc = "Inline" },
+      {
+        "<leader>ac",
+        "<cmd>CodeCompanionChat<CR>",
+        mode = { 'n', 'v' },
+        desc = "Chat"
+      },
     },
     config = function()
       require("codecompanion").setup({
