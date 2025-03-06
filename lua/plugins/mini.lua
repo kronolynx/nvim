@@ -128,6 +128,9 @@ return {
           { mode = 'n', keys = '<leader>ss', desc = '+symbol' },
           { mode = 'n', keys = '<leader>t',  desc = '+tabs' },
           { mode = 'n', keys = '<leader>q',  desc = '+quicklist' },
+
+          { mode = 'n', keys = '<leader>w',  desc = '+walker' },
+          { mode = 'n', keys = '<leader>ws', desc = '+swap' },
           -- Builtins.
           miniclue.gen_clues.builtin_completion(),
           miniclue.gen_clues.g(),

@@ -19,9 +19,8 @@ return {
     formatters_by_ft = {
       lua = { "stylua" },
       python = { "isort", "black" },
-      javascript = { { "prettierd", "prettier" } },
-      scala = { "scalafmt" },
-      fish = { "fish_indent" },
+      javascript = { "prettierd", "prettier", stop_after_first = true },
+      -- scala = { "scalafmt" }, // already integrated in metals
       sh = { "shfmt" },
     },
     -- Set up format-on-save

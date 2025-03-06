@@ -39,6 +39,35 @@ return {
         },
       },
       {
+        'aaronik/treewalker.nvim',
+        keys = {
+          -- moving
+          { "<leader>wk",  "<cmd>Treewalker Up<CR>",        desc = "move up" },
+          { "<leader>wj",  "<cmd>Treewalker Down<CR>",      desc = "move down" },
+          { "<leader>wh",  "<cmd>Treewalker Left<CR>",      desc = "move left" },
+          { "<leader>wl",  "<cmd>Treewalker Right<CR>",     desc = "move right" },
+          -- swaping
+          { "<leader>wsk", "<cmd>Treewalker SwapUp<CR>",    desc = "swap up" },
+          { "<leader>wsj", "<cmd>Treewalker SwapDown<CR>",  desc = "swap down" },
+          { "<leader>wsh", "<cmd>Treewalker SwapLeft<CR>",  desc = "swap left" },
+          { "<leader>wsl", "<cmd>Treewalker SwapRight<CR>", desc = "swap right" }
+        },
+        -- The following options are the defaults.
+        -- Treewalker aims for sane defaults, so these are each individually optional,
+        -- and setup() does not need to be called, so the whole opts block is optional as well.
+        opts = {
+          -- Whether to briefly highlight the node after jumping to it
+          highlight = true,
+
+          -- How long should above highlight last (in ms)
+          highlight_duration = 250,
+
+          -- The color of the above highlight. Must be a valid vim highlight group.
+          -- (see :h highlight-group for options)
+          highlight_group = 'CursorLine',
+        }
+      },
+      {
         "j-hui/fidget.nvim",
         opts = {
           progress = {
