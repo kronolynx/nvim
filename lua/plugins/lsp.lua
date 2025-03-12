@@ -40,6 +40,7 @@ return {
       },
       {
         'aaronik/treewalker.nvim',
+        lazy = true,
         keys = {
           -- moving
           { "<leader>wk",  "<cmd>Treewalker Up<CR>",        desc = "move up" },
@@ -99,6 +100,7 @@ return {
         rust_analyzer = {},
         jsonls = {},
         yamlls = {},
+        ts_ls = {}, -- Typescript
         -- marksman = {},
         -- markdown_oxide = {},
         -- tsserver = {},
@@ -204,8 +206,16 @@ return {
         map("n", "<leader>lco", "<cmd>FzfLua lsp_outgoing_calls<cr>", { desc = "lsp calls outgoing" })
         map("n", "<leader>lf", "<cmd>FzfLua lsp_finder<cr>", { desc = "lsp finder" })
 
-        if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then -- only available in nightly
-          vim.keymap.set('n', '<leader>lvh', function()
+        -- Diagnostic keymaps
+        map("n", "<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "line" })
+        map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = 'previous' })
+        map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = 'next' })
+        map("n", "<leader>db", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", { desc = "lsp diagnostics buffer" }) -- sort=2 // for reverse sort
+        map("n", "<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", { desc = "lsp diagnostics workspace" })
+
+        if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then
+          -- vim.lsp.inlay_hint.enable(true) -- TODO find a way to enable by default but not here as it will enable each time a buffer is loaded
+          vim.keymap.set('n', '<leader>lh', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
           end, {
             desc = 'inlay hints',
@@ -339,8 +349,7 @@ return {
         end
       end
       vim.lsp.handlers[methods.textDocument_hover] = enhanced_float_handler(vim.lsp.handlers.hover, true)
-      vim.lsp.handlers[methods.textDocument_signatureHelp] = enhanced_float_handler(vim.lsp.handlers.signature_help,
-        false)
+      vim.lsp.handlers[methods.textDocument_signatureHelp] = enhanced_float_handler(vim.lsp.handlers.signature_help, true)
 
 
       -- Uncomment for trace logs from neovim
@@ -367,9 +376,24 @@ return {
         autoImportBuild = "initial", -- initial, all, off
         defaultBspToBuildTool = true,
         enableSemanticHighlighting = false,
+        superMethodLensesEnabled = false,
         showImplicitArguments = false,
         showImplicitConversionsAndClasses = false,
         showInferredType = true,
+        serverProperties = {
+          "-Xmx2G",
+          "-Dmetals.enable-best-effort=true",
+          "-XX:+UseZGC",
+          "-XX:ZUncommitDelay=30",
+          "-XX:ZCollectionInterval=5",
+        },
+        inlayHints = {
+          hintsInPatternMatch = { enable = true },
+          implicitArguments = { enable = false },
+          implicitConversions = { enable = false },
+          inferredTypes = { enable = true },
+          typeParameters = { enable = false },
+        },
         serverVersion = "latest.snapshot",
         scalafixConfigPath = vim.env.HOME .. "/.config/scalafix.conf",
         --testUserInterface = "Test Explorer"
