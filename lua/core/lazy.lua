@@ -28,18 +28,22 @@ end
 return lazy.setup("plugins",
   {
     change_detection = { notify = false },
+    install = {
+      -- Do not automatically install on startup.
+      missing = false,
+    },
     performance = {
-        rtp = {
-            -- Stuff I don't use.
-            disabled_plugins = {
-                'gzip',
-                'netrwPlugin',
-                'rplugin',
-                'tarPlugin',
-                'tohtml',
-                'tutor',
-                'zipPlugin',
-            },
+      rtp = {
+        -- Stuff I don't use.
+        disabled_plugins = {
+          'gzip',
+          'netrwPlugin',
+          'rplugin',
+          'tarPlugin',
+          'tohtml',
+          'tutor',
+          'zipPlugin',
         },
+      },
     },
   })
