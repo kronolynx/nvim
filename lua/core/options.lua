@@ -14,8 +14,8 @@ global_opt.scrolloff = 7
 
 vim.o.termguicolors = true
 
-opt.clipboard = { "unnamed", "unnamedplus" } -- use the system clipboard
-opt.history = 1000                           -- store the last 1000 commands entered
+opt.clipboard = { "unnamedplus" } -- use the system clipboard
+opt.history = 1000                -- store the last 1000 commands entered
 
 opt.guicursor = {
   "n-v-c:block",
@@ -58,13 +58,13 @@ opt.softtabstop = indent
 opt.expandtab = true
 
 opt.spelllang = 'en_us'
-opt.spell = true -- fix spell error keybinding `z=`
+opt.spell = false -- TODO investigate why CamelCase words are reported as error,  fix spell error keybinding `z=`
 
 -- interface
-opt.showcmd = true    -- Show the (partial) command as it’s being typed
-opt.number = true     -- show line numbers
-opt.cmdheight = 0     -- Height of the command bar -- TODO fix problems with messages and flickering
-opt.cursorline = true -- Highlight current line
+opt.showcmd = true      -- Show the (partial) command as it’s being typed
+opt.number = true       -- show line numbers
+opt.cmdheight = 0       -- Height of the command bar -- TODO fix problems with messages and flickering
+opt.cursorline = true   -- Highlight current line
 opt.cursorcolumn = true -- Highlight current column
 opt.signcolumn = "yes"
 
@@ -73,8 +73,8 @@ opt.list = true
 opt.listchars = {
   tab = " →",
   -- eol = "¬",
-  -- trail = "␣", --            
-  trail = "¬", --            
+  -- trail = "␣", --
+  trail = "¬", --
   extends = "❯",
   precedes = "❮"
 }
@@ -91,6 +91,11 @@ opt.foldlevel = 99
 -- opt.foldlevel = 99
 -- opt.foldlevelstart = 99
 
+
+-- Completion.
+opt.wildignore:append { '.DS_Store' }
+vim.o.completeopt = 'menuone,noselect,noinsert'
+vim.o.pumheight = 15
 
 -- completion
 -- opt.wildmode = "list:longest,full"

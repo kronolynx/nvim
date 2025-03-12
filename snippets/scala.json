@@ -77,6 +77,13 @@
     ],
     "description": "TODO"
   },
+  "note": {
+    "prefix": "note",
+    "body": [
+      "// NOTE: ${1:note} "
+    ],
+    "description": "NOTE"
+  },
   "opt": {
     "prefix": "opt",
     "body": [

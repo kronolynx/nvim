@@ -16,6 +16,7 @@ return {
   },
   opts = {
     winbar = true,
-    default_view = "headers_body"
+    default_view = "headers_body",
+    split_direction = "horizontal",
   },
 }

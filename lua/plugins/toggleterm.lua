@@ -4,7 +4,7 @@ return {
   opts = {
     -- direction = 'horizontal',
     direction = 'float',
-    open_mapping = [[<F2>]],
+    open_mapping = [[<M-t>]],
     auto_scroll = false
   },
   config = function(_, opts)

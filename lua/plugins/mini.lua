@@ -10,6 +10,7 @@ return {
     -- Only for cursor animation
     'echasnovski/mini.animate',
     event = "VeryLazy",
+    enabled = true,
     config = function()
       require('mini.animate').setup(
         {
@@ -33,6 +34,7 @@ return {
     'echasnovski/mini.bufremove',
     config = true,
     lazy = true,
+    -- enabled = false,
     keys = {
       {
         '<leader>td',
@@ -125,6 +127,7 @@ return {
 
           { mode = 'n', keys = '<leader>n',  desc = '+noice' },
           { mode = 'n', keys = '<leader>s',  desc = '+search' },
+          { mode = 'v', keys = '<leader>s',  desc = '+search' },
           { mode = 'n', keys = '<leader>ss', desc = '+symbol' },
           { mode = 'n', keys = '<leader>t',  desc = '+tabs' },
           { mode = 'n', keys = '<leader>q',  desc = '+quicklist' },
@@ -233,5 +236,22 @@ return {
         },
       })
     end
-  }
+  },
+  {
+    'echasnovski/mini.misc',
+    lazy = true,
+    enabled = false,
+    keys = {
+      {
+        "<leader>z", -- TODO try to replace windows with this ?
+        function()
+          require('mini.misc').zoom()
+        end,
+        desc = "zoom"
+      },
+    },
+    config = function()
+      require('mini.misc').setup()
+    end
+  },
 }

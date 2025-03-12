@@ -2,6 +2,7 @@ return {
   {
     'milanglacier/minuet-ai.nvim',
     enabled = true,
+    event = "VeryLazy",
     keys = {
       { "<leader>av", "<cmd>Minuet virtualtext toggle<CR>", desc = "Toggle virtual text" },
     },

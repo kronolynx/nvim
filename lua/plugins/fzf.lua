@@ -23,7 +23,7 @@ return {
     { "<leader>mS",  "<cmd>FzfLua git_stash<cr>",        desc = "git stash" },
 
     -- search
-    { "<leader>sr",  "<cmd>FzfLua resume<cr>",           desc = "resume" },
+    { "<leader>sc",  "<cmd>FzfLua resume<cr>",           desc = "continue" },
     { "<leader>ss",  "<cmd>FzfLua live_grep<cr>",        desc = "search path" },
     { "<leader>sw",  "<cmd>FzfLua grep_cword<cr>",       desc = "search cursor" },
 
@@ -77,16 +77,15 @@ return {
         rg_glob = true, -- always parse globs in both 'grep' and 'live_grep'
       },
       lsp = {
-        prompt_postfix        = '❯ ', -- will be appended to the LSP label
-        jump_to_single_result = true,
-        ignore_current_line   = true, -- not sure if I want this behaviour
-        includeDeclaration    = false, -- include current declaration in LSP context
-        async_or_timeout      = 5000, -- timeout(ms) or 'true' for async calls
-        git_icons             = false,
-        finder                = {
+        prompt_postfix      = '❯ ', -- will be appended to the LSP label
+        ignore_current_line = true, -- not sure if I want this behaviour
+        includeDeclaration  = false, -- include current declaration in LSP context
+        async_or_timeout    = 5000, -- timeout(ms) or 'true' for async calls
+        git_icons           = false,
+        finder              = {
           includeDeclaration = false, -- include current declaration in LSP context
         },
-        symbols               = {
+        symbols             = {
           symbol_icons = icons.symbol_kinds,
           symbol_style = 2 -- 1: icon+kind, 2: icon only, 3: kind only, false: disable
         }
