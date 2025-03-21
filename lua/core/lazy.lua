@@ -30,7 +30,7 @@ return lazy.setup("plugins",
     change_detection = { notify = false },
     install = {
       -- Do not automatically install on startup.
-      missing = false,
+      missing = true,
     },
     performance = {
       rtp = {

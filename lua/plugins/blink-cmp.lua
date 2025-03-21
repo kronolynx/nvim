@@ -3,6 +3,7 @@ return {
   event = { "InsertEnter" },
   -- enabled = false,
   version = "v0.*",
+  dependencies = "milanglacier/minuet-ai.nvim",
   opts = {
     signature = {
       enabled = true,

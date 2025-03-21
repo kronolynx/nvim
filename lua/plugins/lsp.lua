@@ -10,6 +10,14 @@ vim.diagnostic.config {
     border = 'rounded',
     focusable = true,
   },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diagnostics.ERROR,
+      [vim.diagnostic.severity.WARN] = icons.diagnostics.WARN,
+      [vim.diagnostic.severity.INFO] = icons.diagnostics.HINT,
+      [vim.diagnostic.severity.HINT] = icons.diagnostics.INFO,
+    },
+  },
 }
 
 return {
@@ -108,10 +116,24 @@ return {
         bashls = {},
         lua_ls = { -- TODO fix maybe name is lua-language_server
           Lua = {
-            workspace = { checkThirdParty = false },
+            runtime = {
+              -- Tell the language server which version of Lua you're using
+              -- (most likely LuaJIT in the case of Neovim)
+              version = 'LuaJIT',
+            },
+            diagnostics = {
+              -- Get the language server to recognize the `vim` global
+              globals = {
+                'vim',
+                'require'
+              },
+            },
+            workspace = {
+              -- Make the server aware of Neovim runtime files
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false
+            },
             telemetry = { enable = false },
-            -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
           },
         },
       }
@@ -132,18 +154,6 @@ return {
       mason_lspconfig.setup {
         ensure_installed = vim.tbl_keys(servers),
       }
-
-      -- Configuration for diagnostics
-      local signs = {
-        { name = 'DiagnosticSignError', text = icons.diagnostics.ERROR },
-        { name = 'DiagnosticSignWarn',  text = icons.diagnostics.WARN },
-        { name = 'DiagnosticSignHint',  text = icons.diagnostics.HINT },
-        { name = 'DiagnosticSignInfo',  text = icons.diagnostics.INFO },
-      }
-
-      for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
-      end
 
       vim.lsp.handlers["textDocument/publishDiagnostics"] =
           vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -175,6 +185,25 @@ return {
         dynamicRegistration = false,
         lineFoldingOnly = true
       }
+      local hover = vim.lsp.buf.hover
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.lsp.buf.hover = function()
+        return hover {
+          border = 'rounded',
+          max_height = math.floor(vim.o.lines * 0.8),
+          max_width = math.floor(vim.o.columns * 0.8),
+        }
+      end
+
+      local signature_help = vim.lsp.buf.signature_help
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.lsp.buf.signature_help = function()
+        return signature_help {
+          border = 'rounded',
+          max_height = math.floor(vim.o.lines * 0.8),
+          max_width = math.floor(vim.o.columns * 0.8),
+        }
+      end
 
       local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
 
@@ -211,7 +240,8 @@ return {
         map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = 'previous' })
         map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = 'next' })
         map("n", "<leader>db", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", { desc = "lsp diagnostics buffer" }) -- sort=2 // for reverse sort
-        map("n", "<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", { desc = "lsp diagnostics workspace" })
+        map("n", "<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>",
+          { desc = "lsp diagnostics workspace" })
 
         if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then
           -- vim.lsp.inlay_hint.enable(true) -- TODO find a way to enable by default but not here as it will enable each time a buffer is loaded
@@ -227,7 +257,7 @@ return {
           api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
         end
 
-        if client.supports_method(methods.textDocument_documentHighlight) then
+        if client:supports_method(methods.textDocument_documentHighlight) then
           vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'BufEnter' }, {
             group = lsp_group,
             desc = 'Highlight references under the cursor',
@@ -242,7 +272,7 @@ return {
           })
         end
 
-        if client.supports_method(methods.codeLens_resolve) then
+        if client:supports_method(methods.codeLens_resolve) then
           api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
             group = lsp_group,
             desc = 'Refresh code lens',
