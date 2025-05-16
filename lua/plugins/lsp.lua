@@ -283,17 +283,6 @@ return {
       end
 
 
-      mason_lspconfig.setup_handlers {
-        function(server_name)
-          require('lspconfig')[server_name].setup {
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = servers[server_name],
-            filetypes = (servers[server_name] or {}).filetypes,
-          }
-        end,
-      }
-
       --- https://github.com/MariaSolOs/dotfiles/blob/c5000d1eba7b2a153112300301e75b19a63bb25b/config/nvim/lua/lsp.lua#L177
       --- Adds extra inline highlights to the given buffer.
       ---@param buf integer
