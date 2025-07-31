@@ -11,6 +11,14 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
+-- close quickfix menu after selecting choice
+vim.api.nvim_create_autocmd(
+  "FileType", {
+    pattern = { "qf" },
+    command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]
+  })
+
+
 -- auto-read files when modified externally
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
   command = "if mode() != 'c' | checktime | endif",
@@ -30,12 +38,12 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 vim.api.nvim_create_autocmd('BufRead',
 
   {
-  group = vim.api.nvim_create_augroup('NoModWhenReadOnly', { clear = true }),
-  pattern = '*',
-  callback = function()
-    vim.bo.modifiable = not vim.bo.readonly
-  end,
-})
+    group = vim.api.nvim_create_augroup('NoModWhenReadOnly', { clear = true }),
+    pattern = '*',
+    callback = function()
+      vim.bo.modifiable = not vim.bo.readonly
+    end,
+  })
 
 -- vim.api.nvim_create_autocmd({ "VimSuspend", "FocusLost" }, { command = "silent! update" })
 --
@@ -43,19 +51,20 @@ vim.api.nvim_create_autocmd('BufRead',
 --   { "FocusLost", "ModeChanged", "TextChangedI", "BufEnter" },
 --   { desc = "autosave", pattern = "*", command = "silent! update" }
 -- )
+--
 vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'VimLeavePre', 'InsertLeave' }, {
-	pattern = '*',
-	group = vim.api.nvim_create_augroup('autosave', { clear = true }),
-	callback = function(event)
-		if event.buftype or event.file == '' then
-			return
-		end
-		vim.api.nvim_buf_call(event.buf, function()
-			vim.schedule(function()
-				vim.cmd 'silent! update'
-			end)
-		end)
-	end,
+  pattern = '*',
+  group = vim.api.nvim_create_augroup('autosave', { clear = true }),
+  callback = function(event)
+    if event.buftype or event.file == '' then
+      return
+    end
+    vim.api.nvim_buf_call(event.buf, function()
+      vim.schedule(function()
+        vim.cmd 'silent! update'
+      end)
+    end)
+  end,
 })
 
 -- --- TODO fix
@@ -109,6 +118,27 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set('n', 'q', '<cmd>quit<cr>', { buffer = args.buf })
   end,
 })
+
+
+-- Function to grep the word under the cursor
+function _G.grep_word_under_cursor()
+  local word = vim.fn.expand('<cword>')
+  vim.cmd('Grep ' .. word)
+end
+
+-- Function to prompt for grep arguments and run the Grep command
+function _G.prompt_grep()
+  local pattern = vim.fn.input('Grep pattern: ')
+  if pattern ~= '' then
+    vim.cmd('Grep ' .. pattern)
+  end
+end
+
+vim.api.nvim_create_user_command('Grep', function(opts)
+  vim.cmd('silent grep ' .. table.concat(opts.fargs, ' '))
+  vim.cmd('redraw!')
+  vim.cmd('copen')
+end, { nargs = '+', complete = 'file' })
 
 -- -- TODO move somewhere else and add keybinding
 -- -- Copy text to clipboard using codeblock format ```{ft}{content}```

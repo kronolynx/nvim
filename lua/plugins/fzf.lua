@@ -1,17 +1,15 @@
 return {
   "ibhagwan/fzf-lua",
-  enabled = true,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
     { "<M-CR>",      '<cmd>FzfLua lsp_code_actions<CR>', mode = { "v", "n" } },
 
-    -- { "<leader>gf",  "<cmd>FzfLua lsp_declarations<cr>",           desc = "lsp declarations" }, -- not supported by metals
     { "<leader>gf",  "<cmd>FzfLua files<cr>",            desc = "find files" },
     { "<leader>gh",  "<cmd>FzfLua helptags<cr>",         desc = "help tags" },
     { "<leader>gj",  "<cmd>FzfLua jumps<cr>",            desc = "jumps" },
     { "<leader>gk",  "<cmd>FzfLua keymaps<cr>",          desc = "keymaps" },
     { "<leader>gm",  "<cmd>FzfLua marks<cr>",            desc = "marks" },
-    { "<leader>gR",  "<cmd>FzfLua registers<cr>",        desc = "registers" },
+    -- { "<leader>gR",  "<cmd>FzfLua registers<cr>",        desc = "registers" },
 
 
     -- git
@@ -25,18 +23,19 @@ return {
     -- search
     { "<leader>sc",  "<cmd>FzfLua resume<cr>",           desc = "continue" },
     { "<leader>ss",  "<cmd>FzfLua live_grep<cr>",        desc = "search path" },
-    { "<leader>sw",  "<cmd>FzfLua grep_cword<cr>",       desc = "search cursor" },
+    { "<leader>sW",  "<cmd>FzfLua grep_cword<cr>",       desc = "search cursor" },
 
     -- buffers
     { "<leader>to",  "<cmd>FzfLua oldfiles<cr>",         desc = "old files" },
     { "<leader>tr",  "<cmd>FzfLua buffers<cr>",          desc = "recent files" },
   },
-  config = function()
+  opts = function()
     local actions = require "fzf-lua.actions"
     local icons = require('util.icons')
     local fzf = require('fzf-lua')
 
-    fzf.setup {
+    return {
+      "hide",
       "telescope", -- :FzfLua profiles
       defaults = {
         formatter  = "path.filename_first",
@@ -50,6 +49,7 @@ return {
         row        = 0.35,       -- window row position (0=top, 1=bottom)
         col        = 0.50,       -- window col position (0=left, 1=right)
         fullscreen = false,      -- start fullscreen?
+        backdrop   = 100,        -- Backdrop opacity, 0 is fully opaque, 100 is fully transparent (i.e. disabled)
         preview    = {
           hidden   = 'nohidden', -- hidden|nohidden
           vertical = 'up:60%',   -- up|down:size
@@ -57,11 +57,13 @@ return {
         },
       },
       fzf_opts = {
-        ["--ansi"]   = true,
-        ["--info"]   = "inline-right",
-        ["--height"] = "100%",
-        ["--layout"] = "default",
-        ["--border"] = "none",
+        ["--ansi"]           = true,
+        ["--info"]           = "inline-right", -- fzf < v0.42 = "inline"
+        ["--height"]         = "100%",
+        ["--layout"]         = "reverse",
+        -- ["--layout"]         = "default", -- TODO this is broken
+        ["--border"]         = "none",
+        ["--highlight-line"] = true,
       },
       files = {
         prompt       = 'Files❯ ',
@@ -79,7 +81,7 @@ return {
       lsp = {
         prompt_postfix      = '❯ ', -- will be appended to the LSP label
         ignore_current_line = true, -- not sure if I want this behaviour
-        includeDeclaration  = false, -- include current declaration in LSP context
+        includeDeclaration  = true, -- include current declaration in LSP context
         async_or_timeout    = 5000, -- timeout(ms) or 'true' for async calls
         git_icons           = false,
         finder              = {
@@ -115,7 +117,45 @@ return {
         },
       },
     }
+  end,
+  init = function()
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.ui.select = function(items, opts, on_choice)
+      local ui_select = require 'fzf-lua.providers.ui_select'
 
-    fzf.register_ui_select()
-  end
+      -- Register the fzf-lua picker the first time we call select.
+      if not ui_select.is_registered() then
+        ui_select.register(function(ui_opts)
+          if ui_opts.kind == 'luasnip' then
+            ui_opts.prompt = 'Snippet choice: '
+            ui_opts.winopts = {
+              relative = 'cursor',
+              height = 0.35,
+              width = 0.3,
+            }
+          elseif ui_opts.kind == 'color_presentation' then
+            ui_opts.winopts = {
+              relative = 'cursor',
+              height = 0.35,
+              width = 0.3,
+            }
+          else
+            ui_opts.winopts = { height = 0.5, width = 0.4 }
+          end
+
+          -- Use the kind (if available) to set the previewer's title.
+          if ui_opts.kind then
+            ui_opts.winopts.title = string.format(' %s ', ui_opts.kind)
+          end
+
+          return ui_opts
+        end)
+      end
+
+      -- Don't show the picker if there's nothing to pick.
+      if #items > 0 then
+        return vim.ui.select(items, opts, on_choice)
+      end
+    end
+  end,
 }

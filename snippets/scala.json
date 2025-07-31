@@ -1,97 +1,125 @@
 {
-  "pln": {
-    "prefix": "pln",
+  "ppld": {
+    "prefix": "ppld",
     "body": [
-      "println(\"<<<>>>  $1\")",
-      "$0"
+      "\"com.lihaoyi\" %% \"pprint\" % \"0.8.1\""
     ],
-    "description": "Log output to console"
+    "description": "pprint dependency"
+  },
+  "pprint": {
+    "prefix": "ppp",
+    "body": [
+      "pprint.log($1, tag = \"\", height = 100000)"
+    ]
   },
   "ppl": {
     "prefix": "ppl",
     "body": [
-      "pprint.log(${1:EXPR}, tag = \"${1:EXPR}\")"
+      "pprint.log(${1:EXPR}, tag = \"${1:EXPR}\", height = 100000)"
     ],
     "description": "pprint log"
+  },
+  "ppa": {
+    "prefix": "ppa",
+    "body": "println(Console.$1 + s\"$\" + Console.RESET)"
+  },
+  "ppb": {
+    "prefix": "ppb",
+    "body": "println(Console.$1 + Console.BLINK + s\"\" + Console.RESET)"
+  },
+  "pln": {
+    "prefix": "pln",
+    "body": [
+      "println(s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  $1\")",
+      "$0"
+    ],
+    "description": "Log output to console"
+  },
+  "plb": {
+    "prefix": "plb",
+    "body": [
+      "println(Console.BLUE_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
+    ],
+    "description": "print blue background"
   },
   "ply": {
     "prefix": "ply",
     "body": [
-      "println(Console.YELLOW_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.YELLOW_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
     "description": "print yellow background"
   },
   "plm": {
     "prefix": "plm",
     "body": [
-      "println(Console.MAGENTA_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.MAGENTA_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
     "description": "print magenta background"
   },
-  "plb": {
-    "prefix": "plb",
+  "ln": {
+    "prefix": "ln",
     "body": [
-      "println(Console.BLUE_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "${TM_FILENAME_BASE}:${TM_LINE_NUMBER}"
     ],
-    "description": "print magenta background"
+    "description": "line number with file"
   },
   "plc": {
     "prefix": "plc",
     "body": [
-      "println(Console.CYAN_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.CYAN_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
     "description": "print magenta background"
   },
   "plr": {
     "prefix": "plr",
     "body": [
-      "println(Console.RED_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.RED_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
     "description": "print red background"
   },
   "plg": {
     "prefix": "plg",
     "body": [
-      "println(Console.GREEN_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
+      "println(Console.GREEN_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
     ],
     "description": "print green background"
   },
-  "plw": {
-    "prefix": "plw",
-    "body": [
-      "println(Console.WHITE_B + Console.BLACK + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
-    ],
-    "description": "print white background"
-  },
-  "plf": {
-    "prefix": "plf",
-    "body": [
-      "println(Conssole.BLACK_B + Console.${1:COLOR} + s\"<<<>>>  ${2:EXPR}\\n\" + Console.RESET)"
-    ],
-    "description": "print color foreground"
-  },
-  "todo": {
-    "prefix": "todo",
-    "body": [
-      "// TODO: ${1:todo} "
-    ],
-    "description": "TODO"
-  },
-  "note": {
-    "prefix": "note",
-    "body": [
-      "// NOTE: ${1:note} "
-    ],
-    "description": "NOTE"
-  },
-  "opt": {
-    "prefix": "opt",
-    "body": [
-      "${1:OPTION} match {",
-      "\tcase Some(${2:NAME}) => ${3:SOME}",
-      "\tcase None => ${4:NONE}",
-      "}"
-    ],
-    "description": "Template for matching Option type"
-  }
+	"plw": {
+		"prefix": "plw",
+		"body": [
+			"println(Console.WHITE_B + Console.BLACK + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
+		],
+		"description": "print white background"
+	},
+	"plf": {
+		"prefix": "plf",
+		"body": [
+			"println(Conssole.BLACK_B + Console.${1:COLOR} + s\"<<< ${TM_FILENAME_BASE}:${TM_LINE_NUMBER} >>>  ${2:EXPR}\\n\" + Console.RESET)"
+		],
+		"description": "print color foreground"
+	},
+	"todo": {
+		"prefix": "todo",
+		"body": [
+			"// TODO: ${1:todo} "
+		],
+		"description": "TODO"
+	},
+	"note": {
+		"prefix": "note",
+		"body": [
+			"// NOTE: ${1:note} "
+		],
+		"description": "NOTE"
+	},
+	"opt": {
+		"prefix": "opt",
+		"body": [
+			"${1:OPTION} match {",
+			"\tcase Some(${2:NAME}) => ${3:SOME}",
+			"\tcase None => ${4:NONE}",
+			"}"
+		],
+		"description": "Template for matching Option type"
+	}
 }

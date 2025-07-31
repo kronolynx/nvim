@@ -38,7 +38,7 @@ opt.undofile = true      -- save undo history to file
 -- opt.lazyredraw = true    -- don't redraw while executing macros
 opt.magic = true -- set magic on, for regular expressions
 
-opt.showmode = false
+opt.fixeol = false -- don't fix end of line
 
 opt.conceallevel = 2 -- show conceals
 -- disable wrap of long lines
@@ -59,14 +59,6 @@ opt.expandtab = true
 
 opt.spelllang = 'en_us'
 opt.spell = false -- TODO investigate why CamelCase words are reported as error,  fix spell error keybinding `z=`
-
--- interface
-opt.showcmd = true      -- Show the (partial) command as it’s being typed
-opt.number = true       -- show line numbers
-opt.cmdheight = 0       -- Height of the command bar -- TODO fix problems with messages and flickering
-opt.cursorline = true   -- Highlight current line
-opt.cursorcolumn = true -- Highlight current column
-opt.signcolumn = "yes"
 
 -- toggle invisible characters
 opt.list = true
@@ -91,6 +83,8 @@ opt.foldlevel = 99
 -- opt.foldlevel = 99
 -- opt.foldlevelstart = 99
 
+-- Add the cfilter plugin to quicklist
+vim.cmd.packadd 'cfilter'
 
 -- Completion.
 opt.wildignore:append { '.DS_Store' }
@@ -106,19 +100,23 @@ vim.o.pumheight = 15
 -- opt.shortmess:append("A") -- ATTENTION swap
 -- opt.shortmess:append("I") -- intro message when starting
 
+opt.showmode = false
 -- suppress messages
 -- :h shortmess
 opt.shortmess:append {
-  A = true, -- ATTENTION swap
-  F = true, -- don't give the file info when editing a file, like `:silent was used`.
-  I = true, -- intro message when starting
-  W = true, -- don't give "written" or "[w]" when writing a file
-  q = true, -- don't show recording info
-  c = true, -- "match 1 of 2", "The only match", "Pattern not found", "Back at original", etc.
-  n = true, -- no write since last change
-  o = true, -- overwriting a file
-  s = true, -- hit BOTTOM
+  A = true,   -- ATTENTION swap
+  F = true,   -- don't give the file info when editing a file, like `:silent was used`.
+  I = true,   -- intro message when starting
+  W = true,   -- don't give "written" or "[w]" when writing a file
+  q = true,   -- don't show recording info
+  c = true,   -- "match 1 of 2", "The only match", "Pattern not found", "Back at original", etc.
+  n = true,   -- no write since last change
+  o = true,   -- overwriting a file
+  s = true,   -- hit BOTTOM
 }
+
+-- Don't show the command that produced the quickfix list.
+vim.g.qf_disable_statusline = 1
 
 -- auto-reload files when modified externally
 -- https://unix.stackexchange.com/a/383044
@@ -131,6 +129,20 @@ vim.api.nvim_set_option('updatetime', 300)
 vim.o.grepprg = 'rg --vimgrep'
 vim.o.grepformat = '%f:%l:%c:%m'
 
+if vim.g.vscode then
+  local vscode = require("vscode")
+  vim.notify = vscode.notify
+  vim.g.clipboard = vim.g.vscode_clipboard
+  vim.notify("VScode-nvim settings loaded", "info", { title = "LazyVim" })
+else
+  -- interface
+  opt.showcmd = true      -- Show the (partial) command as it’s being typed
+  opt.number = true       -- show line numbers
+  opt.cmdheight = 0       -- Height of the command bar -- TODO fix problems with messages and flickering
+  opt.cursorline = true   -- Highlight current line
+  opt.cursorcolumn = true -- Highlight current column
+  opt.signcolumn = "yes"
+end
 -- local last_showcmd_linger = 1000
 -- local ns = vim.api.nvim_create_namespace('showcmd_msg')
 -- local function set_showmess(mess)

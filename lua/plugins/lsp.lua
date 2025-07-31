@@ -1,7 +1,8 @@
 local api = vim.api
-local map = vim.keymap.set
 local icons = require('util.icons')
 local methods = vim.lsp.protocol.Methods
+-- Disable inlay hints initially (and enable if needed with my ToggleInlayHints command).
+vim.g.inlay_hints = false
 
 vim.diagnostic.config {
   virtual_text = false,
@@ -24,7 +25,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    enabled = os.getenv("LSP_ENABLED") ~= "false", -- use `alias no="LSP_ENABLED=false nvim"` to disable LSP
+    enabled = os.getenv("LSP_ENABLED") ~= "false",
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -109,12 +110,13 @@ return {
         jsonls = {},
         yamlls = {},
         ts_ls = {}, -- Typescript
+        smithy_ls = {},
         -- marksman = {},
         -- markdown_oxide = {},
         -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
         bashls = {},
-        lua_ls = { -- TODO fix maybe name is lua-language_server
+        lua_ls = {
           Lua = {
             runtime = {
               -- Tell the language server which version of Lua you're using
@@ -130,8 +132,12 @@ return {
             },
             workspace = {
               -- Make the server aware of Neovim runtime files
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false
+              -- library = vim.api.nvim_get_runtime_file("", true),
+              library = {
+                vim.env.VIMRUNTIME,
+                '${3rd}/luv/library',
+              },
+              checkThirdParty = false,
             },
             telemetry = { enable = false },
           },
@@ -140,7 +146,6 @@ return {
 
       -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
       capabilities.workspace = {
         didChangeWatchedFiles = {
@@ -208,48 +213,103 @@ return {
       local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
 
       local on_attach = function(client, bufnr)
-        map("n", "<leader>gD", vim.lsp.buf.definition, { desc = "definitions" })
-        map("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
-        map("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
-        map("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
-        map("n", "H", vim.lsp.buf.signature_help, { desc = "signature help" })
-        map("i", "<M-h>", vim.lsp.buf.signature_help, { desc = "signature" })
-        map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
-        map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
-        map("v", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
-        map("n", "<leader>ll", vim.lsp.codelens.run, { desc = "code lens" })
-        map("n", "<leader>lw", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
-        map("n", "K", vim.lsp.buf.hover)
 
+        ---@param lhs string
+        ---@param rhs string|function
+        ---@param desc string
+        ---@param mode? string|string[]
+        local function keymap(lhs, rhs, desc, mode)
+          mode = mode or 'n'
+          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+        end
+
+        -- TODO fix miniclue to display these clues only when lsp attached
+        -- vim.b[bufnr].miniclue_config = {
+        --   clues = {
+        --     { mode = 'n', keys = '<leader>l',   desc = '+lsp' },
+        --     { mode = 'x', keys = '<leader>l',   desc = '+lsp' },
+        --     { mode = 'n', keys = '<leader>ld',  desc = '+debug' },
+        --     { mode = 'x', keys = '<leader>ld',  desc = '+debug' },
+        --     { mode = 'n', keys = '<leader>lv',  desc = '+view' },
+        --     { mode = 'x', keys = '<leader>lv',  desc = '+view' },
+        --     -- TODO move metals clues to metals attach
+        --     { mode = 'n', keys = '<leader>lm',  desc = '+metals' },
+        --     { mode = 'n', keys = '<leader>lmv', desc = '+view' },
+        --     { mode = 'x', keys = '<leader>lm',  desc = '+metals' },
+        --     { mode = 'x', keys = '<leader>lmv', desc = '+view' },
+        --   },
+        -- }
+
+        keymap("H", vim.lsp.buf.signature_help, "signature help")
+        keymap("<M-h>", vim.lsp.buf.signature_help, "signature", "i")
+
+        keymap("<leader>lr", vim.lsp.buf.rename, "rename")
+        -- keymap( "<leader>la", vim.lsp.buf.code_action, "code action" )
+        keymap("<leader>ll", vim.lsp.codelens.run, "code lens")
+        keymap("<leader>lw", vim.lsp.buf.add_workspace_folder, "add workspace folder")
+        keymap("K", vim.lsp.buf.hover, "Hover")
+
+        keymap("<leader>gi", vim.lsp.buf.implementation, "implementation")
+        keymap("<leader>gt", vim.lsp.buf.type_definition, "type definition")
+        keymap("<leader>gr", vim.lsp.buf.references, "references")
+        keymap("<leader>gSb", vim.lsp.buf.document_symbol, "document symbol")
+        keymap("<leader>li", vim.lsp.buf.incoming_calls, "incoming calls") -- Lists all the call sites of the symbol under the cursor in the quickfix window.
+        keymap("<leader>lo", vim.lsp.buf.outgoing_calls, "outgoing calls") -- Lists all the items that are called by the symbol under the cursor in the quickfix window.
+        keymap("<leader>lh", vim.lsp.buf.typehierarchy, "hierarchy")       -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
+        keymap("<leader>l=", vim.lsp.buf.format, "format")                 -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
         -- FZF
-        map("n", "<leader>gd", "<cmd>FzfLua lsp_definitions<cr>", { desc = "lsp definitions" })
-        map("n", "<leader>gi", "<cmd>FzfLua lsp_implementations<cr>", { desc = "lsp implementations" })
-        map("n", "<leader>gr", "<cmd>FzfLua lsp_references<cr>", { desc = "lsp references" })
-        map("n", "<leader>gSb", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "lsp symbols buffer" })
-        map("n", "<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", { desc = "lsp live workspace symbols" })
-        map("n", "<leader>gSw", "<cmd>FzfLua lsp_workspace_symbols<cr>", { desc = "lsp symbols workspace" })
-        map("n", "<leader>gt", "<cmd>FzfLua lsp_typedefs<cr>", { desc = "lsp typedefs" })
+        keymap("<leader>gI", "<cmd>FzfLua lsp_implementations<cr>", "implementation FZF")
+        keymap("<leader>gT", "<cmd>FzfLua lsp_typedefs<cr>", "typedefs FZF")
+        keymap("<leader>gR", "<cmd>FzfLua lsp_references<cr>", "references FZF")
+        keymap("<leader>gSB", "<cmd>FzfLua lsp_document_symbols<cr>", "symbols buffer FZF")
+        keymap("<leader>lI", "<cmd>FzfLua lsp_incoming_calls<cr>", "incoming calls FZF")
+        keymap("<leader>lO", "<cmd>FzfLua lsp_outgoing_calls<cr>", "outgoing calls FZF")
 
-        map("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", { desc = "lsp code actions" })
-        map("n", "<leader>lci", "<cmd>FzfLua lsp_incoming_calls<cr>", { desc = "lsp calls incoming" })
-        map("n", "<leader>lco", "<cmd>FzfLua lsp_outgoing_calls<cr>", { desc = "lsp calls outgoing" })
-        map("n", "<leader>lf", "<cmd>FzfLua lsp_finder<cr>", { desc = "lsp finder" })
+        keymap("<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", "lsp live workspace symbols FZF")
+        -- keymap("<leader>gSw", "<cmd>FzfLua lsp_workspace_symbols<cr>", "lsp symbols workspace FZF") -- doesn't work for metals
+        keymap("<leader>gSw", vim.lsp.buf.workspace_symbol, "workspace symbol")
 
-        -- Diagnostic keymaps
-        map("n", "<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "line" })
-        map("n", '<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = 'previous' })
-        map("n", '<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = 'next' })
-        map("n", "<leader>db", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", { desc = "lsp diagnostics buffer" }) -- sort=2 // for reverse sort
-        map("n", "<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>",
-          { desc = "lsp diagnostics workspace" })
+
+        keymap( "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "lsp code actions" )
+        keymap("<leader>lf", "<cmd>FzfLua lsp_finder<cr>", "lsp finder FZF")
+
+        -- Diagnostics keymaps
+        keymap("<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", "line")
+        keymap('<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", 'previous')
+        keymap('<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", 'next')
+        keymap("<leader>db", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", "diagnostics buffer FZF") -- sort=2 // for reverse sort
+        keymap("<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", "diagnostics workspace FZF")
+        -- keymap("<leader>dW", vim.lsp.buf.workspace_diagnostics, "diagnostics workspace") -- broken
+
+        keymap('[d', function() vim.diagnostic.jump { count = -1 } end, 'Previous diagnostic')
+        keymap(']d', function() vim.diagnostic.jump { count = 1 } end, 'Next diagnostic')
+        keymap('[e', function() vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR } end,
+          'Previous error')
+        keymap(']e', function() vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR } end,
+          'Next error')
+
+        if client:supports_method(methods.textDocument_definition) then
+          -- keymap('gd', function() require('fzf-lua').lsp_definitions { jump1 = true } end, 'Go to definition')
+          keymap("<leader>gd", vim.lsp.buf.definition, "definition") -- TODO if not happy with QF then replace with the one above
+          keymap('<leader>gD', function() require('fzf-lua').lsp_definitions { jump1 = false } end, 'Peek definition FZF')
+        end
+
+        if client:supports_method(methods.textDocument_signatureHelp) then
+          keymap('<C-k>', function()
+            -- Close the completion menu first (if open).
+            if require('blink.cmp.completion.windows.menu').win:is_open() then
+              require('blink.cmp').hide()
+            end
+
+            vim.lsp.buf.signature_help()
+          end, 'Signature help', 'i')
+        end
 
         if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then
           -- vim.lsp.inlay_hint.enable(true) -- TODO find a way to enable by default but not here as it will enable each time a buffer is loaded
-          vim.keymap.set('n', '<leader>lh', function()
+          keymap('<leader>lvh', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-          end, {
-            desc = 'inlay hints',
-          })
+          end, 'enable inlay hints')
         end
 
 
@@ -406,14 +466,14 @@ return {
           "-XX:ZUncommitDelay=30",
           "-XX:ZCollectionInterval=5",
         },
-        inlayHints = {
-          hintsInPatternMatch = { enable = true },
-          implicitArguments = { enable = false },
-          implicitConversions = { enable = false },
-          inferredTypes = { enable = true },
-          typeParameters = { enable = false },
-        },
-        serverVersion = "latest.snapshot",
+        -- inlayHints = { -- TODO if this is added can't toggle hindts
+        --   hintsInPatternMatch = { enable = true },
+        --   implicitArguments = { enable = true },
+        --   implicitConversions = { enable = true },
+        --   inferredTypes = { enable = true },
+        --   typeParameters = { enable = false },
+        -- },
+        -- serverVersion = "latest.snapshot",
         scalafixConfigPath = vim.env.HOME .. "/.config/scalafix.conf",
         --testUserInterface = "Test Explorer"
       }
@@ -431,42 +491,52 @@ return {
       metals_config.capabilities = capabilities
 
       metals_config.on_attach = function(client, bufnr)
+        ---@param lhs string
+        ---@param rhs string|function
+        ---@param desc string
+        ---@param mode? string|string[]
+        local function keymap(lhs, rhs, desc, mode)
+          mode = mode or 'n'
+          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+        end
+
+
         on_attach(client, bufnr)
 
-        map("n", "<leader>gs", require("metals").goto_super_method, { desc = "super method" })
+        keymap("<leader>gs", require("metals").goto_super_method, "super method")
 
-        map("v", "K", require("metals").type_of_range, { desc = "type of range" })
+        keymap("K", require("metals").type_of_range, "type of range", "v")
 
-        map("n", "<leader>lmw", function()
+        keymap("<leader>lmw", function()
           require("metals").hover_worksheet({ border = "single" })
-        end, { desc = "hover worksheet" })
+        end, "hover worksheet")
 
-        map("n", "<leader>lmt", require("metals.tvp").toggle_tree_view, { desc = "tree view" })
+        keymap("<leader>lmt", require("metals.tvp").toggle_tree_view, "tree view")
 
-        map("n", "<leader>lmf", require("metals.tvp").reveal_in_tree, { desc = "find in tree" })
+        keymap("<leader>lmf", require("metals.tvp").reveal_in_tree, "find in tree")
 
-        map("n", "<leader>lmc", require("metals").commands, { desc = "commands" })
-        map("n", "<leader>lmi", require("metals").import_build, { desc = "import build" })
-        map("n", "<leader>lmd", require("metals").find_in_dependency_jars, { desc = "find in jars" })
-        map("n", "<leader>lmo", require("metals").organize_imports, { desc = "organize imports" })
-        map("n", "<leader>lmw", require("metals").hover_worksheet, { desc = "hover worksheet" })
-        map("n", "<leader>lml", require("metals").toggle_logs, { desc = "toggle logs" })
+        keymap("<leader>lmc", require("metals").commands, "commands")
+        keymap("<leader>lmi", require("metals").import_build, "import build")
+        keymap("<leader>lmd", require("metals").find_in_dependency_jars, "find in jars")
+        keymap("<leader>lmo", require("metals").organize_imports, "organize imports")
+        keymap("<leader>lmw", require("metals").hover_worksheet, "hover worksheet")
+        keymap("<leader>lml", require("metals").toggle_logs, "toggle logs")
 
-        map("n", "<leader>lmva", function()
+        keymap("<leader>lmva", function()
           require("metals").toggle_setting("showImplicitArguments")
-        end, { desc = "view implicit arguments" })
+        end, "view implicit arguments")
 
-        map("n", "<leader>lmvc", function()
+        keymap("<leader>lmvc", function()
           require("metals").toggle_setting("showImplicitConversionsAndClasses")
-        end, { desc = "view implicit conversions" })
+        end, "view implicit conversions")
 
-        map("n", "<leader>lmvs", function()
+        keymap("<leader>lmvs", function()
           require("metals").toggle_setting("enableSemanticHighlighting")
-        end, { desc = "view semanting highlighting" })
+        end, "view semanting highlighting")
 
-        map("n", "<leader>lmvt", function()
+        keymap("<leader>lmvt", function()
           require("metals").toggle_setting("showInferredType")
-        end, { desc = "view inferred type" })
+        end, "view inferred type")
 
         api.nvim_create_autocmd("FileType", {
           pattern = { "dap-repl" },

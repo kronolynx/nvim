@@ -45,6 +45,9 @@ return {
         documentation = {
           enabled = false
         },
+        popupmenu = {
+          enabled = false,
+        }
       },
       status = {
         -- Statusline component for LSP progress notifications.
@@ -64,6 +67,11 @@ return {
         -- Ignore `redo` message
         {
           filter = { event = "msg_show", find = "^%d+ .*; after #%d+  %d+.*ago$" },
+          opts = { skip = true },
+        },
+        -- ignore grep
+        {
+          filter = { event = "msg_show", kind = "", find = "grep" },
           opts = { skip = true },
         },
         {

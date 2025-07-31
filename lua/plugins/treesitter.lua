@@ -2,6 +2,7 @@ return {
   -- Problems check https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#troubleshooting
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
+  cond = true,
   build = ':TSUpdate',
   dependencies = {
     {
@@ -69,6 +70,7 @@ return {
         "regex",
         "toml",
         "scala",
+        "smithy",
         "tsx",
         "typescript",
         "vim",

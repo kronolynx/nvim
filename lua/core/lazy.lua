@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- /Users/jortiz/.local/share/nvim/lazy/lazy.nvim
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git",
@@ -25,25 +26,41 @@ if not status_ok then
   return
 end
 
-return lazy.setup("plugins",
-  {
-    change_detection = { notify = false },
-    install = {
-      -- Do not automatically install on startup.
-      missing = true,
-    },
-    performance = {
-      rtp = {
-        -- Stuff I don't use.
-        disabled_plugins = {
-          'gzip',
-          'netrwPlugin',
-          'rplugin',
-          'tarPlugin',
-          'tohtml',
-          'tutor',
-          'zipPlugin',
-        },
+-- Setup lazy.nvim
+-- local plugins = {}
+-- if not vim.g.vscode then
+--   plugins = { import = "plugins.nvim" }
+-- end
+return lazy.setup({
+  spec = {
+    -- { import = "plugins.common" },
+    { import = "plugins" },
+    -- { import = "plugins.code" },
+    -- plugins
+  },
+  defaults = {
+    cond = not vim.g.vscode,
+  },
+  -- automatically check for plugin updates
+  checker = { enabled = false },
+
+  change_detection = {
+    -- automatically check for config file changes and reload the ui
+    enabled = false,
+    notify = false, -- get a notification when changes are found
+  },
+  performance = {
+    rtp = {
+      -- Stuff I don't use.
+      disabled_plugins = {
+        'gzip',
+        'netrwPlugin',
+        'rplugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
       },
     },
-  })
+  },
+})
