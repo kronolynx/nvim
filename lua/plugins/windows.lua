@@ -5,7 +5,8 @@ return {
     { "anuvyklack/middleclass" },
   },
   keys = {
-    { "<M-z>", "<cmd>WindowsMaximize<cr>", desc = "Zoom" },
+    { "<M-z>", "<cmd>WindowsMaximize<cr>", desc = "Zoom" }, -- TODO not working in kitty
+    { "<C-w>z", "<cmd>WindowsMaximize<cr>", desc = "Zoom" },
   },
   config = function()
     vim.o.winwidth = 10

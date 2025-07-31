@@ -4,7 +4,7 @@ return {
     lazy = true,
     keys = {
       {
-        '<leader>gc',
+        '<leader>gg',
         function()
           local api = require('nvim-tree.api').tree
           api.open({ focus = true, find_file = true })

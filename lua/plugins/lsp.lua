@@ -270,7 +270,9 @@ return {
         keymap("<leader>gSw", vim.lsp.buf.workspace_symbol, "workspace symbol")
 
 
-        keymap( "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "lsp code actions" )
+        keymap('<leader>la', function() require('tiny-code-action').code_action() end, 'vim.lsp.buf.code_action()',
+          { 'n', 'x' })
+        -- keymap( "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "lsp code actions" )
         keymap("<leader>lf", "<cmd>FzfLua lsp_finder<cr>", "lsp finder FZF")
 
         -- Diagnostics keymaps
@@ -306,7 +308,6 @@ return {
         end
 
         if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then
-          -- vim.lsp.inlay_hint.enable(true) -- TODO find a way to enable by default but not here as it will enable each time a buffer is loaded
           keymap('<leader>lvh', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
           end, 'enable inlay hints')

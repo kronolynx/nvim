@@ -21,7 +21,8 @@ return
       end,
       mode = { 'n', 'v' },
       desc = 'yank open perma link'
-    }
+    },
+    { '<leader>mV', '<cmd>GitLink! blame<cr>', mode = { 'n', 'v' }, desc = 'Open git link' },
   },
   config = function()
     require("gitlinker").setup({

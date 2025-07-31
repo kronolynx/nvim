@@ -40,6 +40,7 @@ return {
     "olimorris/codecompanion.nvim",
     -- enabled = false,
     event = "VeryLazy",
+    cmd = 'CodeCompanion',
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -47,22 +48,34 @@ return {
       { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
     },
     keys = {
-      { "<leader>al", "<cmd>CodeCompanion<CR>", desc = "Inline" },
+      { "<leader>al", "<cmd>CodeCompanion<CR>",            desc = "Inline" },
       {
         "<leader>ac",
         "<cmd>CodeCompanionChat<CR>",
         mode = { 'n', 'v' },
         desc = "Chat"
       },
+      { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle CodeCompanion chat' },
+      { '<leader>aa', '<cmd>CodeCompanionChat Add<cr>',    desc = 'Add to CodeCompanion chat', mode = 'x' },
     },
-    config = function()
-      require("codecompanion").setup({
+    opts = function()
+      return {
         strategies = {
           chat = {
             adapter = "openai",
           },
           inline = {
             adapter = "openai",
+            keymaps = {
+              accept_change = {
+                modes = { n = '<leader>ay' },
+                description = 'Accept the suggested change',
+              },
+              reject_change = {
+                modes = { n = '<leader>an' },
+                description = 'Reject the suggested change',
+              },
+            },
           },
         },
         opts = {
@@ -99,7 +112,7 @@ return {
             })
           end,
         },
-      })
+      }
     end
   },
   {
