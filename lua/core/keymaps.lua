@@ -24,6 +24,8 @@ keymap("n", "<leader>tp", "<cmd>cprevious<cr>", { desc = "previous" })
 keymap("v", "<leader>p", "\"dP")
 keymap("n", "<F1>", "<Esc>")
 
+keymap({'n', 't'},'<M-t>',function() require('core.float_term').toggle_term() end, { desc = "toggle term"})
+
 -- -- Done using tmux navigation
 -- -- Smart way to move between windows
 -- keymap("", "<C-j>", "<C-W>j")
