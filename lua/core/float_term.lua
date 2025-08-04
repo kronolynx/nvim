@@ -41,7 +41,9 @@ function M.toggle_term(opts)
     local terminal = terminals[term_index]
     if terminal and terminal:buf_valid() then
       terminal:toggle()
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>i', true, true, true), 'n', true)
     else
+      opts.title = "[" .. term_index .. "]"
       terminal = require('lazy.util').float_term(default_shell, opts)
       terminals[term_index] = terminal
     end
