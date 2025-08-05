@@ -501,9 +501,6 @@ return {
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
         end
 
-
-        on_attach(client, bufnr)
-
         keymap("<leader>gs", require("metals").goto_super_method, "super method")
 
         keymap("K", require("metals").type_of_range, "type of range", "v")
@@ -557,6 +554,21 @@ return {
           require("metals").initialize_or_attach(metals_config)
         end,
         group = nvim_metals_group,
+      })
+
+      vim.api.nvim_create_autocmd('LspAttach', {
+        desc = 'Configure LSP keymaps',
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- I don't think this can happen but it's a wild world out there.
+          if not client then
+            vim.nofity("No client attached")
+            return
+          end
+
+          on_attach(client, args.buf)
+        end,
       })
     end,
   },
