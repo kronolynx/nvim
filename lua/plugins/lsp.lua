@@ -223,22 +223,16 @@ return {
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
         end
 
-        -- TODO fix miniclue to display these clues only when lsp attached
-        -- vim.b[bufnr].miniclue_config = {
-        --   clues = {
-        --     { mode = 'n', keys = '<leader>l',   desc = '+lsp' },
-        --     { mode = 'x', keys = '<leader>l',   desc = '+lsp' },
-        --     { mode = 'n', keys = '<leader>ld',  desc = '+debug' },
-        --     { mode = 'x', keys = '<leader>ld',  desc = '+debug' },
-        --     { mode = 'n', keys = '<leader>lv',  desc = '+view' },
-        --     { mode = 'x', keys = '<leader>lv',  desc = '+view' },
-        --     -- TODO move metals clues to metals attach
-        --     { mode = 'n', keys = '<leader>lm',  desc = '+metals' },
-        --     { mode = 'n', keys = '<leader>lmv', desc = '+view' },
-        --     { mode = 'x', keys = '<leader>lm',  desc = '+metals' },
-        --     { mode = 'x', keys = '<leader>lmv', desc = '+view' },
-        --   },
-        -- }
+        vim.b[bufnr].miniclue_config = {
+          clues = {
+            { mode = 'n', keys = '<leader>l',  desc = '+lsp' },
+            { mode = 'x', keys = '<leader>l',  desc = '+lsp' },
+            { mode = 'n', keys = '<leader>ld', desc = '+debug' },
+            { mode = 'x', keys = '<leader>ld', desc = '+debug' },
+            { mode = 'n', keys = '<leader>lv', desc = '+view' },
+            { mode = 'x', keys = '<leader>lv', desc = '+view' },
+          }
+        }
 
         keymap("H", vim.lsp.buf.signature_help, "signature help")
         keymap("<M-h>", vim.lsp.buf.signature_help, "signature", "i")
@@ -501,6 +495,18 @@ return {
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
         end
 
+        local metals_clues = {
+          { mode = 'n', keys = '<leader>lm',  desc = '+metals' },
+          { mode = 'n', keys = '<leader>lmv', desc = '+view' },
+          { mode = 'x', keys = '<leader>lm',  desc = '+metals' },
+          { mode = 'x', keys = '<leader>lmv', desc = '+view' },
+        }
+        local current_clues = vim.b[bufnr].miniclue_config.clues or {}
+
+        vim.b[bufnr].miniclue_config = {
+          clues = vim.list_extend(current_clues, metals_clues),
+        }
+
         keymap("<leader>gs", require("metals").goto_super_method, "super method")
 
         keymap("K", require("metals").type_of_range, "type of range", "v")
@@ -563,7 +569,7 @@ return {
 
           -- I don't think this can happen but it's a wild world out there.
           if not client then
-            vim.nofity("No client attached")
+            vim.notify("No client attached", "error")
             return
           end
 

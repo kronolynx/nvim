@@ -147,19 +147,6 @@ return {
           { mode = 'n', keys = '<leader>g',   desc = '+goto' },
           { mode = 'n', keys = '<leader>h',   desc = '+http' },
 
-          -- TODO move to LSP
-          { mode = 'n', keys = '<leader>l',   desc = '+lsp' },
-          { mode = 'x', keys = '<leader>l',   desc = '+lsp' },
-          { mode = 'n', keys = '<leader>ld',  desc = '+debug' },
-          { mode = 'x', keys = '<leader>ld',  desc = '+debug' },
-          { mode = 'n', keys = '<leader>lv',  desc = '+view' },
-          { mode = 'x', keys = '<leader>lv',  desc = '+view' },
-          -- TODO move metals clues to metals attach
-          { mode = 'n', keys = '<leader>lm',  desc = '+metals' },
-          { mode = 'n', keys = '<leader>lmv', desc = '+view' },
-          { mode = 'x', keys = '<leader>lm',  desc = '+metals' },
-          { mode = 'x', keys = '<leader>lmv', desc = '+view' },
-
           { mode = 'n', keys = '<leader>n',   desc = '+noice' },
           { mode = 'n', keys = '<leader>s',   desc = '+search' },
           { mode = 'v', keys = '<leader>s',   desc = '+search' },
