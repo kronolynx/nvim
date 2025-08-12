@@ -10,7 +10,8 @@ return {
     -- Only for cursor animation
     'echasnovski/mini.animate',
     event = "VeryLazy",
-    cond = true,
+    -- cond = true,
+    enabled = false,
     config = function()
       require('mini.animate').setup(
         {
@@ -31,23 +32,9 @@ return {
     end
   },
   {
-    'echasnovski/mini.bufremove',
-    config = true,
-    lazy = true,
-    -- enabled = false,
-    keys = {
-      {
-        '<leader>bd',
-        function()
-          require('mini.bufremove').delete(0, false)
-        end,
-        desc = 'delete',
-      },
-    }
-  },
-  {
     'echasnovski/mini.clue',
     event = 'VeryLazy',
+    enabled = false,
     opts = function()
       local miniclue = require 'mini.clue'
 
@@ -157,8 +144,8 @@ return {
           { mode = 'n', keys = '<leader>w',   desc = '+walker' },
           { mode = 'n', keys = '<leader>ws',  desc = '+swap' },
 
-          { mode = 'n', keys = '[',           desc = '+prev' },
-          { mode = 'n', keys = ']',           desc = '+next' },
+          -- { mode = 'n', keys = '[',           desc = '+prev' },
+          -- { mode = 'n', keys = ']',           desc = '+next' },
           -- Builtins.
           miniclue.gen_clues.builtin_completion(),
           miniclue.gen_clues.g(),
@@ -197,6 +184,8 @@ return {
   {
     'echasnovski/mini.hipatterns',
     event = 'BufReadPost',
+    -- TODO do I need this ?
+    -- enabled = false,
     opts = function()
       local highlighters = {}
       for _, word in ipairs { 'todo', 'note', 'hack' } do
@@ -213,6 +202,7 @@ return {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
     event = "VeryLazy",
+    enabled = false,
     opts = {
       -- symbol = "▏",
       symbol = "│",

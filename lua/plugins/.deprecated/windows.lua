@@ -1,6 +1,7 @@
 return {
   "anuvyklack/windows.nvim",
   event = "WinNew",
+  enabled = false,
   dependencies = {
     { "anuvyklack/middleclass" },
   },

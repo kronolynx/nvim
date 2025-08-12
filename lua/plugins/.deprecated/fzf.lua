@@ -1,10 +1,11 @@
 return {
   "ibhagwan/fzf-lua",
+  enabled = false,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
-    { "<M-CR>",      '<cmd>FzfLua lsp_code_actions<CR>', mode = { "v", "n" } },
+    -- { "<M-CR>",      '<cmd>FzfLua lsp_code_actions<CR>', mode = { "v", "n" } },
 
-    { "<leader>gf",  "<cmd>FzfLua files<cr>",            desc = "find files" },
+    -- { "<leader>gf",  "<cmd>FzfLua files<cr>",            desc = "find files" },
     { "<leader>gh",  "<cmd>FzfLua helptags<cr>",         desc = "help tags" },
     { "<leader>gj",  "<cmd>FzfLua jumps<cr>",            desc = "jumps" },
     { "<leader>gk",  "<cmd>FzfLua keymaps<cr>",          desc = "keymaps" },
@@ -12,22 +13,22 @@ return {
     -- { "<leader>gR",  "<cmd>FzfLua registers<cr>",        desc = "registers" },
 
 
-    -- git
-    { "<leader>mB",  "<cmd>FzfLua git_branches<cr>",     desc = "git branches" },
-    { "<leader>mc",  "<cmd>FzfLua git_commits<cr>",      desc = "git commits" },
-    { "<leader>mbc", "<cmd>FzfLua git_bcommits<cr>",     desc = "git commits buffer" },
-    { "<leader>mf",  "<cmd>FzfLua git_files<cr>",        desc = "git files" },
-    { "<leader>ms",  "<cmd>FzfLua git_status<cr>",       desc = "git status" },
-    { "<leader>mS",  "<cmd>FzfLua git_stash<cr>",        desc = "git stash" },
+    -- -- git
+    -- { "<leader>mB",  "<cmd>FzfLua git_branches<cr>",     desc = "git branches" },
+    -- { "<leader>mc",  "<cmd>FzfLua git_commits<cr>",      desc = "git commits" },
+    -- { "<leader>mbc", "<cmd>FzfLua git_bcommits<cr>",     desc = "git commits buffer" },
+    -- { "<leader>mf",  "<cmd>FzfLua git_files<cr>",        desc = "git files" },
+    -- { "<leader>ms",  "<cmd>FzfLua git_status<cr>",       desc = "git status" },
+    -- { "<leader>mS",  "<cmd>FzfLua git_stash<cr>",        desc = "git stash" },
 
     -- search
     { "<leader>sc",  "<cmd>FzfLua resume<cr>",           desc = "continue" },
     { "<leader>ss",  "<cmd>FzfLua live_grep<cr>",        desc = "search path" },
-    { "<leader>sW",  "<cmd>FzfLua grep_cword<cr>",       desc = "search cursor" },
+    -- { "<leader>sW",  "<cmd>FzfLua grep_cword<cr>",       desc = "search cursor" },
 
     -- buffers
     { "<leader>to",  "<cmd>FzfLua oldfiles<cr>",         desc = "old files" },
-    { "<leader>tr",  "<cmd>FzfLua buffers<cr>",          desc = "recent files" },
+    -- { "<leader>tr",  "<cmd>FzfLua buffers<cr>",          desc = "recent files" },
   },
   opts = function()
     local actions = require "fzf-lua.actions"

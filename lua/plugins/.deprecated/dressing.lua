@@ -3,6 +3,7 @@ return {
   {
     'stevearc/dressing.nvim',
     lazy = true,
+    enabled = false,
     opts = {
       input = {
         win_options = {
