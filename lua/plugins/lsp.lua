@@ -5,7 +5,13 @@ local methods = vim.lsp.protocol.Methods
 vim.g.inlay_hints = false
 
 vim.diagnostic.config {
-  virtual_text = false,
+  -- virtual_text = false,
+  update_in_insert = false, -- false so diags are updated on InsertLeave
+  severity_sort = true,
+  -- virtual_text = { spacing = 4 },
+  virtual_text = { current_line = true, severity = { min = 'INFO', max = 'WARN' } },
+  virtual_lines = { current_line = true, severity = { min = 'ERROR' } },
+  severity_sort = true,
   float = {
     header = false,
     border = 'rounded',
@@ -21,17 +27,39 @@ vim.diagnostic.config {
   },
 }
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    "documentation",
+    "detail",
+    "additionalTextEdits",
+  },
+}
+capabilities.workspace = {
+  didChangeWatchedFiles = {
+    dynamicRegistration = true,
+  },
+}
+
 return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     enabled = os.getenv("LSP_ENABLED") ~= "false",
     dependencies = {
-      "williamboman/mason.nvim",
+      {
+        "williamboman/mason.nvim",
+        opts = { ensure_installed = { "gitui" } },
+      },
       "williamboman/mason-lspconfig.nvim",
-      'scalameta/nvim-metals',
-      "mfussenegger/nvim-dap",
-      "nvim-lua/plenary.nvim",
+      -- {
+      --   "mfussenegger/nvim-dap",
+      --   ft = { "scala", "sbt", "java" },
+      --   lazy = true,
+      -- },
+      -- "mfussenegger/nvim-dap",
+      -- "nvim-lua/plenary.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       {
         "folke/lazydev.nvim",
@@ -144,14 +172,6 @@ return {
         },
       }
 
-      -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-      capabilities.workspace = {
-        didChangeWatchedFiles = {
-          dynamicRegistration = true,
-        },
-      }
 
       -- Ensure the servers above are installed
       local mason_lspconfig = require 'mason-lspconfig'
@@ -162,14 +182,6 @@ return {
 
       vim.lsp.handlers["textDocument/publishDiagnostics"] =
           vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-            -- Disable underline, it's very annoying
-            underline = true,
-            -- Enable virtual text, overrde spacing to 4
-            -- virtual_text = { spacing = 4 },
-            signs = false,
-            -- signs = {
-            --   active = signs
-            -- },
             update_in_insert = false,
             float = {
               focusable = true,
@@ -223,16 +235,13 @@ return {
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
         end
 
-        vim.b[bufnr].miniclue_config = {
-          clues = {
-            { mode = 'n', keys = '<leader>l',  desc = '+lsp' },
-            { mode = 'x', keys = '<leader>l',  desc = '+lsp' },
-            { mode = 'n', keys = '<leader>ld', desc = '+debug' },
-            { mode = 'x', keys = '<leader>ld', desc = '+debug' },
-            { mode = 'n', keys = '<leader>lv', desc = '+view' },
-            { mode = 'x', keys = '<leader>lv', desc = '+view' },
-          }
-        }
+        local wk = require("which-key")
+        wk.add(
+          {
+            { "<leader>l",  group = "lsp" },
+            { "<leader>ld", group = "debug" },
+            { "<leader>lv", group = "view" },
+          })
 
         keymap("H", vim.lsp.buf.signature_help, "signature help")
         keymap("<M-h>", vim.lsp.buf.signature_help, "signature", "i")
@@ -243,38 +252,39 @@ return {
         keymap("<leader>lw", vim.lsp.buf.add_workspace_folder, "add workspace folder")
         keymap("K", vim.lsp.buf.hover, "Hover")
 
-        keymap("<leader>gi", vim.lsp.buf.implementation, "implementation")
-        keymap("<leader>gt", vim.lsp.buf.type_definition, "type definition")
-        keymap("<leader>gr", vim.lsp.buf.references, "references")
-        keymap("<leader>gSb", vim.lsp.buf.document_symbol, "document symbol")
+        keymap("<leader>gI", vim.lsp.buf.implementation, "implementation")
+        keymap("<leader>gT", vim.lsp.buf.type_definition, "type definition")
+        keymap("<leader>gR", vim.lsp.buf.references, "references")
+        -- keymap("<leader>gS", vim.lsp.buf.document_symbol, "document symbol")
         keymap("<leader>li", vim.lsp.buf.incoming_calls, "incoming calls") -- Lists all the call sites of the symbol under the cursor in the quickfix window.
         keymap("<leader>lo", vim.lsp.buf.outgoing_calls, "outgoing calls") -- Lists all the items that are called by the symbol under the cursor in the quickfix window.
         keymap("<leader>lh", vim.lsp.buf.typehierarchy, "hierarchy")       -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
         keymap("<leader>l=", vim.lsp.buf.format, "format")                 -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
         -- FZF
-        keymap("<leader>gI", "<cmd>FzfLua lsp_implementations<cr>", "implementation FZF")
-        keymap("<leader>gT", "<cmd>FzfLua lsp_typedefs<cr>", "typedefs FZF")
-        keymap("<leader>gR", "<cmd>FzfLua lsp_references<cr>", "references FZF")
-        keymap("<leader>gSB", "<cmd>FzfLua lsp_document_symbols<cr>", "symbols buffer FZF")
-        keymap("<leader>lI", "<cmd>FzfLua lsp_incoming_calls<cr>", "incoming calls FZF")
-        keymap("<leader>lO", "<cmd>FzfLua lsp_outgoing_calls<cr>", "outgoing calls FZF")
+        -- keymap("<leader>gI", "<cmd>FzfLua lsp_implementations<cr>", "implementation FZF")
+        -- keymap("<leader>gT", "<cmd>FzfLua lsp_typedefs<cr>", "typedefs FZF")
+        -- keymap("<leader>gR", "<cmd>FzfLua lsp_references<cr>", "references FZF")
+        -- keymap("<leader>gSB", "<cmd>FzfLua lsp_document_symbols<cr>", "symbols buffer FZF")
+        -- keymap("<leader>lI", "<cmd>FzfLua lsp_incoming_calls<cr>", "incoming calls FZF")
+        -- keymap("<leader>lO", "<cmd>FzfLua lsp_outgoing_calls<cr>", "outgoing calls FZF")
 
-        keymap("<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", "lsp live workspace symbols FZF")
+        -- keymap("<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", "lsp live workspace symbols FZF")
         -- keymap("<leader>gSw", "<cmd>FzfLua lsp_workspace_symbols<cr>", "lsp symbols workspace FZF") -- doesn't work for metals
-        keymap("<leader>gSw", vim.lsp.buf.workspace_symbol, "workspace symbol")
+        -- keymap("<leader>gSw", vim.lsp.buf.workspace_symbol, "workspace symbol")
 
 
-        keymap('<leader>la', function() require('tiny-code-action').code_action() end, 'vim.lsp.buf.code_action()',
-          { 'n', 'x' })
+        -- keymap('<M-CR>', function() require('tiny-code-action').code_action() end, 'vim.lsp.buf.code_action()',
+        --   { 'n', 'x' })
+        keymap('<M-CR>', vim.lsp.buf.code_action, "code action")
         -- keymap( "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "lsp code actions" )
-        keymap("<leader>lf", "<cmd>FzfLua lsp_finder<cr>", "lsp finder FZF")
+        -- keymap("<leader>lf", "<cmd>FzfLua lsp_finder<cr>", "lsp finder FZF")
 
         -- Diagnostics keymaps
         keymap("<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", "line")
         keymap('<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", 'previous')
         keymap('<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", 'next')
-        keymap("<leader>db", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", "diagnostics buffer FZF") -- sort=2 // for reverse sort
-        keymap("<leader>dw", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", "diagnostics workspace FZF")
+        -- keymap("<leader>dB", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", "diagnostics buffer FZF") -- sort=2 // for reverse sort
+        -- keymap("<leader>dW", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", "diagnostics workspace FZF")
         -- keymap("<leader>dW", vim.lsp.buf.workspace_diagnostics, "diagnostics workspace") -- broken
 
         keymap('[d', function() vim.diagnostic.jump { count = -1 } end, 'Previous diagnostic')
@@ -284,11 +294,11 @@ return {
         keymap(']e', function() vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR } end,
           'Next error')
 
-        if client:supports_method(methods.textDocument_definition) then
-          -- keymap('gd', function() require('fzf-lua').lsp_definitions { jump1 = true } end, 'Go to definition')
-          keymap("<leader>gd", vim.lsp.buf.definition, "definition") -- TODO if not happy with QF then replace with the one above
-          keymap('<leader>gD', function() require('fzf-lua').lsp_definitions { jump1 = false } end, 'Peek definition FZF')
-        end
+        -- if client:supports_method(methods.textDocument_definition) then
+        --   -- keymap('gd', function() require('fzf-lua').lsp_definitions { jump1 = true } end, 'Go to definition')
+        --   -- keymap("<leader>gd", vim.lsp.buf.definition, "definition") -- TODO if not happy with QF then replace with the one above
+        --   -- keymap('<leader>gD', function() require('fzf-lua').lsp_definitions { jump1 = false } end, 'Peek definition FZF')
+        -- end
 
         if client:supports_method(methods.textDocument_signatureHelp) then
           keymap('<C-k>', function()
@@ -429,6 +439,27 @@ return {
       -- Uncomment for trace logs from neovim
       -- vim.lsp.set_log_level('trace')
 
+      api.nvim_create_autocmd('LspAttach', {
+        desc = 'Configure LSP keymaps',
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- I don't think this can happen but it's a wild world out there.
+          if not client then
+            vim.notify("No client attached", "error")
+            return
+          end
+
+          on_attach(client, args.buf)
+        end,
+      })
+    end,
+  },
+  {
+    'scalameta/nvim-metals',
+    ft = { "scala", "sbt", "java" },
+    lazy = true,
+    opts = function()
       --================================
       -- Metals specific setup
       --================================
@@ -495,17 +526,15 @@ return {
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
         end
 
+        local wk = require("which-key")
         local metals_clues = {
-          { mode = 'n', keys = '<leader>lm',  desc = '+metals' },
-          { mode = 'n', keys = '<leader>lmv', desc = '+view' },
-          { mode = 'x', keys = '<leader>lm',  desc = '+metals' },
-          { mode = 'x', keys = '<leader>lmv', desc = '+view' },
+          { "<leader>l",   group = "lsp" },
+          { "<leader>lm",  group = "metals" },
+          { "<leader>lmv", group = "view" },
         }
-        local current_clues = vim.b[bufnr].miniclue_config.clues or {}
+        wk.add(metals_clues)
 
-        vim.b[bufnr].miniclue_config = {
-          clues = vim.list_extend(current_clues, metals_clues),
-        }
+        require("metals").setup_dap()
 
         keymap("<leader>gs", require("metals").goto_super_method, "super method")
 
@@ -541,41 +570,20 @@ return {
         keymap("<leader>lmvt", function()
           require("metals").toggle_setting("showInferredType")
         end, "view inferred type")
-
-        api.nvim_create_autocmd("FileType", {
-          pattern = { "dap-repl" },
-          callback = function()
-            require("dap.ext.autocompl").attach()
-          end,
-          group = lsp_group,
-        })
-
-        require("metals").setup_dap()
       end
 
+      return metals_config
+    end,
+    config = function(self, metals_config)
       local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
       api.nvim_create_autocmd("FileType", {
-        pattern = { "scala", "sbt", "java" },
+        -- pattern = { "scala", "sbt", "java" },
+        pattern = self.ft,
         callback = function()
           require("metals").initialize_or_attach(metals_config)
         end,
         group = nvim_metals_group,
       })
-
-      vim.api.nvim_create_autocmd('LspAttach', {
-        desc = 'Configure LSP keymaps',
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-
-          -- I don't think this can happen but it's a wild world out there.
-          if not client then
-            vim.notify("No client attached", "error")
-            return
-          end
-
-          on_attach(client, args.buf)
-        end,
-      })
-    end,
+    end
   },
 }
