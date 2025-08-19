@@ -15,25 +15,26 @@ return {
         -- Disable it when the window is too small.
         min_window_height = 20,
       },
-      keys = {
-        {
-          '[c',
-          function()
-            -- Jump to previous change when in diffview.
-            if vim.wo.diff then
-              return '[c'
-            else
-              vim.schedule(function()
-                require('treesitter-context').go_to_context()
-              end)
-              return '<Ignore>'
-            end
-          end,
-          desc = 'Jump to upper context',
-          expr = true,
-        },
-      },
+      -- keys = {
+      --   {
+      --     '[c',
+      --     function()
+      --       -- Jump to previous change when in diffview.
+      --       if vim.wo.diff then
+      --         return '[c'
+      --       else
+      --         vim.schedule(function()
+      --           require('treesitter-context').go_to_context()
+      --         end)
+      --         return '<Ignore>'
+      --       end
+      --     end,
+      --     desc = 'Jump to upper context',
+      --     expr = true,
+      --   },
+      -- },
     },
+    "nvim-treesitter/nvim-treesitter-textobjects",
   },
   -- See `:help nvim-treesitter`
   -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
@@ -45,6 +46,29 @@ return {
         use_virtual_text = true,
         lint_events = { "BufWrite", "CursorHold" },
       },
+      textobjects = {
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            ["]f"] = { query = "@function.outer", desc = "Next outer function"},
+            ["]c"] = { query = "@class.outer", desc = "Next outer class"},
+          },
+          goto_previous_start = {
+            ["[f"] = { query = "@function.outer", desc = "Previous outer function"},
+            ["[c"] = { query = "@class.outer", desc = "Previous outer class"},
+          },
+        },
+        -- swap = { -- TODO doesn't work with scala
+        --   enable = true,
+        --   swap_next = {
+        --     ["<leader>wsl"] = { query = "@parameter.inner", desc = "Swap left"},
+        --   },
+        --   swap_previous = {
+        --     ["<leader>wsh"] = { query = "@parameter.inner", desc = "Swap right"},
+        --   },
+        -- },
+      },
       -- breaking changes announcements
       -- https://github.com/nvim-treesitter/nvim-treesitter/issues/2293
       -- ensure_installed = "all",
@@ -53,6 +77,7 @@ return {
         "bash",
         "diff",
         "dap_repl",
+        "graphql",
         "haskell",
         "hocon",
         "html",
