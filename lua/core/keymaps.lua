@@ -32,10 +32,21 @@ keymap({'n', 't'},'<M-t>',function() require('core.float_term').toggle_term() en
 -- keymap("", "<C-k>", "<C-W>k")
 -- keymap("", "<C-h>", "<C-W>h")
 -- keymap("", "<C-l>", "<C-W>l")
-
+-- Exit terminal mode in the builtin terminal
+keymap('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+-- Rename word under cursor using substitute command
+keymap('n', '<leader>cw', ':%s/<C-r><C-w>/', { desc = '[R]ename [W]ord' })
 -- Move highlighted region up and down
 keymap('v', 'J', ":m '>+1<cr>gv=gv")
 keymap('v', 'K', ":m '<-2<cr>gv=gv")
+
+-- Copy whole file
+keymap('n', '<leader>by', 'ggvG$y', { desc = '[y]ank' })
+keymap('n', '<leader>bY', 'ggvG$"+y', { desc = '[Y]ank +' })
+
+-- Paste whole file
+keymap('n', '<leader>bp', 'ggvG$p', { desc = '[p]aste' })
+keymap('n', '<leader>bP', 'ggvG$"+p', { desc = '[P]aste +' })
 
 -- Helpful for copy and paste
 -- keymap('x', '<leader>p', '"_dP')
@@ -71,8 +82,8 @@ keymap('n', '<leader>qr', ':call setqflist([], "r", {"idx": line(".")})<CR>', { 
 keymap('n', '<leader>qx', ':call setqflist([])<CR>', { desc = "clear" })
 
 -- grep
-keymap('n', '<leader>sg', ":lua prompt_grep()<CR>", { desc = "grep" } )
-keymap('n', '<leader>sw', ":lua grep_word_under_cursor()<CR>", { desc = "grep word" } )
+keymap('n', '<leader>sg', ":lua prompt_grep()<CR>", { desc = "grep" })
+keymap('n', '<leader>sW', ":lua grep_word_under_cursor()<CR>", { desc = "grep word" })
 
 if vim.g.vscode then
   -- keymap("i", "jj", "<ESC>")
