@@ -106,8 +106,8 @@ return {
   },
   config = function(_, opts)
     require('blink.cmp').setup(opts)
-
+    -- On Neovim 0.11+ with vim.lsp.config, you may skip this step. See nvim-lspconfig docs
     -- Extend neovim's client capabilities with the completion ones.
-    vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) })
+    -- vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) })
   end,
 }
