@@ -3,6 +3,7 @@ return {
     "ggandor/leap.nvim",
     event = "VeryLazy",
     cond = true,
+    enabled = false,
     keys = {
       { "s",  mode = { "n", "x", "o" }, desc = "Leap Forward to" },
       { "S",  mode = { "n", "x", "o" }, desc = "Leap Backward to" },
@@ -27,6 +28,7 @@ return {
   {
     "ggandor/flit.nvim",
     event = "VeryLazy",
+    enabled = false,
     cond = true,
     keys = function()
       local ret = {}
@@ -37,9 +39,9 @@ return {
     end,
     opts = { labeled_modes = "nx" },
   },
-  {
-    "tpope/vim-repeat",
-    cond = true,
-    event = "VeryLazy"
-  }
+  -- {
+  --   "tpope/vim-repeat",
+  --   cond = true,
+  --   event = "VeryLazy"
+  -- }
 }
