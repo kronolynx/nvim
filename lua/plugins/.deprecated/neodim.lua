@@ -1,6 +1,7 @@
 return {
   "zbirenbaum/neodim",
   event = "LspAttach",
+  enabled = false,
   config = function()
     require("neodim").setup({
       alpha = 0.75,
@@ -14,6 +15,7 @@ return {
         "[uU]nused",
         "[nN]ever [rR]ead",
         "[nN]ot [rR]ead",
+        "[nN]ot [uU]sed",
       },
       priority = 128,
       disable = {},
