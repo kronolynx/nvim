@@ -94,6 +94,7 @@ local picker       = {
   sources = {
     explorer = {
       auto_close = true,
+      include = {".metals" },
       formatters = {
         file = { filename_only = true },
         severity = { pos = "right" },

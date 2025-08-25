@@ -12,7 +12,7 @@ return {
         desc = 'current file in explorer',
       },
       {
-        '<M-e>',
+        '<M-f>',
         function()
           require('nvim-tree.api').tree.toggle()
         end,
@@ -20,10 +20,24 @@ return {
       },
     },
     config = function()
+      local prev = { new_name = "", old_name = "" } -- Prevents duplicate events
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "NvimTreeSetup",
+        callback = function()
+          local events = require("nvim-tree.api").events
+          events.subscribe(events.Event.NodeRenamed, function(data)
+            if prev.new_name ~= data.new_name or prev.old_name ~= data.old_name then
+              data = data
+              Snacks.rename.on_rename_file(data.old_name, data.new_name)
+            end
+          end)
+        end,
+      })
       require("nvim-tree").setup(
         {
           filters = {
             dotfiles = true,
+            exclude = { ".metals" }
           },
           hijack_netrw = false,
           respect_buf_cwd = true,
@@ -116,8 +130,9 @@ return {
   {
     "antosha417/nvim-lsp-file-operations",
     event = "VeryLazy",
+    enabled = false,
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      -- "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-tree.lua",
     },
     config = function()
