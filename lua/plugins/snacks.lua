@@ -1,3 +1,13 @@
+-- for debugging
+-- https://github.com/folke/snacks.nvim/blob/main/docs/debug.md
+_G.dd              = function(...)
+  Snacks.debug.inspect(...)
+end
+_G.bt              = function()
+  Snacks.debug.backtrace()
+end
+vim.print          = _G.dd
+
 local gitbrowse    = {
   -- what = "permalink",
   url_patterns = {
@@ -94,7 +104,7 @@ local picker       = {
   sources = {
     explorer = {
       auto_close = true,
-      include = {".metals" },
+      include = { ".metals" },
       formatters = {
         file = { filename_only = true },
         severity = { pos = "right" },
@@ -208,7 +218,7 @@ return {
     scroll = { enabled = false },
     statuscolumn = statuscolumn,
     styles = { enabled = false },
-    terminal = { enabled = true },
+    terminal = { enabled = false },
     toggle = { enabled = false },
     win = { enabled = false },
     words = { enabled = false },
@@ -284,6 +294,7 @@ return {
     -- GOTO
     { "<leader>gp",      function() Snacks.picker.projects() end,                          desc = "Projects" },
     { "<leader>gf",      function() Snacks.picker.files() end,                             desc = "Find Files" },
+    { "<leader>gh",      function() Snacks.picker.help() end,                              desc = "Help Pages" },
     -- Diagnostics
     { "<leader>db",      function() Snacks.picker.diagnostics_buffer() end,                desc = "Buffer Diagnostics" },
     {
