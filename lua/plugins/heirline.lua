@@ -4,6 +4,7 @@ return {
     event = "ColorScheme",
     dependencies = {
       "lewis6991/gitsigns.nvim",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
       -- "nvim-lua/lsp-status.nvim"
     },
     config = function()
