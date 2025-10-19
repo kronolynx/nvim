@@ -322,7 +322,7 @@ function M.active_lsp_component()
   local icon_or_name = {}
 
   for _, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-    local lsp_icon = lsp_icons[server.name] or { icon = server.name, color = colors.cyan }
+    local lsp_icon = lsp_icons[server.name] or { icon = server.name, hl = colors.cyan }
 
     local hl = M.get_or_create_hl(lsp_icon.hl)
 
