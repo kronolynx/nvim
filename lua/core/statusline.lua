@@ -270,7 +270,11 @@ end
 --- File-content encoding for the current buffer.
 ---@return string
 function M.filename_component()
-  local filename = vim.api.nvim_buf_get_name(0)
+  local window = vim.g.statusline_winid;
+  --- Buffer of the window.
+  ---@type integer
+  local buffer = vim.api.nvim_win_get_buf(window);
+  local filename = vim.api.nvim_buf_get_name(buffer)
 
   local extension = vim.fn.fnamemodify(filename, ":e")
   local icon, icon_hl = require("nvim-web-devicons").get_icon(filename, extension,
