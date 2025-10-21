@@ -531,7 +531,6 @@ function M.render_inactive()
     concat_components {
       M.workdir_component(),
       M.filename_component(),
-      M.diagnostics_component()
     },
     '%#StatusLine#%=',
     M.git_branch_component(),
