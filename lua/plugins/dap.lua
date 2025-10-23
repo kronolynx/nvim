@@ -139,6 +139,13 @@ return {
           end,
         },
       },
+      {
+        type = "scala",
+        request = "attach",
+        name = "Attach to Docker",
+        hostName = "127.0.0.1", -- or the IP address of your Docker container
+        port = 5005,
+      },
     }
 
     -- Lua configurations.

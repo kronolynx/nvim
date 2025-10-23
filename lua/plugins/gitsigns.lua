@@ -2,16 +2,22 @@ return {
   "lewis6991/gitsigns.nvim",
   event = { "BufReadPre", "BufNewFile" },
   opts = {
-    preview_config = { border = 'rounded' },
-    current_line_blame = true,
+    preview_config = {
+      border = 'rounded',
+      style = "minimal",
+      relative = "cursor",
+      row = 1,
+      col = 0,
+    },
+    current_line_blame = false,
 
     on_attach = function(bufnr)
       local gs = package.loaded.gitsigns
       -- Register the leader group with miniclue.
       vim.b[bufnr].miniclue_config = {
         clues = {
-          { mode = 'n', keys = '<leader>m', desc = '+git' },
-          { mode = 'x', keys = '<leader>m', desc = '+git' },
+          { mode = 'n', keys = '<leader>m',  desc = '+git' },
+          { mode = 'x', keys = '<leader>m',  desc = '+git' },
           { mode = 'n', keys = '<leader>mh', desc = '+hunk' },
           { mode = 'x', keys = '<leader>mh', desc = '+hunk' },
           { mode = 'n', keys = '<leader>mb', desc = '+buffer' },
@@ -31,13 +37,13 @@ return {
       nmap('<leader>mhp', gs.prev_hunk, 'Previous hunk')
       nmap('<leader>mhn', gs.next_hunk, 'Next hunk')
       nmap('<leader>gR', gs.reset_buffer, 'Reset buffer')
-      nmap('<leader>mB', gs.blame_line, 'Blame line')
+      nmap('<leader>mv', gs.blame_line, 'Blame line')
       nmap('<leader>mp', gs.preview_hunk, 'Preview hunk')
       nmap('<leader>mhR', gs.reset_hunk, 'Reset hunk')
       nmap('<leader>mhs', gs.stage_hunk, 'Stage hunk')
       nmap('<leader>mbs', gs.stage_buffer, 'Stage buffer')
       nmap('<leader>mbR', gs.reset_buffer, 'Reset buffer')
-      nmap('<leader>ml', function()
+      nmap('<leader>mz', function()
         require('core.float_term').float_term('lazygit', {
           size = { width = 0.85, height = 0.9 },
           cwd = vim.b.gitsigns_status_dict.root,
@@ -45,5 +51,4 @@ return {
       end, 'Lazygit')
     end
   },
-  dependencies = 'nvim-lua/plenary.nvim',
 }

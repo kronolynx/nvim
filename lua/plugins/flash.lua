@@ -1,7 +1,7 @@
 return {
   {
     "folke/flash.nvim",
-    event = "VeryLazy",
+    event = { 'BufReadPre', 'BufNewFile' },
     cond = true,
     opts = {
       jump = {
@@ -12,6 +12,7 @@ return {
     keys = {
       {
         "s",
+        mode = {"n", "v"},
         function()
           require("flash").jump({
             search = { forward = true, wrap = false, multi_window = false },
@@ -21,6 +22,7 @@ return {
       },
       {
         "S",
+        mode = {"n", "v"},
         function()
           require("flash").jump({
             search = { forward = false, wrap = false, multi_window = false },

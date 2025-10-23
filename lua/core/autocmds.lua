@@ -36,7 +36,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 
 -- Disable modifiable when readonly
 vim.api.nvim_create_autocmd('BufRead',
-
   {
     group = vim.api.nvim_create_augroup('NoModWhenReadOnly', { clear = true }),
     pattern = '*',
@@ -52,18 +51,16 @@ vim.api.nvim_create_autocmd('BufRead',
 --   { desc = "autosave", pattern = "*", command = "silent! update" }
 -- )
 --
+-- Autosave on leave/focus lost
 vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'VimLeavePre', 'InsertLeave' }, {
   pattern = '*',
   group = vim.api.nvim_create_augroup('autosave', { clear = true }),
-  callback = function(event)
-    if event.buftype or event.file == '' then
-      return
-    end
-    vim.api.nvim_buf_call(event.buf, function()
+  callback = function()
+    if vim.bo.buftype == "" and vim.bo.modified and vim.api.nvim_buf_get_name(0) ~= '' then
       vim.schedule(function()
         vim.cmd 'silent! update'
       end)
-    end)
+    end
   end,
 })
 

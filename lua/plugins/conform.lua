@@ -1,6 +1,7 @@
 return {
   "stevearc/conform.nvim",
-  event = { "BufWritePre" },
+  -- event = { "BufWritePre" }, -- I'm not formating before save
+  lazy = true,
   cmd = { "ConformInfo" },
   keys = {
     {
@@ -15,13 +16,27 @@ return {
   },
   -- Everything in opts will be passed to setup()
   opts = {
+    -- notify_on_error = false,
     -- Define your formatters
     formatters_by_ft = {
+      c = { name = 'clangd', timeout_ms = 500, lsp_format = 'prefer' },
+      javascript = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      javascriptreact = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      json = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      jsonc = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      less = { 'prettier' },
       lua = { "stylua" },
+      markdown = { 'prettier' },
       python = { "isort", "black" },
-      javascript = { "prettierd", "prettier", stop_after_first = true },
+      rust = { name = 'rust_analyzer', timeout_ms = 500, lsp_format = 'prefer' },
       -- scala = { "scalafmt" }, // already integrated in metals
+      scss = { 'prettier' },
       sh = { "shfmt" },
+      typescript = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      typescriptreact = { 'prettier', name = 'dprint', timeout_ms = 500, lsp_format = 'fallback' },
+      yaml = { 'prettier' },
+      -- For filetypes without a formatter:
+      -- ['_'] = { 'trim_whitespace', 'trim_newlines' }, -- this breaks scala format
     },
     -- Set up format-on-save
     format_on_save = nil, -- { timeout_ms = 500, lsp_fallback = true },

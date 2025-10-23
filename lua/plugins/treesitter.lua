@@ -78,6 +78,7 @@ return {
         "diff",
         "dap_repl",
         "graphql",
+        "fish",
         "haskell",
         "hocon",
         "html",

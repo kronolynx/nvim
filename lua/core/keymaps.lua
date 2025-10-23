@@ -7,6 +7,22 @@ local function keymap(mode, key, action, opts)
   vim.keymap.set(mode, key, action, options)
 end
 
+-- Remap movement keys to handle wrapped lines
+vim.keymap.set('n', 'k', function()
+  return vim.v.count == 0 and 'gk' or 'k'
+end, { expr = true, noremap = true })
+
+vim.keymap.set('n', 'j', function()
+  return vim.v.count == 0 and 'gj' or 'j'
+end, { expr = true, noremap = true })
+
+vim.keymap.set('n', '<Up>', function()
+  return vim.v.count == 0 and 'g<Up>' or '<Up>'
+end, { expr = true, noremap = true })
+
+vim.keymap.set('n', '<Down>', function()
+  return vim.v.count == 0 and 'g<Down>' or '<Down>'
+end, { expr = true, noremap = true })
 
 
 -- Yank from cursor to end of line
@@ -24,7 +40,14 @@ keymap("n", "<leader>tp", "<cmd>cprevious<cr>", { desc = "previous" })
 keymap("v", "<leader>p", "\"dP")
 keymap("n", "<F1>", "<Esc>")
 
-keymap({'n', 't'},'<M-t>',function() require('core.float_term').toggle_term() end, { desc = "toggle term"})
+keymap({ 'n', 't' }, '<M-t>', function() require('core.float_term').toggle_term() end, { desc = "toggle term" })
+
+keymap("n", '<leader>ml', function()
+  require('core.float_term').float_term('gitui', {
+    size = { width = 0.9, height = 0.9 },
+    -- cwd = vim.b.gitsigns_status_dict.root,
+  })
+end, { desc = 'gitui'})
 
 -- -- Done using tmux navigation
 -- -- Smart way to move between windows
@@ -43,6 +66,8 @@ keymap('v', 'K', ":m '<-2<cr>gv=gv")
 -- Copy whole file
 keymap('n', '<leader>by', 'ggvG$y', { desc = '[y]ank' })
 keymap('n', '<leader>bY', 'ggvG$"+y', { desc = '[Y]ank +' })
+
+keymap('n', '<leader>cw', ':set wrap!<CR>', { desc = 'Toggle Wrap' })
 
 -- Paste whole file
 keymap('n', '<leader>bp', 'ggvG$p', { desc = '[p]aste' })
@@ -84,6 +109,8 @@ keymap('n', '<leader>qx', ':call setqflist([])<CR>', { desc = "clear" })
 -- grep
 keymap('n', '<leader>sg', ":lua prompt_grep()<CR>", { desc = "grep" })
 keymap('n', '<leader>sW', ":lua grep_word_under_cursor()<CR>", { desc = "grep word" })
+
+keymap("i", "kj", "<ESC>")
 
 if vim.g.vscode then
   -- keymap("i", "jj", "<ESC>")

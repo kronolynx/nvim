@@ -100,6 +100,15 @@ local picker       = {
       truncate = 200
     },
   },
+  win = {
+    input = {
+      keys = {
+        ["<s-h>"] = { "toggle_hidden", mode = { "n" } },
+        ["<s-i>"] = { "toggle_ignored", mode = { "n" } },
+        ["<a-m>"] = { "toggle_maximize", mode = { "i", "n" } },
+      }
+    }
+  },
   ui_select = true, -- replace `vim.ui.select` with the snacks picker
   sources = {
     explorer = {
@@ -112,6 +121,7 @@ local picker       = {
       layout = {
         preset = "sidebar",
         preview = "main",
+        hidden = { "preview" },
         layout = {
           width = 60, -- TODO set with to match text
           -- width = 0.3
@@ -226,8 +236,8 @@ return {
   },
   keys = {
     --
-    { "<C-w>Z",  function() Snacks.zen() end,                desc = "Toggle Zen Mode" },
-    { "<C-w>z",  function() Snacks.zen.zoom() end,           desc = "Toggle Zoom" },
+    { "<C-w>Z",     function() Snacks.zen() end,                desc = "Toggle Zen Mode" },
+    { "<C-w>z",     function() Snacks.zen.zoom() end,           desc = "Toggle Zoom" },
     { "<leader>.",  function() Snacks.scratch() end,            desc = "Toggle Scratch Buffer" },
     { "<leader>S",  function() Snacks.scratch.select() end,     desc = "Select Scratch Buffer" },
     -- { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
