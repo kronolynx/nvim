@@ -263,18 +263,17 @@ function M.git_branch_component()
   end
 
   local hl = M.get_or_create_hl(colors.purple)
+  local component = hl .. ' ' .. head
 
   return hl .. ' ' .. head
 end
 
 --- File-content encoding for the current buffer.
+---@param bufnr integer?
 ---@return string
-function M.filename_component()
-  local window = vim.g.statusline_winid;
-  --- Buffer of the window.
-  ---@type integer
-  local buffer = vim.api.nvim_win_get_buf(window);
-  local filename = vim.api.nvim_buf_get_name(buffer)
+function M.filename_component(bufnr)
+  bufnr = bufnr or 0
+  local filename = vim.api.nvim_buf_get_name(bufnr)
 
   local extension = vim.fn.fnamemodify(filename, ":e")
   local icon, icon_hl = require("nvim-web-devicons").get_icon(filename, extension,
@@ -454,22 +453,28 @@ function M.diagnostics_component()
   return table.concat(parts, ' ')
 end
 
-function M.filetype_component()
+---@param bufnr integer?
+function M.filetype_component(bufnr)
+  bufnr = bufnr or 0
   local hl = M.get_or_create_hl("Type")
-  return hl .. string.upper(vim.bo.filetype)
+  return hl .. string.upper(vim.bo[bufnr].filetype)
 end
 
-function M.terminal_component()
-  local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
+---@param bufnr integer?
+function M.terminal_component(bufnr)
+  bufnr = bufnr or 0
+  local tname, _ = vim.api.nvim_buf_get_name(bufnr):gsub(".*:", "")
   local hl = M.get_or_create_hl(colors.blue)
   return hl .. " " .. tname
 end
 
-function M.help_file_component()
+---@param bufnr integer?
+function M.help_file_component(bufnr)
+  bufnr = bufnr or 0
   local component = ""
   if vim.bo.filetype == "help" then
     local hl = M.get_or_create_hl(colors.blue)
-    local filename = vim.api.nvim_buf_get_name(0)
+    local filename = vim.api.nvim_buf_get_name(bufnr)
     -- see :help filename-modifiers
     component = hl .. vim.fn.fnamemodify(filename, ":t")
   end
@@ -506,31 +511,34 @@ function M.render_active()
   }
 end
 
-function M.render_special()
+---@param bufnr integer?
+function M.render_special(bufnr)
   return table.concat {
     concat_components {
-      M.filetype_component(),
-      M.help_file_component(),
+      M.filetype_component(bufnr),
+      M.help_file_component(bufnr),
     },
     '%#StatusLine#%=',
   }
 end
 
-function M.render_terminal()
+---@param bufnr integer?
+function M.render_terminal(bufnr)
   return table.concat {
     concat_components {
-      M.filetype_component(),
-      M.terminal_component()
+      M.filetype_component(bufnr),
+      M.terminal_component(bufnr)
     },
     '%#StatusLine#%=',
   }
 end
 
-function M.render_inactive()
+---@param bufnr integer?
+function M.render_inactive(bufnr)
   return table.concat {
     concat_components {
       M.workdir_component(),
-      M.filename_component(),
+      M.filename_component(bufnr),
     },
     '%#StatusLine#%=',
     M.git_branch_component(),
@@ -550,6 +558,25 @@ function M.render()
   end
 end
 
+function M.render_nc()
+  local window = vim.g.statusline_winid;
+
+  --- Buffer of the window.
+  ---@type integer
+  local bufnr = vim.api.nvim_win_get_buf(window);
+
+  if M.conditions.buffer_matches({ buftype = { "terminal" } }, bufnr) then
+    return M.render_terminal(bufnr)
+  elseif M.conditions.buffer_matches({
+        buftype = { "nofile", "prompt", "help", "quickfix" },
+        filetype = { "^git.*", "fugitive", "^dap.*" },
+      }, bufnr) then
+    return M.render_special(bufnr)
+  else
+    return M.render_inactive(bufnr)
+  end
+end
+
 vim.api.nvim_create_augroup("Statusline", { clear = true })
 
 -- Set the statusline when entering or leaving a window/buffer
@@ -563,7 +590,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   group = "Statusline",
   callback = function()
-    vim.wo.statusline = "%!v:lua.require'core.statusline'.render_inactive()"
+    vim.wo.statusline = "%!v:lua.require'core.statusline'.render_nc()"
   end,
 })
 
