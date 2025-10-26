@@ -6,9 +6,15 @@ local M = {}
 --
 local default_opts = {
   ft = 'lazyterm',
-  size = { width = 0.9, height = 0.9 },
-  border = "single",
   persistent = true,
+  win = {
+    title_pos = "left",
+    title = "test",
+    border = "rounded",
+    backdrop = false,
+    width = 0.9,
+    height = 0.9
+  }
 }
 
 ---@type LazyFloat?
@@ -41,10 +47,10 @@ function M.toggle_term(opts)
     local terminal = terminals[term_index]
     if terminal and terminal:buf_valid() then
       terminal:toggle()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>i', true, true, true), 'n', true)
+      -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>i', true, true, true), 'n', true)
     else
-      opts.title = "[" .. term_index .. "]"
-      terminal = require('lazy.util').float_term(default_shell, opts)
+      opts.win.title = "[" .. term_index .. "]"
+      terminal = Snacks.terminal.get(default_shell, opts)
       terminals[term_index] = terminal
     end
   end

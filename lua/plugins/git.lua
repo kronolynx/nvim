@@ -1,7 +1,10 @@
-return {
-  "lewis6991/gitsigns.nvim",
-  event = { "BufReadPre", "BufNewFile" },
-  opts = {
+vim.pack.add({
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/ruifm/gitlinker.nvim" },
+}, { confirm = false })
+
+vim.defer_fn(function()
+  require("gitsigns").setup({
     preview_config = {
       border = 'rounded',
       style = "minimal",
@@ -50,5 +53,18 @@ return {
         })
       end, 'Lazygit')
     end
-  },
-}
+  })
+
+  --- Linker
+  vim.keymap.set({ 'n', 'v' }, '<leader>mY', function()
+    local mode = string.lower(vim.fn.mode())
+    require("gitlinker").get_buf_range_url(mode)
+  end, { desc = 'yank perma link' })
+
+  vim.keymap.set({ 'n', 'v' }, '<leader>my', function()
+    local mode = string.lower(vim.fn.mode())
+    require("gitlinker").get_buf_range_url(mode, { action_callback = require("gitlinker.actions").open_in_browser })
+  end, { desc = 'yank open perma link' })
+
+  vim.keymap.set({ 'n', 'v' }, '<leader>mV', '<cmd>GitLink! blame<cr>', { desc = 'Open git link' })
+end, 200)

@@ -1,18 +1,7 @@
-return {
-  "aserowy/tmux.nvim",
-  event = "VeryLazy",
-  config = function()
-    return require("tmux").setup (
-    --   {
-    --   -- TODO: Add resize keybindings
-    --   navigation = {
-    --     -- prevents unzoom tmux when navigating beyond vim border
-    --     persist_zoom = true,
-    --   },
-    --   resize = {
-    --     enable_default_keybindings = false,
-    --   }
-    -- }
-    )
-  end
-}
+vim.pack.add({
+  { src = 'https://github.com/aserowy/tmux.nvim' }
+}, { load = true, confirm = false })
+
+vim.defer_fn(function()
+  require("tmux").setup()
+end, 600)

@@ -1,10 +1,13 @@
 require("core.autocmds")
 require("core.cmds")
-require("core.statusline")
 
 require("core.options")
 require("core.keymaps")
-require("core.lazy")
+require("plugins.init")
+require("core.statusline")
+
+-- require("core.lazy")
+-- require("core.breadcrumbs")
 
 if vim.g.neovide then
   require("core.neovide")

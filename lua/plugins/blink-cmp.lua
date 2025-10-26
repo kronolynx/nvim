@@ -1,10 +1,9 @@
-return {
-  "saghen/blink.cmp",
-  event = { "InsertEnter" },
-  -- enabled = false,
-  version = '1.*',
-  dependencies = "milanglacier/minuet-ai.nvim",
-  opts = {
+vim.pack.add({
+  { src = "https://github.com/saghen/blink.cmp" },
+}, { confirm = false })
+
+vim.defer_fn(function()
+  require('blink.cmp').setup({
     -- 'default' for mappings similar to built-in completion
     -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
     -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
@@ -89,6 +88,12 @@ return {
       },
       -- For manual completion only, remove 'minuet' from default
       providers = {
+        -- copilot = {
+        --   name = "copilot",
+        --   module = "blink-copilot",
+        --   score_offset = 100,
+        --   async = true,
+        -- },
         minuet = {
           name = 'minuet',
           module = 'minuet.blink',
@@ -103,11 +108,5 @@ return {
       -- sorts = { 'label', 'kind', 'score' }
       sorts = { 'score', 'sort_text' },
     },
-  },
-  config = function(_, opts)
-    require('blink.cmp').setup(opts)
-    -- On Neovim 0.11+ with vim.lsp.config, you may skip this step. See nvim-lspconfig docs
-    -- Extend neovim's client capabilities with the completion ones.
-    -- vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) })
-  end,
-}
+  })
+end, 300)

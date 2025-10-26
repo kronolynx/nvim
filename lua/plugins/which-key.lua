@@ -1,8 +1,9 @@
-return {
-  "folke/which-key.nvim",
-  enabled = true,
-  event = "VeryLazy",
-  opts = {
+vim.pack.add({
+  { src = "https://github.com/folke/which-key.nvim" },
+}, { confirm = false })
+
+vim.defer_fn(function()
+  require("which-key").setup({
     preset = "helix",
     sort = { "alphanum" },
     icons = {
@@ -23,20 +24,15 @@ return {
       { '<leader>m',  group = 'git' },
       { '<leader>s',  group = 'search',       mode = { 'n', 'v' } },
       { '<leader>t',  group = 'tabs' },
-      { '<leader>u',        group = 'utilities' },
+      { '<leader>u',  group = 'utilities' },
       { '<leader>q',  group = 'quicklist' },
 
       { '<leader>w',  group = 'walker' },
       { '<leader>ws', group = 'swap' },
     },
-  },
-  keys = {
-    {
-      "<leader>?",
-      function()
-        require("which-key").show({ global = false })
-      end,
-      desc = "Buffer Local Keymaps (which-key)",
-    },
-  },
-}
+  })
+
+  vim.keymap.set('n', '<leader>?', function()
+    require("which-key").show({ global = false })
+  end, { desc = "Buffer Local Keymaps (which-key)" })
+end, 100)
