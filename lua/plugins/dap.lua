@@ -1,74 +1,10 @@
 vim.pack.add({
   { src = "https://github.com/mfussenegger/nvim-dap" },
-  { src = "https://github.com/nvim-neotest/nvim-nio" }, -- dap-ui dependency
-  { src = "https://github.com/rcarriga/nvim-dap-ui" }
+  { src = 'https://github.com/igorlfs/nvim-dap-view' },
+  { src = 'https://github.com/m00qek/baleia.nvim' },
 }, { confirm = false, load = true })
 
 vim.defer_fn(function()
-  -- require("nvim-dap-ui").setup(
-  --   {
-  --     -- Set icons to characters that are more likely to work in every terminal.
-  --     --    Feel free to remove or use ones that you like more! :)
-  --     --    Don't feel like these are good choices.
-  --     icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-  --     mappings = {
-  --       -- Use a table to apply multiple mappings
-  --       expand = { "<CR>", "<2-LeftMouse>" },
-  --       open = "o",
-  --       remove = "d",
-  --       edit = "e",
-  --       repl = "r",
-  --       toggle = "t",
-  --     },
-  --     controls = {
-  --       icons = {
-  --         pause = '⏸',
-  --         play = '▶',
-  --         step_into = '⏎',
-  --         step_over = '⏭',
-  --         step_out = '⏮',
-  --         step_back = 'b',
-  --         run_last = '▶▶',
-  --         terminate = '⏹',
-  --         disconnect = '⏏',
-  --       },
-  --     },
-  --     layouts = {
-  --       {
-  --         elements = {
-  --           -- Elements can be strings or table with id and size keys.
-  --           { id = "scopes", size = 0.25 },
-  --           "breakpoints",
-  --           "stacks",
-  --           "watches",
-  --         },
-  --         size = 40,     -- 40 columns
-  --         position = "left",
-  --       },
-  --       {
-  --         elements = {
-  --           "repl",
-  --           -- "console",
-  --         },
-  --         size = 0.25,     -- 25% of total lines
-  --         position = "bottom",
-  --       },
-  --     },
-  --     floating = {
-  --       max_height = nil,     -- These can be integers or a float between 0 and 1.
-  --       max_width = nil,      -- Floats will be treated as percentage of your screen.
-  --       mappings = {
-  --         close = { "q", "<Esc>" },
-  --       },
-  --     },
-  --     windows = { indent = 1 },
-  --     render = {
-  --       max_type_length = nil,     -- Can be integer or nil.
-  --       -- -- Enable ANSI color support TODO check if this exists
-  --       -- ansi_colors = true,
-  --     },
-  --   })
-  --
   vim.keymap.set('n', '<leader>ldr', "<cmd>lua require('dap').continue()<CR>", { desc = '[r]un continue/start' })
   vim.keymap.set('n', '<leader>ldi', "<cmd>lua require('dap').step_into()<CR>", { desc = 'step [i]nto' })
   vim.keymap.set('n', '<leader>ldo', "<cmd>lua require('dap').step_over()<CR>", { desc = 'step [o]ver' })
@@ -76,15 +12,12 @@ vim.defer_fn(function()
   vim.keymap.set('n', '<leader>ldb', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { desc = 'toggle [b]reakpoint' })
   vim.keymap.set('n', '<leader>ldB', "<cmd>lua require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: '<CR>",
     { desc = 'set [B]reakpoint condition' })
-  vim.keymap.set('n', '<leader>ldt', "<cmd>lua require('dapui').toggle()<CR>", { desc = '[t]oggle ui' })
-  vim.keymap.set('n', '<leader>lds', "<cmd>FzfLua dap_breakpoints<cr>", { desc = "debug breakpoints" })
-  vim.keymap.set('n', '<leader>ldv', "<cmd>FzfLua dap_variables<cr>", { desc = "debug variables" })
+  vim.keymap.set('n', '<leader>ldt', "<cmd>DapViewToggle<CR>", { desc = '[t]oggle ui' })
 
+  vim.fn.sign_define("DapBreakpoint", { text = '', texthl = "", linehl = "", numhl = "" })
+  vim.fn.sign_define("DapStopped", { text = '', texthl = "", linehl = "", numhl = "" })
 
   local dap = require 'dap'
-  -- local dv = require "dap-view"
-  local dapui = require 'dapui'
-  local icons = require 'util.icons'
 
   -- `integratedTerminal`
   -- `externalTerminal`
@@ -142,36 +75,59 @@ vim.defer_fn(function()
       name = 'Attach to running Neovim instance',
     },
   }
-  -- dap.listeners.before.attach["dap-view-config"] = function()
-  --   dv.open()
-  -- end
-  -- dap.listeners.before.launch["dap-view-config"] = function()
-  --   dv.open()
-  -- end
-  --
-  -- -- -- keep UI open
-  -- dap.listeners.before.event_terminated["dap-view-config"] = nil
-  -- dap.listeners.before.event_exited["dap-view-config"] = nil
 
-  -- TODO deprecated
-  -- vim.fn.sign_define("DapBreakpoint", { text = '', texthl = "", linehl = "", numhl = "" })
-  -- vim.fn.sign_define("DapStopped", { text = '', texthl = "", linehl = "", numhl = "" })
 
   -- Automatically open UI
-  dap.listeners.after.event_initialized["dapui_config"] = function()
-    dapui.open()
-  end
-  dap.listeners.before.launch["dap-view-config"] = function()
-    dapui.open()
-  end
-  -- keep UI open
-  dap.listeners.after.event_terminated["dapui_config"] = nil
-  dap.listeners.before.event_exited["dapui_config"] = nil
+  require('dap-view').setup({
+    winbar = {
+      default_section = "repl",
+      controls = {
+        enabled = true
+      }
+    },
+    windows = {
+      height = 0.40,
+      position = "below",
+      terminal = {
+        width = 0.5,
+        position = "left",
+        -- List of debug adapters for which the terminal should be ALWAYS hidden
+        hide = {},
+        -- Hide the terminal when starting a new session
+        start_hidden = true,
+      },
+    },
+    auto_toggle = true,
+  })
 
-  -- dap.listeners.after.event_terminated["dapui_config"] = function()
-  --   dapui.close()
-  -- end
-  -- dap.listeners.before.event_exited["dapui_config"] = function()
-  --   dapui.close()
-  -- end
+  -- To colorize scala metals
+  vim.g.baleia = require("baleia").setup({
+    -- TODO use palette from theme
+    colors = {
+      [00] = "#51576d", -- black
+      [01] = "#e78284", -- red
+      [02] = "#a6d189", -- green
+      [03] = "#e5c890", -- yellow
+      [04] = "#8caaee", -- blue
+      [05] = "#f4b8e4", -- magenta
+      [06] = "#81c8be", -- cyan
+      [07] = "#b5bfe2", -- white / light gray
+
+      [08] = "#626880", -- bright black
+      [09] = "#ef9f9f", -- bright red
+      [10] = "#b8e994", -- bright green
+      [11] = "#f2d791", -- bright yellow
+      [12] = "#a5b7ff", -- bright blue
+      [13] = "#f7c6ff", -- bright magenta
+      [14] = "#a3d9d9", -- bright cyan
+      [15] = "#c6d0f5", -- bright white
+    },
+  })
+
+  vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = "dap-repl",
+    callback = function()
+      vim.g.baleia.automatically(vim.api.nvim_get_current_buf())
+    end,
+  })
 end, 600)
