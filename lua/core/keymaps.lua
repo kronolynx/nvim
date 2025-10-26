@@ -1,12 +1,3 @@
-local function keymap(mode, key, action, opts)
-  local options = { noremap = false, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  -- vim.api.nvim_set_keymap(mode, key, action, options)
-  vim.keymap.set(mode, key, action, options)
-end
-
 -- Remap movement keys to handle wrapped lines
 vim.keymap.set('n', 'k', function()
   return vim.v.count == 0 and 'gk' or 'k'
@@ -26,122 +17,115 @@ end, { expr = true, noremap = true })
 
 
 -- Yank from cursor to end of line
-keymap("", "Y", "y$")
+vim.keymap.set('n', 'Y', 'y$')
 -- save only when buffer has changed
-keymap("n", "<C-s>", "<cmd>silent update!<cr>", { noremap = true })
-keymap("i", "<C-s>", "<cmd>silent update!<cr>", { noremap = true })
-keymap("v", "<C-s>", "<cmd>silent update!<cr>", { noremap = true })
+vim.keymap.set('n', '<C-s>', '<cmd>silent update!<cr>', { noremap = true })
+vim.keymap.set('i', '<C-s>', '<cmd>silent update!<cr>', { noremap = true })
+vim.keymap.set('v', '<C-s>', '<cmd>silent update!<cr>', { noremap = true })
 
-keymap("n", "<leader>to", "<cmd>copen<cr>", { desc = "open" })
-keymap("n", "<leader>tc", "<cmd>cclose<cr>", { desc = "close" })
-keymap("n", "<leader>tn", "<cmd>cnext<cr>", { desc = "next" })
-keymap("n", "<leader>tp", "<cmd>cprevious<cr>", { desc = "previous" })
+vim.keymap.set('n', '<leader>to', '<cmd>copen<cr>', { desc = 'open' })
+vim.keymap.set('n', '<leader>tc', '<cmd>cclose<cr>', { desc = 'close' })
+vim.keymap.set('n', '<leader>tn', '<cmd>cnext<cr>', { desc = 'next' })
+vim.keymap.set('n', '<leader>tp', '<cmd>cprevious<cr>', { desc = 'previous' })
 
-keymap("v", "<leader>p", "\"dP")
-keymap("n", "<F1>", "<Esc>")
+vim.keymap.set('v', '<leader>p', '"dP')
+vim.keymap.set('n', '<F1>', '<Esc>')
 
-keymap({ 'n', 't' }, '<M-t>', function() require('core.float_term').toggle_term() end, { desc = "toggle term" })
-
-keymap("n", '<leader>ml', function()
-  require('core.float_term').float_term('gitui', {
-    size = { width = 0.9, height = 0.9 },
-    -- cwd = vim.b.gitsigns_status_dict.root,
-  })
-end, { desc = 'gitui'})
+vim.keymap.set({ 'n', 't' }, '<M-t>', function() require('core.float_term').toggle_term() end, { desc = 'toggle term' })
 
 -- -- Done using tmux navigation
 -- -- Smart way to move between windows
--- keymap("", "<C-j>", "<C-W>j")
--- keymap("", "<C-k>", "<C-W>k")
--- keymap("", "<C-h>", "<C-W>h")
--- keymap("", "<C-l>", "<C-W>l")
+-- vim.keymap.set('n', '<C-j>', '<C-W>j')
+-- vim.keymap.set('n', '<C-k>', '<C-W>k')
+-- vim.keymap.set('n', '<C-h>', '<C-W>h')
+-- vim.keymap.set('n', '<C-l>', '<C-W>l')
 -- Exit terminal mode in the builtin terminal
-keymap('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 -- Rename word under cursor using substitute command
-keymap('n', '<leader>cw', ':%s/<C-r><C-w>/', { desc = '[R]ename [W]ord' })
+vim.keymap.set('n', '<leader>cw', ':%s/<C-r><C-w>/', { desc = '[R]ename [W]ord' })
 -- Move highlighted region up and down
-keymap('v', 'J', ":m '>+1<cr>gv=gv")
-keymap('v', 'K', ":m '<-2<cr>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<cr>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<cr>gv=gv")
 
 -- Copy whole file
-keymap('n', '<leader>by', 'ggvG$y', { desc = '[y]ank' })
-keymap('n', '<leader>bY', 'ggvG$"+y', { desc = '[Y]ank +' })
+vim.keymap.set('n', '<leader>by', 'ggvG$y', { desc = '[y]ank' })
+vim.keymap.set('n', '<leader>bY', 'ggvG$"+y', { desc = '[Y]ank +' })
 
-keymap('n', '<leader>cw', ':set wrap!<CR>', { desc = 'Toggle Wrap' })
+vim.keymap.set('n', '<leader>cw', ':set wrap!<CR>', { desc = 'Toggle Wrap' })
 
 -- Paste whole file
-keymap('n', '<leader>bp', 'ggvG$p', { desc = '[p]aste' })
-keymap('n', '<leader>bP', 'ggvG$"+p', { desc = '[P]aste +' })
+vim.keymap.set('n', '<leader>bp', 'ggvG$p', { desc = '[p]aste' })
+vim.keymap.set('n', '<leader>bP', 'ggvG$"+p', { desc = '[P]aste +' })
 
 -- Helpful for copy and paste
--- keymap('x', '<leader>p', '"_dP')
--- keymap('n', '<leader>y', '"+y')
--- keymap('v', '<leader>y', '"+y')
--- keymap('n', '<leader>Y', '"+Y')
--- keymap('n', '<leader>d', '"_d')
--- keymap('v', '<leader>d', '"_d')
+-- vim.keymap.set('x', '<leader>p', '"_dP')
+-- vim.keymap.set('n', '<leader>y', '"+y')
+-- vim.keymap.set('v', '<leader>y', '"+y')
+-- vim.keymap.set('n', '<leader>Y', '"+Y')
+-- vim.keymap.set('n', '<leader>d', '"_d')
+-- vim.keymap.set('v', '<leader>d', '"_d')
 
-keymap("", "<M-m>", "<C-W>x") -- swap window
+vim.keymap.set('n', '<M-m>', '<C-W>x') -- swap window
 
 -- Make many of the jump commands also center on search term
-keymap("n", "n", "nzz", { noremap = true })
-keymap("n", "N", "Nzz", { noremap = true })
-keymap("n", "<C-o>", "<C-o>zz", { noremap = true })
-keymap("n", "<C-i>", "<C-i>zz", { noremap = true })
-keymap("n", "*", "*zz", { noremap = true })
-keymap("n", "#", "#zz", { noremap = true })
+vim.keymap.set('n', 'n', 'nzz', { noremap = true })
+vim.keymap.set('n', 'N', 'Nzz', { noremap = true })
+vim.keymap.set('n', '<C-o>', '<C-o>zz', { noremap = true })
+vim.keymap.set('n', '<C-i>', '<C-i>zz', { noremap = true })
+vim.keymap.set('n', '*', '*zz', { noremap = true })
+vim.keymap.set('n', '#', '#zz', { noremap = true })
 
 -- This unsets the "last search pattern" register by hitting return
--- keymap("n", "<CR>", "<cmd>noh<CR><CR>", { noremap = true })
--- keymap("", "<BS>", "<cmd>nohlsearch<CR>", { silent = true })
-keymap('n', '<C-c>', '<cmd>nohlsearch<cr>')
+-- vim.keymap.set('n', '<CR>', '<cmd>noh<CR><CR>', { noremap = true })
+-- vim.keymap.set('', '<BS>', '<cmd>nohlsearch<CR>', { silent = true })
+vim.keymap.set('n', '<C-c>', '<cmd>nohlsearch<cr>')
 
 -- navigate quicklist
-keymap('n', '<leader>qo', ':copen<CR>', { desc = "open" })
-keymap('n', '<leader>qc', ':cclose<CR>', { desc = "close" })
-keymap('n', '<leader>qn', ':cnext<CR>', { desc = "next" })
-keymap('n', '<leader>qp', ':cprev<CR>', { desc = "previous" })
-keymap('n', '<leader>qf', ':cfirst<CR>', { desc = "first" })
-keymap('n', '<leader>ql', ':clast<CR>', { desc = "last" })
-keymap('n', '<leader>qr', ':call setqflist([], "r", {"idx": line(".")})<CR>', { desc = "remove" })
-keymap('n', '<leader>qx', ':call setqflist([])<CR>', { desc = "clear" })
+vim.keymap.set('n', '<leader>qo', ':copen<CR>', { desc = 'open' })
+vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { desc = 'close' })
+vim.keymap.set('n', '<leader>qn', ':cnext<CR>', { desc = 'next' })
+vim.keymap.set('n', '<leader>qp', ':cprev<CR>', { desc = 'previous' })
+vim.keymap.set('n', '<leader>qf', ':cfirst<CR>', { desc = 'first' })
+vim.keymap.set('n', '<leader>ql', ':clast<CR>', { desc = 'last' })
+vim.keymap.set('n', '<leader>qr', ':call setqflist([], "r", {"idx": line(".")})<CR>', { desc = 'remove' })
+vim.keymap.set('n', '<leader>qx', ':call setqflist([])<CR>', { desc = 'clear' })
 
 -- grep
-keymap('n', '<leader>sg', ":lua prompt_grep()<CR>", { desc = "grep" })
-keymap('n', '<leader>sW', ":lua grep_word_under_cursor()<CR>", { desc = "grep word" })
+vim.keymap.set('n', '<leader>sg', ':lua prompt_grep()<CR>', { desc = 'grep' })
+vim.keymap.set('n', '<leader>sW', ':lua grep_word_under_cursor()<CR>', { desc = 'grep word' })
 
-keymap("i", "kj", "<ESC>")
+vim.keymap.set('i', 'kj', '<ESC>')
 
 if vim.g.vscode then
-  -- keymap("i", "jj", "<ESC>")
--- else
-  local vscode = require("vscode")
+  -- vim.keymap.set('i', 'jj', '<ESC>')
+  -- else
+  local vscode = require('vscode')
 
-  keymap("n", "<C-H>", function() vscode.action "workbench.action.navigateLeft" end)
-  keymap("n", "<C-J>", function() vscode.action "workbench.action.navigateDown" end)
-  keymap("n", "<C-K>", function() vscode.action "workbench.action.navigateUp" end)
-  keymap("n", "<C-L>", function() vscode.action "workbench.action.navigateRight" end)
+  vim.keymap.set('n', '<C-H>', function() vscode.action 'workbench.action.navigateLeft' end)
+  vim.keymap.set('n', '<C-J>', function() vscode.action 'workbench.action.navigateDown' end)
+  vim.keymap.set('n', '<C-K>', function() vscode.action 'workbench.action.navigateUp' end)
+  vim.keymap.set('n', '<C-L>', function() vscode.action 'workbench.action.navigateRight' end)
 
-  keymap("n", "<C-o>", function() vscode.action "workbench.action.navigateBack" end)
-  keymap("n", "<C-i>", function() vscode.action "workbench.action.navigateForward" end)
+  vim.keymap.set('n', '<C-o>', function() vscode.action 'workbench.action.navigateBack' end)
+  vim.keymap.set('n', '<C-i>', function() vscode.action 'workbench.action.navigateForward' end)
 
-  keymap("n", "<C-c>", function() vscode.action ":nohl" end)
-  keymap("n", "<S-h>", function() vscode.action "editor.action.triggerParameterHints" end)
+  vim.keymap.set('n', '<C-c>', function() vscode.action ':nohl' end)
+  vim.keymap.set('n', '<S-h>', function() vscode.action 'editor.action.triggerParameterHints' end)
 
-  -- keymap("n", "<leader>F", function()
-  --   vscode.action("editor.action.formatDocument")
+  -- vim.keymap.set('n', '<leader>F', function()
+  --   vscode.action('editor.action.formatDocument')
   -- end)
   --
-  -- keymap("n", "<leader>fe", function()
-  --   vscode.call("workbench.view.explorer")
+  -- vim.keymap.set('n', '<leader>fe', function()
+  --   vscode.call('workbench.view.explorer')
   -- end)
-  -- keymap("n", "<leader>ff", function()
-  --   vscode.call("workbench.action.quickOpen")
+  -- vim.keymap.set('n', '<leader>ff', function()
+  --   vscode.call('workbench.action.quickOpen')
   -- end)
 
   -- VSCode extension  -- TODO translate like the ones above
   -- local vscode = require('vscode')
-  -- keymap('n', '<leader>', "require('vscode').notify('whichkey.show')<CR>", { desc = "open"})
+  -- vim.keymap.set('n', '<leader>', "require('vscode').notify('whichkey.show')<CR>", { desc = 'open' })
   --
   ---- basic actions
   -- maps.n["<Leader>q"] = function() require("vscode").action "workbench.action.closeWindow" end

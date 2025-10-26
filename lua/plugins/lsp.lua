@@ -122,15 +122,6 @@ if os.getenv("LSP_ENABLED") ~= "false" then
   local lsp_group = api.nvim_create_augroup("lsp", { clear = true })
 
   local on_attach = function(client, bufnr)
-    ---@param lhs string
-    ---@param rhs string|function
-    ---@param desc string
-    ---@param mode? string|string[]
-    local function keymap(lhs, rhs, desc, mode)
-      mode = mode or 'n'
-      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
-    end
-
     local wk = require("which-key")
     wk.add(
       {
@@ -139,72 +130,55 @@ if os.getenv("LSP_ENABLED") ~= "false" then
         { "<leader>lv", group = "view" },
       })
 
-    keymap("H", vim.lsp.buf.signature_help, "signature help")
-    keymap("<M-h>", vim.lsp.buf.signature_help, "signature", "i")
+    vim.keymap.set("n", "H", vim.lsp.buf.signature_help, { desc = "signature help" })
+    vim.keymap.set("i", "<M-h>", vim.lsp.buf.signature_help, { desc = "signature" })
 
-    keymap("<leader>lr", vim.lsp.buf.rename, "rename")
-    -- keymap( "<leader>la", vim.lsp.buf.code_action, "code action" )
-    keymap("<leader>ll", vim.lsp.codelens.run, "code lens")
-    keymap("<leader>lw", vim.lsp.buf.add_workspace_folder, "add workspace folder")
-    keymap("K", vim.lsp.buf.hover, "Hover")
+    vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "rename" })
+    -- vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { desc = "code action" })
+    vim.keymap.set("n", "<leader>ll", vim.lsp.codelens.run, { desc = "code lens" })
+    vim.keymap.set("n", "<leader>lw", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
 
-    keymap("<leader>gI", vim.lsp.buf.implementation, "implementation")
-    keymap("<leader>gT", vim.lsp.buf.type_definition, "type definition")
-    keymap("<leader>gR", vim.lsp.buf.references, "references")
-    -- keymap("<leader>gS", vim.lsp.buf.document_symbol, "document symbol")
-    keymap("<leader>li", vim.lsp.buf.incoming_calls, "incoming calls") -- Lists all the call sites of the symbol under the cursor in the quickfix window.
-    keymap("<leader>lo", vim.lsp.buf.outgoing_calls, "outgoing calls") -- Lists all the items that are called by the symbol under the cursor in the quickfix window.
-    keymap("<leader>lh", vim.lsp.buf.typehierarchy, "hierarchy")       -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
-    keymap("<leader>l=", vim.lsp.buf.format, "format")                 -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
-    -- FZF
-    -- keymap("<leader>gI", "<cmd>FzfLua lsp_implementations<cr>", "implementation FZF")
-    -- keymap("<leader>gT", "<cmd>FzfLua lsp_typedefs<cr>", "typedefs FZF")
-    -- keymap("<leader>gR", "<cmd>FzfLua lsp_references<cr>", "references FZF")
-    -- keymap("<leader>gSB", "<cmd>FzfLua lsp_document_symbols<cr>", "symbols buffer FZF")
-    -- keymap("<leader>lI", "<cmd>FzfLua lsp_incoming_calls<cr>", "incoming calls FZF")
-    -- keymap("<leader>lO", "<cmd>FzfLua lsp_outgoing_calls<cr>", "outgoing calls FZF")
+    vim.keymap.set("n", "<leader>gI", vim.lsp.buf.implementation, { desc = "implementation" })
+    vim.keymap.set("n", "<leader>gT", vim.lsp.buf.type_definition, { desc = "type definition" })
+    vim.keymap.set("n", "<leader>gR", vim.lsp.buf.references, { desc = "references" })
+    -- vim.keymap.set("n", "<leader>gS", vim.lsp.buf.document_symbol, { desc = "document symbol" })
+    vim.keymap.set("n", "<leader>li", vim.lsp.buf.incoming_calls, { desc = "incoming calls" }) -- Lists all the call sites of the symbol under the cursor in the quickfix window.
+    vim.keymap.set("n", "<leader>lo", vim.lsp.buf.outgoing_calls, { desc = "outgoing calls" }) -- Lists all the items that are called by the symbol under the cursor in the quickfix window.
+    vim.keymap.set("n", "<leader>lh", vim.lsp.buf.typehierarchy, { desc = "hierarchy" })       -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
+    vim.keymap.set("n", "<leader>l=", vim.lsp.buf.format, { desc = "format" })                 -- Lists all the subtypes or supertypes of the symbol under the cursor in the quickfix window.
 
-    -- keymap("<leader>gSl", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", "lsp live workspace symbols FZF")
-    -- keymap("<leader>gSw", "<cmd>FzfLua lsp_workspace_symbols<cr>", "lsp symbols workspace FZF") -- doesn't work for metals
-    -- keymap("<leader>gSw", vim.lsp.buf.workspace_symbol, "workspace symbol")
-
-
-    -- keymap('<M-CR>', function() require('tiny-code-action').code_action() end, 'vim.lsp.buf.code_action()',
-    --   { 'n', 'x' })
-    keymap('<M-CR>', vim.lsp.buf.code_action, "code action")
-    -- keymap( "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "lsp code actions" )
-    -- keymap("<leader>lf", "<cmd>FzfLua lsp_finder<cr>", "lsp finder FZF")
+    vim.keymap.set('n', '<M-CR>', vim.lsp.buf.code_action, { buffer = bufnr, desc = 'code action' })
 
     -- Diagnostics keymaps
-    keymap("<leader>dl", "<cmd>lua vim.diagnostic.open_float()<CR>", "line")
-    keymap('<leader>dp', "<cmd>lua vim.diagnostic.goto_prev()<CR>", 'previous')
-    keymap('<leader>dn', "<cmd>lua vim.diagnostic.goto_next()<CR>", 'next')
-    -- keymap("<leader>dB", "<cmd>FzfLua lsp_document_diagnostics sort=true<cr>", "diagnostics buffer FZF") -- sort=2 // for reverse sort
-    -- keymap("<leader>dW", "<cmd>FzfLua lsp_workspace_diagnostics sort=true<cr>", "diagnostics workspace FZF")
-    -- keymap("<leader>dW", vim.lsp.buf.workspace_diagnostics, "diagnostics workspace") -- broken
+    vim.keymap.set('n', '<leader>dl', '<cmd>lua vim.diagnostic.open_float()<CR>', { buffer = bufnr, desc = 'line' })
+    vim.keymap.set('n', '<leader>dp', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { buffer = bufnr, desc = 'previous' })
+    vim.keymap.set('n', '<leader>dn', '<cmd>lua vim.diagnostic.goto_next()<CR>', { buffer = bufnr, desc = 'next' })
 
-    keymap('[d', function() vim.diagnostic.jump { count = -1 } end, 'Previous diagnostic')
-    keymap(']d', function() vim.diagnostic.jump { count = 1 } end, 'Next diagnostic')
-    keymap('[e', function() vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR } end,
-      'Previous error')
-    keymap(']e', function() vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR } end,
-      'Next error')
+    vim.keymap.set('n', '[d', function() vim.diagnostic.jump { count = -1 } end,
+      { buffer = bufnr, desc = 'Previous diagnostic' })
+    vim.keymap.set('n', ']d', function() vim.diagnostic.jump { count = 1 } end,
+      { buffer = bufnr, desc = 'Next diagnostic' })
+    vim.keymap.set('n', '[e', function() vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR } end,
+      { buffer = bufnr, desc = 'Previous error' })
+    vim.keymap.set('n', ']e', function() vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR } end,
+      { buffer = bufnr, desc = 'Next error' })
 
     if client:supports_method('textDocument/signatureHelp') then
-      keymap('<C-k>', function()
+      vim.keymap.set('i', '<C-k>', function()
         -- Close the completion menu first (if open).
         if require('blink.cmp.completion.windows.menu').win:is_open() then
           require('blink.cmp').hide()
         end
 
         vim.lsp.buf.signature_help()
-      end, 'Signature help', 'i')
+      end, { buffer = bufnr, desc = 'Signature help' })
     end
 
     if vim.lsp.inlay_hint and client.server_capabilities.inlayHintProvider then
-      keymap('<leader>lvh', function()
+      vim.keymap.set('n', '<leader>lvh', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-      end, 'enable inlay hints')
+      end, { buffer = bufnr, desc = 'enable inlay hints' })
     end
 
 
@@ -319,15 +293,6 @@ if os.getenv("LSP_ENABLED") ~= "false" then
       metals_config.capabilities = capabilities
 
       metals_config.on_attach = function(_, bufnr)
-        ---@param lhs string
-        ---@param rhs string|function
-        ---@param desc string
-        ---@param mode? string|string[]
-        local function keymap(lhs, rhs, desc, mode)
-          mode = mode or 'n'
-          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
-        end
-
         local wk = require("which-key")
         local metals_clues = {
           { "<leader>l",   group = "lsp" },
@@ -338,51 +303,47 @@ if os.getenv("LSP_ENABLED") ~= "false" then
 
         require("metals").setup_dap()
 
-        keymap("<leader>gs", require("metals").goto_super_method, "super method")
+        vim.keymap.set('n', '<leader>gs', require("metals").goto_super_method, { buffer = bufnr, desc = 'super method' })
 
-        keymap("K", require("metals").type_of_range, "type of range", "v")
+        vim.keymap.set('v', 'K', require("metals").type_of_range, { buffer = bufnr, desc = 'type of range' })
 
-        keymap("<leader>lmw", function()
+        vim.keymap.set('n', '<leader>lmw', function()
           require("metals").hover_worksheet({ border = "single" })
-        end, "hover worksheet")
+        end, { buffer = bufnr, desc = 'hover worksheet' })
 
-        keymap("<leader>lmt", require("metals.tvp").toggle_tree_view, "tree view")
+        vim.keymap.set('n', '<leader>lmt', require("metals.tvp").toggle_tree_view, { buffer = bufnr, desc = 'tree view' })
 
-        keymap("<leader>lmf", require("metals.tvp").reveal_in_tree, "find in tree")
+        vim.keymap.set('n', '<leader>lmf', require("metals.tvp").reveal_in_tree,
+          { buffer = bufnr, desc = 'find in tree' })
 
-        keymap("<leader>lmc", require("metals").commands, "commands")
-        keymap("<leader>lmi", require("metals").import_build, "import build")
-        keymap("<leader>lmd", require("metals").find_in_dependency_jars, "find in jars")
-        keymap("<leader>lmo", require("metals").organize_imports, "organize imports")
-        keymap("<leader>lmw", require("metals").hover_worksheet, "hover worksheet")
-        keymap("<leader>lml", require("metals").toggle_logs, "toggle logs")
+        vim.keymap.set('n', '<leader>lmc', require("metals").commands, { buffer = bufnr, desc = 'commands' })
+        vim.keymap.set('n', '<leader>lmi', require("metals").import_build, { buffer = bufnr, desc = 'import build' })
+        vim.keymap.set('n', '<leader>lmd', require("metals").find_in_dependency_jars,
+          { buffer = bufnr, desc = 'find in jars' })
+        vim.keymap.set('n', '<leader>lmo', require("metals").organize_imports,
+          { buffer = bufnr, desc = 'organize imports' })
+        vim.keymap.set('n', '<leader>lmw', require("metals").hover_worksheet,
+          { buffer = bufnr, desc = 'hover worksheet' })
+        vim.keymap.set('n', '<leader>lml', require("metals").toggle_logs, { buffer = bufnr, desc = 'toggle logs' })
 
-        keymap("<leader>lmva", function()
+        vim.keymap.set('n', '<leader>lmva', function()
           require("metals").toggle_setting("showImplicitArguments")
-        end, "view implicit arguments")
+        end, { buffer = bufnr, desc = 'view implicit arguments' })
 
-        keymap("<leader>lmvc", function()
+        vim.keymap.set('n', '<leader>lmvc', function()
           require("metals").toggle_setting("showImplicitConversionsAndClasses")
-        end, "view implicit conversions")
+        end, { buffer = bufnr, desc = 'view implicit conversions' })
 
-        keymap("<leader>lmvs", function()
+        vim.keymap.set('n', '<leader>lmvs', function()
           require("metals").toggle_setting("enableSemanticHighlighting")
-        end, "view semanting highlighting")
+        end, { buffer = bufnr, desc = 'view semanting highlighting' })
 
-        keymap("<leader>lmvt", function()
+        vim.keymap.set('n', '<leader>lmvt', function()
           require("metals").toggle_setting("showInferredType")
-        end, "view inferred type")
+        end, { buffer = bufnr, desc = 'view inferred type' })
       end
 
       require("metals").initialize_or_attach(metals_config)
-      -- local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
-      -- api.nvim_create_autocmd("FileType", {
-      --   pattern = self.ft,
-      --   callback = function()
-      --
-      --   end,
-      --   group = nvim_metals_group,
-      -- })
     end
   })
 end
