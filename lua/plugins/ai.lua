@@ -34,6 +34,10 @@ vim.defer_fn(function()
       },
     },
   }
+  -- better chat buffer styling
+  require("render-markdown").setup({
+    file_types = { "markdown", "codecompanion" },
+  })
 
   vim.keymap.set('n', '<leader>av', '<cmd>Minuet virtualtext toggle<CR>', { desc = 'Toggle virtual text' })
 
@@ -43,6 +47,9 @@ vim.defer_fn(function()
         chat = {
           -- adapter = "copilot",
           adapter = "openai",
+          opts = {
+            completion_provider = "blink", -- blink|cmp|coc|default
+          },
         },
         inline = {
           -- adapter = "copilot",
@@ -103,13 +110,23 @@ vim.defer_fn(function()
         },
       },
     })
-
+  vim.keymap.set({ "n", "v" }, "<leader>ak", "<cmd>CodeCompanionActions<CR>", { desc = "AI actions" })
   vim.keymap.set('n', '<leader>al', '<cmd>CodeCompanion<CR>', { desc = 'Inline' })
   vim.keymap.set({ 'n', 'v' }, '<leader>ac', '<cmd>CodeCompanionChat<CR>', { desc = 'Chat' })
   vim.keymap.set('n', '<leader>at', '<cmd>CodeCompanionChat Toggle<CR>', { desc = 'Toggle CodeCompanion chat' })
   vim.keymap.set('x', '<leader>aa', '<cmd>CodeCompanionChat Add<CR>', { desc = 'Add to CodeCompanion chat' })
-  vim.keymap.set('x', '<leader>aA', '<cmd>CodeCompanionChat Add<CR>', { desc = 'Actions' })
-
+  vim.keymap.set({ "n", "v" }, "<leader>ai", function()
+    local mode = vim.fn.mode()
+    vim.ui.input({ prompt = "Ask AI 󱙺 ", win = { style = "above_cursor" } }, function(input)
+      if input and input ~= "" then
+        if mode:match("[vV\22]") then
+          vim.cmd("'<,'>CodeCompanion " .. input)
+        else
+          vim.cmd("CodeCompanion " .. input)
+        end
+      end
+    end)
+  end, { desc = "AI inline assistant" })
 
   -- require("copilot").setup({
   --   -- filetypes = {
