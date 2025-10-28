@@ -21,7 +21,7 @@ local gitbrowse    = {
       permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
       commit = "/commit/{commit}",
     },
-    ["gitlab%.com"] = {
+    ["gitlab[%w%.]*%.com"] = {
       branch = "/-/tree/{branch}",
       file = "/-/blob/{branch}/{file}#L{line_start}-{line_end}",
       permalink = "/-/blob/{commit}/{file}#L{line_start}-{line_end}",
@@ -340,8 +340,7 @@ vim.defer_fn(function()
   vim.keymap.set({ "n", "t" }, "[[", function() Snacks.words.jump(-vim.v.count1) end, { desc = "Prev Reference" })
   vim.keymap.set({ "n", "t" }, "]]", function() Snacks.words.jump(vim.v.count1) end, { desc = "Next Reference" })
 
-  -- TODO
-  vim.keymap.set({ "n", "v" }, "<leader>xx", function()
+  vim.keymap.set({ "n", "v" }, "<leader>mY", function()
     Snacks.gitbrowse.open({
       open = function(url)
         vim.fn.setreg("+", url)
@@ -349,7 +348,5 @@ vim.defer_fn(function()
       end,
     })
   end, { desc = "Git Copy Link" })
-  -- vim.keymap.set({ "n", "v" }, "<leader>xx", function() Snacks.gitbrowse.get_url() end, { desc = "Git Browse" })
-  -- vim.keymap.set({ "n", "v" }, "<leader>xx", function() Snacks.gitbrowse() end, { desc = "Git Browse" })
-  -- vim.keymap.set({ "n", "v" }, "<leader>xy", function() Snacks.gitbrowse().open() end, { desc = "Git Browse open" })
+  vim.keymap.set({ "n", "v" }, "<leader>my", function() Snacks.gitbrowse() end, { desc = "Git Browse open" })
 end, 200)
