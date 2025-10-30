@@ -8,6 +8,11 @@
       "rev": "1b25eac",
       "src": "https://github.com/m00qek/baleia.nvim"
     },
+    "blink.cmp": {
+      "rev": "327fff9",
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "1.0.0 - 2.0.0"
+    },
     "catppuccin": {
       "rev": "8c4125e",
       "src": "https://github.com/catppuccin/nvim"
