@@ -34,10 +34,6 @@ vim.defer_fn(function()
       },
     },
   }
-  -- better chat buffer styling
-  require("render-markdown").setup({
-    file_types = { "markdown", "codecompanion" },
-  })
 
   vim.keymap.set('n', '<leader>av', '<cmd>Minuet virtualtext toggle<CR>', { desc = 'Toggle virtual text' })
 
