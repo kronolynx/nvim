@@ -276,8 +276,14 @@ function M.filename_component(bufnr)
   local filename = vim.api.nvim_buf_get_name(bufnr)
 
   local extension = vim.fn.fnamemodify(filename, ":e")
-  local icon, icon_hl = require("nvim-web-devicons").get_icon(filename, extension,
-    { default = true })
+  local icon = icons.symbol_kinds.File
+  local icon_hl = "File"
+
+  if vim.o.loadplugins then -- if nvim --noplugin
+    icon, icon_hl =
+        require("nvim-web-devicons").get_icon(filename, extension,
+          { default = true })
+  end
   icon_hl = M.get_or_create_hl(icon_hl)
   local lfilename = vim.fn.fnamemodify(filename, ":.")
 
@@ -291,12 +297,14 @@ function M.filename_component(bufnr)
   lfilename = filename_hl .. lfilename
 
   local flag = ""
-  if vim.bo.modified then
-    local hl = M.get_or_create_hl(colors.green)
-    flag = hl .. "[+]"
-  elseif not vim.bo.modifiable or vim.bo.readonly then
-    local hl = M.get_or_create_hl(colors.orange)
-    flag = hl .. ""
+  if bufnr == 0 then -- only add flag to active buffer
+    if vim.bo.modified then
+      local hl = M.get_or_create_hl(colors.green)
+      flag = hl .. "[+]"
+    elseif not vim.bo.modifiable or vim.bo.readonly then
+      local hl = M.get_or_create_hl(colors.orange)
+      flag = hl .. ''
+    end
   end
 
   return icon_hl .. icon .. ' ' .. lfilename .. flag
@@ -304,24 +312,33 @@ end
 
 ---@return string
 function M.active_lsp_component()
-  local dev_icons_color = require("nvim-web-devicons").get_icon_color_by_filetype
-
-  local dev_icons = function(ext)
-    local icon, hl = dev_icons_color(ext)
-    return { icon = icon, hl = hl }
-  end
-  local lsp_icons = {
-    lua_ls = dev_icons("lua"),
-    copilot = { icon = "", hl = colors.blue },
-    metals = dev_icons("scala"),
-    pyright = dev_icons("python"),
-    kotlin_language_server = dev_icons("kotlin"),
-    jsonls = dev_icons("json"),
-    rust_analyzer = dev_icons("rust"),
-    yamlls = dev_icons("yaml"),
-    bashls = dev_icons("bash"),
-    marksman = dev_icons("markdown"),
+  local lsp_icons_default = {
+    copilot = { icon = icons.misc.copilot, hl = colors.blue },
   }
+
+  local lsp_icons = lsp_icons_default
+
+  if vim.o.loadplugins then -- if nvim --noplugin
+    local dev_icons_color = require("nvim-web-devicons").get_icon_color_by_filetype
+
+    local dev_icons = function(ext)
+      local icon, hl = dev_icons_color(ext)
+      return { icon = icon, hl = hl }
+    end
+    lsp_icons = {
+      lua_ls = dev_icons("lua"),
+      copilot = lsp_icons.copilot,
+      metals = dev_icons("scala"),
+      pyright = dev_icons("python"),
+      kotlin_language_server = dev_icons("kotlin"),
+      jsonls = dev_icons("json"),
+      rust_analyzer = dev_icons("rust"),
+      yamlls = dev_icons("yaml"),
+      bashls = dev_icons("bash"),
+      marksman = dev_icons("markdown"),
+    }
+  end
+
   local icon_or_name = {}
 
   for _, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
