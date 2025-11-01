@@ -265,7 +265,7 @@ function M.git_branch_component()
   local hl = M.get_or_create_hl(colors.purple)
   local component = hl .. ' ' .. head
 
-  return hl .. ' ' .. head
+  return component
 end
 
 --- File-content encoding for the current buffer.
@@ -600,14 +600,14 @@ vim.api.nvim_create_augroup("Statusline", { clear = true })
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   group = "Statusline",
   callback = function()
-    vim.wo.statusline = "%!v:lua.require'core.statusline'.render()"
+    vim.wo.statusline = "%!v:lua.require'plugins.statusline'.render()"
   end,
 })
 
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   group = "Statusline",
   callback = function()
-    vim.wo.statusline = "%!v:lua.require'core.statusline'.render_nc()"
+    vim.wo.statusline = "%!v:lua.require'plugins.statusline'.render_nc()"
   end,
 })
 

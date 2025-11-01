@@ -1,3 +1,4 @@
+require "plugins.statusline"
 require "plugins.theme"
 require "plugins.conform"
 require "plugins.dap"
