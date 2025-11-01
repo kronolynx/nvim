@@ -31,8 +31,6 @@ vim.keymap.set('n', '<leader>tp', '<cmd>cprevious<cr>', { desc = 'previous' })
 vim.keymap.set('v', '<leader>p', '"dP')
 vim.keymap.set('n', '<F1>', '<Esc>')
 
-vim.keymap.set({ 'n', 't' }, '<M-t>', function() require('core.float_term').toggle_term() end, { desc = 'toggle term' })
-
 -- -- Done using tmux navigation
 -- -- Smart way to move between windows
 -- vim.keymap.set('n', '<C-j>', '<C-W>j')
