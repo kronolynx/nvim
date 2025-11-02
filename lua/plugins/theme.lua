@@ -3,57 +3,74 @@ vim.pack.add({
 }, { confirm = false })
 
 require("catppuccin").setup({
-  flavour = "catppuccin-frappe",
-  integrations = {
-    blink_cmp = true,
-    flash = true,
-    gitsigns = true,
-    mason = true,
-    lsp_trouble = true,
-    native_lsp = {
-      enabled = true,
-      virtual_text = {
-        errors = { "italic" },
-        hints = { "italic" },
-        warnings = { "italic" },
-        information = { "italic" },
-      },
-      underlines = {
-        errors = { "undercurl" },
-        hints = { "undercurl" },
-        warnings = { "undercurl" },
-        information = { "undercurl" },
-      },
-      mini = {
-        enabled = true,
-        indentscope_color = "lavender",
-      },
-    },
-    indent_blankline = {
-      enabled = true,
-      scope_color = "lavender",      -- catppuccin color (eg. `lavender`) Default: text
-      colored_indent_levels = false, -- requires extra steps to enable
-    },
-    nvimtree = true,
-    noice = true,
-    notify = true,
-    telescope = true,
-    treesitter = true,
-    treesitter_context = true,
-    fzf = true,
+  flavour = "frappe",   -- latte, frappe, macchiato, mocha
+  background = {      -- :h background
+    light = "latte",
+    dark = "mocha",
   },
-  highlight_overrides = {
-    all = function(colors)
-      return {
-        Search = { bg = colors.surface1 },
-        LineNr = { fg = colors.overlay0 },
-        CursorLine = { bg = colors.surface0 },
-        CursorColumn = { bg = colors.surface0 },
-        IndentBlanklineChar = { fg = colors.mantle },
-        Comment = { fg = colors.overlay1 },
-      }
-    end,
+  transparent_background = false,   -- disables setting the background color.
+  float = {
+    transparent = false,            -- enable transparent floating windows
+    solid = false,                  -- use solid styling for floating windows, see |winborder|
+  },
+  show_end_of_buffer = false,       -- shows the '~' characters after the end of buffers
+  term_colors = false,              -- sets terminal colors (e.g. `g:terminal_color_0`)
+  dim_inactive = {
+    enabled = false,                -- dims the background color of inactive window
+    shade = "dark",
+    percentage = 0.15,              -- percentage of the shade to apply to the inactive window
+  },
+  no_italic = false,                -- Force no italic
+  no_bold = false,                  -- Force no bold
+  no_underline = false,             -- Force no underline
+  styles = {                        -- Handles the styles of general hi groups (see `:h highlight-args`):
+    comments = { "italic" },        -- Change the style of comments
+    conditionals = { "italic" },
+    loops = {},
+    functions = {},
+    keywords = {},
+    strings = {},
+    variables = {},
+    numbers = {},
+    booleans = {},
+    properties = {},
+    types = {},
+    operators = {},
+    -- miscs = {}, -- Uncomment to turn off hard-coded styles
+  },
+  lsp_styles = {   -- Handles the style of specific lsp hl groups (see `:h lsp-highlight`).
+    virtual_text = {
+      errors = { "italic" },
+      hints = { "italic" },
+      warnings = { "italic" },
+      information = { "italic" },
+      ok = { "italic" },
+    },
+    underlines = {
+      errors = { "undercurl" },
+      hints = { "undercurl" },
+      warnings = { "undercurl" },
+      information = { "undercurl" },
+      ok = { "undercurl" },
+    },
+    inlay_hints = {
+      background = true,
+    },
+  },
+  color_overrides = {},
+  custom_highlights = {},
+  default_integrations = true,
+  auto_integrations = false,
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    notify = true,
+    fidget = true,
+    snacks = true,
+    which_key = true
   },
 })
 
-vim.cmd.colorscheme "catppuccin-frappe"
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
+
