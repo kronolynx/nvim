@@ -4,13 +4,13 @@ vim.pack.add({
 
 -- for debugging
 -- https://github.com/folke/snacks.nvim/blob/main/docs/debug.md
--- _G.dd              = function(...)
---   Snacks.debug.inspect(...)
--- end
--- _G.bt              = function()
---   Snacks.debug.backtrace()
--- end
--- vim.print          = _G.dd
+_G.dd              = function(...)
+  Snacks.debug.inspect(...)
+end
+_G.bt              = function()
+  Snacks.debug.backtrace()
+end
+vim.print          = _G.dd
 
 local gitbrowse    = {
   what = "permalink",
@@ -101,7 +101,8 @@ local picker       = {
       }
     }
   },
-  ui_select = true, -- replace `vim.ui.select` with the snacks picker
+  git_status = true,
+  ui_select = false, -- replace `vim.ui.select` with the snacks picker
   sources = {
     explorer = {
       auto_close = true,
@@ -192,22 +193,29 @@ local statuscolumn = {
   },
 }
 
+local bigfile      = {
+  enabled = true,
+  size = 1.5 * 1024 * 1024, -- 1.5MB
+  line_length = 1500
+}
+
 vim.defer_fn(function()
   require("snacks").setup({
     -- your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
     animate = { enabled = false },
-    bigfile = { enabled = false },
+    bigfile = bigfile,
     dashboard = dashboard,
     dim = { enabled = false },
     explorer = explorer,
     gitbrowse = gitbrowse,
     indent = indent,
-    input = {},
-    lazygit = { enabled = true },
+    input = { enabled = false },
+    lazygit = { enabled = false },
     notifier = { enabled = true },
-    picker = picker,
+    -- picker = picker,
+    picker = { enabled = false },
     profiler = { enabled = false },
     quickfile = { enabled = false },
     scope = { enabled = false },
@@ -264,7 +272,7 @@ vim.defer_fn(function()
   vim.keymap.set("n", "<leader>sj", function() Snacks.picker.jumps() end, { desc = "Jumps" })
   vim.keymap.set("n", "<leader>sk", function() Snacks.picker.keymaps() end, { desc = "Keymaps" })
   vim.keymap.set("n", "<leader>sl", function() Snacks.picker.loclist() end, { desc = "Location List" })
-  vim.keymap.set("n", "<leader>sm", function() Snacks.picker.marks() end, { desc = "Marks" })
+  vim.keymap.set("n", "<leader>sm", function() Snacks.picker.marks({ filter = { cwd = true } }) end, { desc = "Marks" })
   vim.keymap.set("n", "<leader>sq", function() Snacks.picker.qflist() end, { desc = "Quickfix List" })
   vim.keymap.set("n", "<leader>ss", function() Snacks.picker.grep() end, { desc = "Grep" })
   vim.keymap.set("n", "<leader>su", function() Snacks.picker.undo() end, { desc = "Undo History" })
