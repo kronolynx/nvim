@@ -15,15 +15,15 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 -- auto resize splits when the terminal's window is resized
 vim.api.nvim_create_autocmd("VimResized", {
-	command = "wincmd =",
+  command = "wincmd =",
 })
 
 -- no auto continue comments on new line
 vim.api.nvim_create_autocmd("FileType", {
-	group = vim.api.nvim_create_augroup("no_auto_comment", {}),
-	callback = function()
-		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
-	end,
+  group = vim.api.nvim_create_augroup("no_auto_comment", {}),
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
 })
 
 -- -- close quickfix menu after selecting choice
@@ -33,21 +33,11 @@ vim.api.nvim_create_autocmd("FileType", {
 --     command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 --   })
 
-
 -- auto-read files when modified externally
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
   command = "if mode() != 'c' | checktime | endif",
   pattern = { "*" },
 })
-
--- -- Remove trailing whitespace
--- vim.api.nvim_create_autocmd('BufWritePre', {
---   desc = 'Remove trailing whitespace',
---   group = custom,
---   callback = function()
---     vim.cmd [[:%s/\s\+$//e]]
---   end,
--- })
 
 -- Disable modifiable when readonly
 vim.api.nvim_create_autocmd('BufRead',
@@ -59,13 +49,6 @@ vim.api.nvim_create_autocmd('BufRead',
     end,
   })
 
--- vim.api.nvim_create_autocmd({ "VimSuspend", "FocusLost" }, { command = "silent! update" })
---
--- vim.api.nvim_create_autocmd(
---   { "FocusLost", "ModeChanged", "TextChangedI", "BufEnter" },
---   { desc = "autosave", pattern = "*", command = "silent! update" }
--- )
---
 -- Autosave on leave/focus lost
 vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'VimLeavePre', 'InsertLeave' }, {
   pattern = '*',
@@ -79,30 +62,34 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'VimLeavePre', 'InsertLea
   end,
 })
 
--- --- TODO fix
--- Error detected while processing BufLeave Autocommands for "*":
--- Error executing lua callback: vim/_editor.lua:0: BufLeave Autocommands for "*"..script nvim_exec2() called at BufLeave Autocommands for "*":0: Vi
--- m(update):E382: Cannot write, 'buftype' option is set
--- stack traceback:
---         [C]: in function 'nvim_exec2'
---         vim/_editor.lua: in function 'cmd'
---         /Users/jortiz/.config/nvim/lua/config/autocmds.lua:19: in function </Users/jortiz/.config/nvim/lua/config/autocmds.lua:17>
--- todo fix
--- 13:21:35 msg_show Error executing lua callback: vim/_editor.lua:0: BufLeave Autocommands for "*"..script nvim_exec2() called at BufLeave Autocommands for "*":0: Vim(update):E382: Cannot write, 'buftype' option is set
--- stack traceback:
--- 	[C]: in function 'nvim_exec2'
--- 	vim/_editor.lua: in function 'cmd'
--- 	/Users/jortiz/.config/nvim/lua/config/autocmds.lua:29: in function </Users/jortiz/.config/nvim/lua/config/autocmds.lua:27>
--- vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave' }, {
--- -- vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave', 'InsertLeave' }, {
---   group = vim.api.nvim_create_augroup('autosave', { clear = true }),
---   pattern = '*',
---   callback = function()
---     if vim.bo.modified and vim.api.nvim_buf_get_name(0) ~= '' then
---       vim.cmd('silent update')
---     end
---   end
--- })
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('treesitter_folding', { clear = true }),
+    desc = 'Enable Treesitter folding',
+    callback = function(args)
+        local bufnr = args.buf
+
+        -- Enable Treesitter folding when not in huge files and when Treesitter
+        -- is working.
+        if vim.bo[bufnr].filetype ~= 'bigfile' and pcall(vim.treesitter.start, bufnr) then
+            vim.api.nvim_buf_call(bufnr, function()
+                vim.wo[0][0].foldmethod = 'expr'
+                vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+                vim.cmd.normal 'zx'
+            end)
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('big_file', { clear = true }),
+  desc = 'Disable features in big files',
+  pattern = 'bigfile',
+  callback = function(args)
+    vim.schedule(function()
+      vim.bo[args.buf].syntax = vim.filetype.match { buf = args.buf } or ''
+    end)
+  end,
+})
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('yank_highlight', { clear = true }),
@@ -111,9 +98,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank { higroup = 'Visual', timeout = 300 }
   end,
 })
-
--- When vimwindow is resized resize splits
--- cmd([[au VimResized * exe "normal! \<c-w>="]])
 
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('close_with_q', { clear = true }),
@@ -151,13 +135,3 @@ vim.api.nvim_create_user_command('Grep', function(opts)
   vim.cmd('redraw!')
   vim.cmd('copen')
 end, { nargs = '+', complete = 'file' })
-
--- -- TODO move somewhere else and add keybinding
--- -- Copy text to clipboard using codeblock format ```{ft}{content}```
--- vim.api.nvim_create_user_command('CopyCodeBlock', function(opts)
---   local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, true)
---   local content = table.concat(lines, '\n')
---   local result = string.format('```%s\n%s\n```', vim.bo.filetype, content)
---   vim.fn.setreg('+', result)
---   vim.notify 'Text copied to clipboard'
--- end, { range = true })
