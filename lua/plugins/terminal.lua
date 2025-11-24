@@ -124,11 +124,11 @@ vim.keymap.set({ "n" }, "<leader>xv", function()
   M.toggle_term({ position = "below" })
 end, { noremap = true, silent = true, desc = "Toggle split terminal" })
 
-vim.keymap.set({ "n", "t" }, "<leader>lms", function()
+vim.keymap.set({ "n" }, "<leader>lms", function()
   M.toggle_term({ cmd = "sbt", title = "sbt", index = 999 })
 end, { noremap = true, silent = true, desc = "Toggle sbt terminal" })
 
-vim.keymap.set({ "n", "t" }, "<leader>ml", function()
+vim.keymap.set({ "n" }, "<leader>ml", function()
   M.toggle_term({ cmd = "lazygit", title = "Lazygit", index = 998 })
 end, { noremap = true, silent = true, desc = "Toggle lazy terminal" })
 
