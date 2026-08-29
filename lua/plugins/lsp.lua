@@ -8,7 +8,11 @@ vim.diagnostic.config {
   update_in_insert = false, -- false so diags are updated on InsertLeave
   severity_sort = true,
   -- virtual_text = { spacing = 4 },
-  virtual_text = { current_line = true, severity = { min = 'INFO', max = 'WARN' } },
+  virtual_text = {
+    prefix = '',
+    current_line = true,
+    severity = { min = 'INFO', max = 'WARN' }
+  },
   virtual_lines = { current_line = true, severity = { min = 'ERROR' } },
   float = {
     focusable = true,
@@ -128,6 +132,7 @@ if os.getenv("LSP_ENABLED") ~= "false" then
         { "<leader>l",  group = "lsp" },
         { "<leader>ld", group = "debug" },
         { "<leader>lv", group = "view" },
+        { "<leader>dq", group = "quickfix" },
       })
 
     vim.keymap.set("n", "H", vim.lsp.buf.signature_help, { desc = "signature help" })
@@ -154,6 +159,14 @@ if os.getenv("LSP_ENABLED") ~= "false" then
     vim.keymap.set('n', '<leader>dl', '<cmd>lua vim.diagnostic.open_float()<CR>', { buffer = bufnr, desc = 'line' })
     vim.keymap.set('n', '<leader>dp', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { buffer = bufnr, desc = 'previous' })
     vim.keymap.set('n', '<leader>dn', '<cmd>lua vim.diagnostic.goto_next()<CR>', { buffer = bufnr, desc = 'next' })
+    vim.keymap.set('n', '<leader>dqfa', function() vim.diagnostic.setqflist() end, { desc = 'all' })
+    vim.keymap.set('n', '<leader>dqfw', function() vim.diagnostic.setqflist({ severity =  vim.diagnostic.severity.WARN }) end, { desc = 'warn' })
+    vim.keymap.set('n', '<leader>dqfe', function() vim.diagnostic.setqflist({ severity =  vim.diagnostic.severity.ERROR }) end, { desc = 'error' })
+    vim.keymap.set('n', '<leader>dqfi', function() vim.diagnostic.setqflist({ severity =  vim.diagnostic.severity.INFO }) end, { desc = 'info' })
+    vim.keymap.set('n', '<leader>dqa', function() vim.diagnostic.setloclist() end, { desc = 'all' })
+    vim.keymap.set('n', '<leader>dqw', function() vim.diagnostic.setloclist({ severity =  vim.diagnostic.severity.WARN }) end, { desc = 'warn' })
+    vim.keymap.set('n', '<leader>dqe', function() vim.diagnostic.setloclist({ severity =  vim.diagnostic.severity.ERROR }) end, { desc = 'error' })
+    vim.keymap.set('n', '<leader>dqi', function() vim.diagnostic.setloclist({ severity =  vim.diagnostic.severity.INFO }) end, { desc = 'info' })
 
     vim.keymap.set('n', '[d', function() vim.diagnostic.jump { count = -1 } end,
       { buffer = bufnr, desc = 'Previous diagnostic' })
@@ -250,6 +263,7 @@ if os.getenv("LSP_ENABLED") ~= "false" then
 
       -- :h metals-settings
       metals_config.settings = {
+        serverVersion = "2.0.0-M14", -- get latest version https://metals-lsp.org/neovim#configuration
         --disabledMode = true,
         autoImportBuild = "initial", -- initial, all, off
         defaultBspToBuildTool = true,
@@ -259,7 +273,7 @@ if os.getenv("LSP_ENABLED") ~= "false" then
         showImplicitConversionsAndClasses = false,
         showInferredType = true,
         serverProperties = {
-          "-Xmx2G",
+          "-Xmx4G",
           "-Dmetals.enable-best-effort=true",
           "-XX:+UseZGC",
           "-XX:ZUncommitDelay=30",

@@ -29,10 +29,10 @@ vim.defer_fn(function()
     },
   })
 
-  vim.keymap.set("n", "<leader>qq", function() require('quicker').toggle() end, { desc = "Toggle quicker" })
-
-  vim.keymap.set("n", '<leader>ql', function() require('quicker').toggle { loclist = true } end,
-    { desc = 'Toggle loclist list' })
+  -- vim.keymap.set("n", "<leader>qq", function() require('quicker').toggle() end, { desc = "Toggle quicker" })
+  --
+  -- vim.keymap.set("n", '<leader>ql', function() require('quicker').toggle { loclist = true } end,
+  --   { desc = 'Toggle loclist list' })
 
   vim.keymap.set("n", '<leader>qw',
     function()

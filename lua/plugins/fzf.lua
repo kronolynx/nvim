@@ -50,6 +50,23 @@ vim.defer_fn(function()
       color_icons  = true, -- colorize file|git icons
       actions      = {
         ["ctrl-g"] = { actions.toggle_ignore },
+        ["ctrl-s"] = function(selected, opts)
+          -- Filter by filename first, then grep content in those files (like yazi 's' then 'S')
+          local fzf_lua = require('fzf-lua')
+          if not selected or #selected == 0 then
+            fzf_lua.live_grep()
+          else
+            -- Extract file paths from selected items
+            local files = vim.tbl_map(function(item)
+              return fzf_lua.path.entry_to_file(item).path
+            end, selected)
+            -- Grep only in selected files
+            fzf_lua.live_grep({
+              filespec = table.concat(files, " "),
+              prompt = "Grep in filtered files❯ "
+            })
+          end
+        end,
       }
     },
     grep = {
@@ -102,7 +119,7 @@ vim.defer_fn(function()
   }
   require("fzf-lua").setup(setup)
 
-  ---@diagnostic disable-next-line: duplicate-set-field
+  -- ---@diagnostic disable-next-line: duplicate-set-field
   vim.ui.select = function(items, opts, on_choice)
     local ui_select = require 'fzf-lua.providers.ui_select'
 
@@ -141,6 +158,7 @@ vim.defer_fn(function()
     end
   end
 
+  -- require('fzf-lua').register_ui_select()
 
   vim.keymap.set({ "n", "v" }, "<M-CR>", "<cmd>FzfLua lsp_code_actions<CR>")
   vim.keymap.set("n", "<leader>gf", "<cmd>FzfLua files<cr>", { desc = "find files" })
@@ -169,7 +187,27 @@ vim.defer_fn(function()
   vim.keymap.set("n", "<leader>to", "<cmd>FzfLua oldfiles<cr>", { desc = "old files" })
   vim.keymap.set("n", "<leader>tr", "<cmd>FzfLua buffers<cr>", { desc = "recent files" })
 
-  vim.keymap.set('n', '<leader>ld', '<cmd>FzfLua lsp_document_diagnostics<cr>', { desc = 'Document diagnostics' })
   vim.keymap.set('n', 'z=', '<cmd>FzfLua spell_suggest<cr>', { desc = 'Spelling suggestions' })
 
+  -- diagnostics
+  vim.keymap.set('n', '<leader>dw', '<cmd>FzfLua lsp_workspace_diagnostics<cr>', { desc = 'Workspace' })
+  vim.keymap.set('n', '<leader>db', '<cmd>FzfLua lsp_document_diagnostics<cr>', { desc = 'document' })
+  vim.keymap.set('n', '<leader>ld', '<cmd>FzfLua lsp_document_diagnostics<cr>', { desc = 'Document diagnostics' })
+
+
+  -- LSP
+  vim.keymap.set('n', '<leader>gd', '<cmd>FzfLua lsp_definitions<cr>', { desc = 'Definitions' })
+  vim.keymap.set('n', '<leader>gD', '<cmd>FzfLua lsp_declarations<cr>', { desc = 'Declarations' })
+  vim.keymap.set('n', '<leader>gt', '<cmd>FzfLua lsp_typedefs<cr>', { desc = 'type definition' })
+  vim.keymap.set('n', '<leader>gi', '<cmd>FzfLua lsp_implementations<cr>', { desc = 'implementations' })
+  vim.keymap.set('n', '<leader>gr', '<cmd>FzfLua lsp_references<cr>', { desc = 'references' })
+  vim.keymap.set('n', '<leader>gS', '<cmd>FzfLua lsp_type_sub<cr>', { desc = 'subtype' })
+  vim.keymap.set('n', '<leader>gs', '<cmd>FzfLua lsp_type_super<cr>', { desc = 'super' })
+  vim.keymap.set('n', '<leader>gci', '<cmd>FzfLua lsp_incoming_calls<cr>', { desc = 'incoming call' })
+  vim.keymap.set('n', '<leader>gco', '<cmd>FzfLua lsp_outgoing_calls<cr>', { desc = 'outgoing call' })
+
+  -- Symbols
+  vim.keymap.set('n', '<leader>lsd', '<cmd>FzfLua lsp_document_symbols<cr>', { desc = 'Document' })
+  vim.keymap.set('n', '<leader>lsw', '<cmd>FzfLua lsp_workspace_symbols<cr>', { desc = 'Workspace' })
+  vim.keymap.set('n', '<leader>lsg', '<cmd>FzfLua lsp_live_workspace_symbols<cr>', { desc = 'Workspace (live)' })
 end, 200)

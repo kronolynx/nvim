@@ -42,18 +42,18 @@ vim.defer_fn(function()
     require('flash').toggle()
   end, { desc = 'Toggle Flash Search' })
 
-  vim.keymap.set('n', 'gl', function()
-    require('flash').jump({
-      labels = "asdfghjklqwertyuiopzxcvbnm;',.1234567890",
-      search = {
-        mode = 'search',
-        max_length = 0,
-        multi_window = false
-      },
-      label = { after = { 0, 0 } },
-      pattern = '^'
-    })
-  end, { desc = 'select line' })
+  -- vim.keymap.set('n', 'gl', function()
+  --   require('flash').jump({
+  --     labels = "asdfghjklqwertyuiopzxcvbnm;',.1234567890",
+  --     search = {
+  --       mode = 'search',
+  --       max_length = 0,
+  --       multi_window = false
+  --     },
+  --     label = { after = { 0, 0 } },
+  --     pattern = '^'
+  --   })
+  -- end, { desc = 'select line' })
 
   vim.keymap.set('n', 'gw', function()
     require('flash').jump({

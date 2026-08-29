@@ -68,6 +68,13 @@ function Terminal:show()
     })
   end
 
+  -- -- Disable leader key timeout in terminal insert mode
+  -- vim.api.nvim_create_autocmd("TermOpen", {
+  --   callback = function()
+  --     vim.opt_local.timeoutlen = 0
+  --   end,
+  -- })
+
   vim.cmd.startinsert()
 end
 

@@ -66,6 +66,9 @@ M.misc = {
   terminal = '',
   toolbox = '󰦬',
   vertical_bar = '│',
+  plus = ' ',
+  minus = ' ',
+  evil = ''
 }
 
 return M

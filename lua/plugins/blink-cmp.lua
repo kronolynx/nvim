@@ -1,11 +1,17 @@
 vim.pack.add({
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
+  -- {
+  --   src = "https://github.com/milanglacier/minuet-ai.nvim",
+  --   -- data = { dep_of = "blink.cmp" },
+  -- },
 }, { confirm = false })
 
 vim.defer_fn(function()
   require('blink.cmp').setup({
     enabled = function()
-      return vim.bo.filetype ~= "gitcommit"
+      return vim.bo.filetype ~= "gitcommit" 
+        and vim.bo.buftype ~= "terminal"
+        and vim.bo.filetype ~= "bigfile"
     end,
     -- 'default' for mappings similar to built-in completion
     -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
@@ -30,7 +36,7 @@ vim.defer_fn(function()
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
       -- Manually invoke minuet completion.
-      ['<A-y>'] = require('minuet').make_blink_map(),
+      -- ['<A-y>'] = require('minuet').make_blink_map(),
     },
     signature = {
       enabled = true,
@@ -72,7 +78,8 @@ vim.defer_fn(function()
     sources = {
       -- Disable some sources in comments and strings.
       default = function()
-        local sources = { 'lsp', 'buffer' }
+        local sources = { 'lsp', 'buffer'}
+        -- local sources = { 'lsp', 'buffer', 'copilot'}
         local ok, node = pcall(vim.treesitter.get_node)
 
         if ok and node then
@@ -97,17 +104,24 @@ vim.defer_fn(function()
         --   score_offset = 100,
         --   async = true,
         -- },
-        minuet = {
-          name = 'minuet',
-          module = 'minuet.blink',
-          score_offset = 8, -- Gives minuet higher priority among suggestions
-        },
+        -- copilot = {
+        --   name = "copilot",
+        --   module = "blink-copilot",
+        --   score_offset = 100,
+        --   async = true,
+        -- },
+        -- minuet = {
+        --   name = 'minuet',
+        --   module = 'minuet.blink',
+        --   score_offset = 8, -- Gives minuet higher priority among suggestions
+        -- },
       },
     },
     appearance = {
       kind_icons = require('util.icons').symbol_kinds,
     },
     fuzzy = {
+      -- implementation = 'prefer_rust',
       -- sorts = { 'label', 'kind', 'score' }
       sorts = { 'score', 'sort_text' },
     },

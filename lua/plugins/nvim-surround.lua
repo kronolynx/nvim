@@ -14,10 +14,10 @@ vim.defer_fn(function()
   -- <b>or tag* types</b>        csth1<CR>       <h1>or tag types</h1>
   -- delete(functi*on calls)     dsf             function calls
   require("nvim-surround").setup({
-    keymaps = {
-      insert = false,
-      insert_line = false,
-      visual_line = false,
-    },
+    -- keymaps = {
+    --   insert = false,
+    --   insert_line = false,
+    --   visual_line = false,
+    -- },
   })
 end, 300)

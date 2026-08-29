@@ -18,10 +18,9 @@ vim.defer_fn(function()
       { '<leader>c',  group = 'code',         mode = { 'n', 'v' } },
       { '<leader>d',  group = 'diagnostics',  mode = { 'n', 'v' } },
       { '<leader>g',  group = 'goto' },
-      { '<leader>h',  group = 'http' },
-
       { '<leader>n',  group = 'nofitications' },
       { '<leader>m',  group = 'git' },
+      { '<leader>r',  group = 'request (http)' },
       { '<leader>s',  group = 'search',       mode = { 'n', 'v' } },
       { '<leader>t',  group = 'tabs' },
       { '<leader>u',  group = 'utilities' },

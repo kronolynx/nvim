@@ -15,6 +15,12 @@ vim.keymap.set('n', '<Down>', function()
   return vim.v.count == 0 and 'g<Down>' or '<Down>'
 end, { expr = true, noremap = true })
 
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-f>", "<C-f>zz")
+vim.keymap.set("n", "<C-b>", "<C-v>zz")
+
+-- vim.keymap.set('t', '<Space>', '<Space>', { noremap = true })
 
 -- Yank from cursor to end of line
 vim.keymap.set('n', 'Y', 'y$')

@@ -17,3 +17,5 @@ vim.api.nvim_create_user_command('Grep', function(opts)
   vim.cmd('redraw!')
   vim.cmd('copen')
 end, { nargs = '+', complete = 'file' })
+
+vim.api.nvim_create_user_command('PkgUpdate', function() vim.pack.update(nil, { force = false }) end, {})

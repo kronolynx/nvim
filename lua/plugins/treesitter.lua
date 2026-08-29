@@ -76,9 +76,18 @@ vim.defer_fn(function()
     sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
     highlight = {
       enable = true,      -- false will disable the whole extension
-      disable = { "" },   -- list of language that will be disabled
+      disable = function(lang, buf)
+        -- Disable for big files
+        return vim.b[buf].bigfile
+      end,
     },
-    indent = { enable = true, disable = { "yaml" } },
+    indent = {
+      enable = true,
+      disable = function(lang, buf)
+        -- Disable for big files and yaml
+        return lang == "yaml" or vim.b[buf].bigfile
+      end
+    },
     incremental_selection = {
       enable = true,
       keymaps = {

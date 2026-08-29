@@ -265,6 +265,10 @@ function M.git_branch_component()
   local hl = M.get_or_create_hl(colors.purple)
   local component = hl .. ' ' .. head
 
+  -- if not M.conditions.width_percent_below(#component, 0.25) then -- TODO how to do this only for the active buffer
+  --   component = ''
+  -- end
+
   return component
 end
 
@@ -504,6 +508,22 @@ end
 
 ---@return string
 function M.render_active()
+  -- Lightweight statusline for big files
+  if vim.bo.filetype == 'bigfile' then
+    return table.concat {
+      M.endBar(),
+      M.mode_component(),
+      concat_components {
+        M.filename_component(),
+      },
+      '%#StatusLine#%=',
+      concat_components {
+        M.ruler_component(),
+        M.endBar(),
+      },
+    }
+  end
+
   return table.concat {
     M.endBar(),
     M.mode_component(),
@@ -514,6 +534,7 @@ function M.render_active()
       M.diagnostics_component()
     },
     '%#StatusLine#%=',
+    -- M.debug(),
     concat_components {
       M.search_count_component(),
       M.active_lsp_component(),
@@ -557,9 +578,24 @@ function M.render_inactive(bufnr)
       M.workdir_component(),
       M.filename_component(bufnr),
     },
+    -- M.debug(),
     '%#StatusLine#%=',
     M.git_branch_component(),
   }
+end
+
+function M.debug()
+  local window = vim.g.statusline_winid;
+
+  --- Buffer of the window.
+  ---@type integer
+  local bufnr = vim.api.nvim_win_get_buf(window);
+
+  local buf_type = vim.bo[bufnr].filetype
+  -- local filename = vim.api.nvim_buf_get_name(buffer)
+  -- local buffer_type = vim.api.nvim_get_option_value('buftype', { buf = buffer })
+
+  return "window " .. window .. " buffer " .. tostring(bufnr) .. " type " .. buf_type
 end
 
 function M.render()

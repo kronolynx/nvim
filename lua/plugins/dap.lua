@@ -80,21 +80,21 @@ vim.defer_fn(function()
   -- Automatically open UI
   require('dap-view').setup({
     winbar = {
-      default_section = "repl",
+      default_section = "scopes",
       controls = {
         enabled = true
       }
     },
     windows = {
-      height = 0.40,
+      -- height = 0.40, -- TODO this is broken
       position = "below",
       terminal = {
-        width = 0.5,
+        -- width = 0.5, -- TODO this is broken
         position = "left",
         -- List of debug adapters for which the terminal should be ALWAYS hidden
         hide = {},
         -- Hide the terminal when starting a new session
-        start_hidden = true,
+        -- start_hidden = true,
       },
     },
     auto_toggle = true,
