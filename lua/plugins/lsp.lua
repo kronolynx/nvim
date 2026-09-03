@@ -55,9 +55,68 @@ vim.pack.add({
   { src = "https://github.com/scalameta/nvim-metals" },
 }, { confirm = false })
 
+require('mason').setup()
+
+local mason_tools = {
+  'tree-sitter-cli', -- nvim-treesitter shells out to `tree-sitter build`
+}
+
+do
+  local registry = require('mason-registry')
+
+  -- Announced on the next tick, so files required after this one can register
+  -- a listener first. `registry.refresh` may call back synchronously when its
+  -- cache is still fresh, so this must not be emitted inline.
+  local function ready()
+    vim.schedule(function()
+      vim.api.nvim_exec_autocmds('User', { pattern = 'MasonToolsReady' })
+    end)
+  end
+
+  ---@return string[] names that are not installed yet
+  local function missing()
+    return vim.tbl_filter(function(name)
+      local ok, pkg = pcall(registry.get_package, name)
+      return not ok or not pkg:is_installed()
+    end, mason_tools)
+  end
+
+  if #missing() == 0 then
+    ready()
+  else
+    -- Only touch the network when something is genuinely absent.
+    registry.refresh(function()
+      local todo = missing()
+      local pending = #todo
+
+      local function tick()
+        pending = pending - 1
+        if pending <= 0 then
+          ready()
+        end
+      end
+
+      if pending == 0 then
+        return ready()
+      end
+
+      for _, name in ipairs(todo) do
+        local ok, pkg = pcall(registry.get_package, name)
+        if ok then
+          -- Mason has no `install:success` event; the handle's `closed` is
+          -- what signals completion.
+          pkg:install():once('closed', tick)
+        else
+          vim.notify("Mason: unknown package '" .. name .. "'", vim.log.levels.WARN)
+          tick()
+        end
+      end
+    end)
+  end
+end
+
 if os.getenv("LSP_ENABLED") ~= "false" then
   require('fidget').setup()
-  require('mason').setup()
   -- require('mason-lspconfig').setup()
 
   -- Enable the following language servers

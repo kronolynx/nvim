@@ -416,13 +416,13 @@ end
 function M.search_count_component()
   local component = ""
   if vim.v.hlsearch ~= 0 and vim.o.cmdheight == 0 then
-    local hl = M.get_or_create_hl(colors.gray)
-
     local ok, search = pcall(vim.fn.searchcount)
-    if ok and search.total then
-      search = search
+    -- searchcount() returns an empty dict when there is no search pattern yet
+    -- (a fresh session with no shada) or when the count was interrupted.
+    if ok and type(search) == "table" and search.total then
+      local hl = M.get_or_create_hl(colors.gray)
+      component = string.format("%s[%d/%d]", hl, search.current, math.min(search.total, search.maxcount or search.total))
     end
-    component = string.format("%s[%d/%d]", hl, search.current, math.min(search.total, search.maxcount))
   end
   return component
 end
